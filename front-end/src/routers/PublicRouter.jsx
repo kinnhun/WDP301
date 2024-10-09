@@ -5,6 +5,7 @@ import Home from "../pages/home/Home";
 import Login from "../pages/login/Login";
 import News from "../pages/news/news";
 import PaymentHistory from "../pages/paymentHistory/PaymentHistory";
+import Report from "../pages/report/Report";
 import Requests from "../pages/requests/Requests";
 import ResidentHistories from "../pages/residentHistories/ResidentHistories";
 const publicRouter = () => {
@@ -19,6 +20,7 @@ const publicRouter = () => {
       <Route path="/EWUsage" element={<EWUsage />} />
       <Route path="/PaymentHistory" element={<PaymentHistory />} />
       <Route path="/Requests" element={<Requests />} />
+      <Route path="/Report" element={<Report />} />
       {/* <Route path="/register" element={<Register />} />
       <Route path="/verify" element={<Verify />} /> */}
     </Routes>
