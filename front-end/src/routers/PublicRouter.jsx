@@ -1,30 +1,19 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import Bookings from "../pages/bookings/Bookings";
-import EWUsage from "../pages/EWUsage/EWUsage";
-import Home from "../pages/home/Home";
-import Login from "../pages/login/Login";
-import News from "../pages/news/news";
-import PaymentHistory from "../pages/paymentHistory/PaymentHistory";
-import Report from "../pages/report/Report";
-import Requests from "../pages/requests/Requests";
-import ResidentHistories from "../pages/residentHistories/ResidentHistories";
-const publicRouter = () => {
+import Login from "../pages/Login/Login";
+import { Routes, Route, Navigate } from "react-router-dom";
+import ManageUser from "../pages/Manager/ManageUser/ManageUser";
+import UserList from "../pages/Manager/ManageUser/UserList";
+import Layout from "../layouts/Layout";
+
+const PublicRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/news" element={<News></News>} />
-      <Route path="/ResidentHistories" element={<ResidentHistories></ResidentHistories>} />
-      <Route path="/Bookings" element={<Bookings />} />
-      <Route path="/EWUsage" element={<EWUsage />} />
-      <Route path="/PaymentHistory" element={<PaymentHistory />} />
-      <Route path="/Requests" element={<Requests />} />
-      <Route path="/Report" element={<Report />} />
-      {/* <Route path="/register" element={<Register />} />
-      <Route path="/verify" element={<Verify />} /> */}
+      <Route element={<Layout />}>
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/manager/manage-user" element={<UserList />} />
+      </Route>
     </Routes>
   );
 };
 
-export default publicRouter;
+export default PublicRouter;
