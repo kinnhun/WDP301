@@ -91,39 +91,15 @@ const Sidebar = () => {
                                 <span className="align-middle">About</span>
                             </Link>
                             </li>
-
-
-                            <li className="sidebar-item">
-                                <a data-bs-target="#dashboards" data-bs-toggle="collapse" className="sidebar-link collapsed">
-                                    <i className="align-middle" data-feather="sliders"></i> <span className="align-middle">Dashboards</span>
-                                </a>
-                                <ul id="dashboards" className="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-                                    <li className="sidebar-item"><a className="sidebar-link" href="index.html">Analytics</a></li>
-                                    <li className="sidebar-item"><a className="sidebar-link" href="dashboard-ecommerce.html">E-Commerce <span
-                                        className="sidebar-badge badge bg-primary">Pro</span></a></li>
-                                    <li className="sidebar-item"><a className="sidebar-link" href="dashboard-crypto.html">Crypto <span
-                                        className="sidebar-badge badge bg-primary">Pro</span></a></li>
-                                </ul>
+                            <li>
+                                <Link className="sidebar-link" to="/Report">
+                                    <i className="align-middle" data-feather="message-square"></i>
+                                    <span className="align-middle">Report</span>
+                                </Link>
                             </li>
 
-                            <li className="sidebar-item">
-                                <a data-bs-target="#pages" data-bs-toggle="collapse" className="sidebar-link">
-                                    <i className="align-middle" data-feather="layout"></i> <span className="align-middle">Pages</span>
-                                </a>
-                                <ul id="pages" className="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
-                                    <li className="sidebar-item"><a className="sidebar-link" href="pages-settings.html">Settings</a></li>
-                                    <li className="sidebar-item"><a className="sidebar-link" href="pages-projects.html">Projects <span
-                                        className="sidebar-badge badge bg-primary">Pro</span></a></li>
-                                    <li className="sidebar-item"><a className="sidebar-link" href="pages-clients.html">Clients <span
-                                        className="sidebar-badge badge bg-primary">Pro</span></a></li>
-                                    <li className="sidebar-item"><a className="sidebar-link" href="pages-pricing.html">Pricing <span
-                                        className="sidebar-badge badge bg-primary">Pro</span></a></li>
-                                    <li className="sidebar-item"><a className="sidebar-link" href="pages-chat.html">Chat <span
-                                        className="sidebar-badge badge bg-primary">Pro</span></a></li>
-                                    <li className="sidebar-item"><a className="sidebar-link" href="pages-blank.html">Blank Page</a></li>
-                                </ul>
-                            </li>
 
+                           
                             <li className="sidebar-item">
                                 <a className="sidebar-link" href="pages-profile.html">
                                     <i className="align-middle" data-feather="user"></i> <span className="align-middle">Profile</span>
