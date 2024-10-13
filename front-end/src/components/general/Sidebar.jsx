@@ -1,31 +1,34 @@
 
 const Sidebar = () => {
+    const baseUrl = import.meta.env.VITE_PUBLIC_URL;
+
     return (
         <div>
-             {/* <!-- ========== Left Sidebar Start ========== --> */}
-             <div className="leftside-menu" >
+            {/* <!-- ========== Left Sidebar Start ========== --> */}
+            <div className="leftside-menu" >
 
-    
+
                 {/* <!-- LOGO --> */}
-                <a href="index.html" className="logo text-center logo-light">
+                <a href="home" className="logo text-center logo-light">
                     <span className="logo-lg">
-                        <img src="assets/images/logo.png" alt="" height="16"></img>
+                        <img src={`${baseUrl}/assets/images/logo.png`} alt="Logo Light" height="16" />
                     </span>
                     <span className="logo-sm">
-                        <img src="assets/images/logo_sm.png" alt="" height="16"></img>
+                        <img src={`${baseUrl}/assets/images/logo_sm.png`} alt="Logo Light Small" height="16" />
                     </span>
                 </a>
 
                 {/* <!-- LOGO --> */}
-                <a href="index.html" className="logo text-center logo-dark">
+                <a href="home" className="logo text-center logo-dark">
                     <span className="logo-lg">
-                        <img src="assets/images/logo-dark.png" alt="" height="16"></img>
+                        <img src={`${baseUrl}/assets/images/logo-dark.png`} alt="Logo Dark" height="16" />
                     </span>
                     <span className="logo-sm">
-                        <img src="assets/images/logo_sm_dark.png" alt="" height="16"></img>
+                        <img src={`${baseUrl}/assets/images/logo_sm_dark.png`} alt="Logo Dark Small" height="16" />
                     </span>
                 </a>
-    
+
+
                 <div className="h-100" id="leftside-menu-container" data-simplebar>
 
                     {/* <!--- Sidemenu --> */}
@@ -295,14 +298,14 @@ const Sidebar = () => {
                                         <div className="collapse" id="sidebarPagesError">
                                             <ul className="side-nav-third-level">
                                                 <li>
-                                                <a href="pages-404.html">Error 404</a>
-                                            </li>
-                                            <li>
-                                                <a href="pages-404-alt.html">Error 404-alt</a>
-                                            </li>
-                                            <li>
-                                                <a href="pages-500.html">Error 500</a>
-                                            </li>
+                                                    <a href="pages-404.html">Error 404</a>
+                                                </li>
+                                                <li>
+                                                    <a href="pages-404-alt.html">Error 404-alt</a>
+                                                </li>
+                                                <li>
+                                                    <a href="pages-500.html">Error 500</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </li>
@@ -347,7 +350,7 @@ const Sidebar = () => {
                                 </ul>
                             </div>
                         </li>
-            
+
                         <li className="side-nav-title side-nav-item mt-1">Components</li>
 
                         <li className="side-nav-item">
