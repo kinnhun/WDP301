@@ -1,8 +1,9 @@
-import React from 'react';
 
 const Login = () => {
   return (
-    <div className="authentication-bg pb-0" data-layout-config='{"darkMode":false}'>
+    <div className="authentication-bg pb-0" 
+    data-layout-config='{"darkMode":false}' 
+    style={{ height: '100vh' }}>
       <div className="auth-fluid">
         <div className="auth-fluid-form-box">
           <div className="align-items-center d-flex h-100">
@@ -58,7 +59,8 @@ const Login = () => {
               </form>
 
               <footer className="footer footer-alt">
-                <p className="text-muted">Don't have an account? <a href="pages-register-2.html" className="text-muted ms-1"><b>Sign Up</b></a></p>
+                <p className="text-muted">Do not have an account? 
+                  <a href="pages-register-2.html" className="text-muted ms-1"><b>Sign Up</b></a></p>
               </footer>
             </div>
           </div>
@@ -67,7 +69,8 @@ const Login = () => {
         <div className="auth-fluid-right text-center">
           <div className="auth-user-testimonial">
             <h2 className="mb-3">I love the color!</h2>
-            <p className="lead"><i className="mdi mdi-format-quote-open"></i> It's an elegant template. I love it very much! <i className="mdi mdi-format-quote-close"></i></p>
+            <p className="lead"><i className="mdi mdi-format-quote-open"></i>
+             It is an elegant template. I love it very much! <i className="mdi mdi-format-quote-close"></i></p>
             <p>- Hyper Admin User</p>
           </div>
         </div>
