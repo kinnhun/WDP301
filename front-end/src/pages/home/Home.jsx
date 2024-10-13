@@ -1,6 +1,8 @@
+import React from 'react';
+import './Home.css'; // Đảm bảo thêm file CSS tùy chỉnh
 
 const Home = () => {
-  // Sample data for announcements and events
+  // Dữ liệu mẫu cho thông báo và sự kiện
   const announcements = [
     {
       id: 1,
@@ -34,34 +36,45 @@ const Home = () => {
   ];
 
   return (
-    <div className="container mt-4">
-      <h1>Welcome to Your Dormitory Portal</h1>
+    <div className="container mt-5">
+      <div className="text-center">
+        <h1 className="mb-4 main-title">Dormitory Management System</h1>
+        <p className="intro-text">
+          Welcome to the Dormitory Management Portal. Find the latest announcements, events, and useful resources below.
+        </p>
+      </div>
 
       {/* Announcements Section */}
-      <div className="mb-4">
-        <h2>Latest Announcements</h2>
+      <div className="announcements-section mb-5">
+        <h2 className="mb-3 section-title">Latest Announcements</h2>
         {announcements.length > 0 ? (
-          announcements.map(announcement => (
-            <div className="card mb-3" key={announcement.id}>
-              <div className="card-body">
-                <h5 className="card-title">{announcement.title}</h5>
-                <p className="card-text">{announcement.content}</p>
-                <p className="card-text"><small className="text-muted">Posted on: {announcement.date}</small></p>
+          <div className="row">
+            {announcements.map((announcement) => (
+              <div className="col-md-6" key={announcement.id}>
+                <div className="card announcement-card mb-3 shadow-sm">
+                  <div className="card-body">
+                    <h5 className="card-title">{announcement.title}</h5>
+                    <p className="card-text">{announcement.content}</p>
+                    <p className="card-text">
+                      <small className="text-muted">Posted on: {announcement.date}</small>
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         ) : (
-          <p>No announcements available.</p>
+          <p>No announcements available at the moment.</p>
         )}
       </div>
 
       {/* Events Section */}
-      <div className="mb-4">
-        <h2>Upcoming Events</h2>
+      <div className="events-section mb-5">
+        <h2 className="mb-3 section-title">Upcoming Events</h2>
         {events.length > 0 ? (
-          <ul className="list-group">
-            {events.map(event => (
-              <li className="list-group-item" key={event.id}>
+          <ul className="list-group events-list">
+            {events.map((event) => (
+              <li className="list-group-item event-item shadow-sm" key={event.id}>
                 <strong>{event.title}</strong> - {event.date} at {event.time} ({event.location})
               </li>
             ))}
@@ -72,17 +85,27 @@ const Home = () => {
       </div>
 
       {/* Useful Links Section */}
-      <div className="mb-4">
-        <h2>Useful Links</h2>
-        <ul className="list-group">
-          <li className="list-group-item"><a href="#">Dormitory Rules and Regulations</a></li>
-          <li className="list-group-item"><a href="#">Report a Maintenance Issue</a></li>
-          <li className="list-group-item"><a href="#">Contact Dormitory Administration</a></li>
+      <div className="useful-links-section mb-5">
+        <h2 className="mb-3 section-title">Useful Links</h2>
+        <ul className="list-group useful-links-list">
+          <li className="list-group-item useful-link shadow-sm">
+            <a href="#">Dormitory Rules and Regulations</a>
+          </li>
+          <li className="list-group-item useful-link shadow-sm">
+            <a href="#">Report a Maintenance Issue</a>
+          </li>
+          <li className="list-group-item useful-link shadow-sm">
+            <a href="#">Contact Dormitory Administration</a>
+          </li>
         </ul>
       </div>
+
+      {/* Footer Section */}
+      <footer className="text-center mt-5 footer">
+        <p>&copy; 2024 Dormitory Management System. All rights reserved.</p>
+      </footer>
     </div>
   );
 };
 
-
-export default Home
+export default Home;
