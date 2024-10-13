@@ -9,17 +9,19 @@ import News from "../pages/news/news";
 import PaymentHistory from "../pages/paymentHistory/PaymentHistory";
 import Requests from "../pages/requests/Requests";
 import ResidentHistories from "../pages/residentHistories/ResidentHistories";
+import Verify from "../pages/Login/Verify";
 
 const PublicRouter = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/verify" element={<Verify />} />
 
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/manager/manage-user" element={<UserList />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/home" element={<Home />} />
+        {/* <Route path="/home" element={<Home />} /> */}
         <Route path="/news" element={<News></News>} />
         <Route path="/ResidentHistories" element={<ResidentHistories></ResidentHistories>} />
         <Route path="/Bookings" element={<Bookings />} />
