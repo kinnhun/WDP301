@@ -1,0 +1,75 @@
+/* Home.css */
+
+/* Tiêu đề chính */
+.main-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #007bff;
+    animation: fadeInDown 1s;
+  }
+  
+  /* Văn bản giới thiệu */
+  .intro-text {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-bottom: 2rem;
+  }
+  
+  /* Tiêu đề của các phần */
+  .section-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #343a40;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  /* Card thông báo */
+  .announcement-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .announcement-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Danh sách sự kiện */
+  .events-list .event-item {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+  }
+  .events-list .event-item:hover {
+    background-color: #f8f9fa;
+    transform: translateX(10px);
+  }
+  
+  /* Liên kết hữu ích */
+  .useful-links-list .useful-link {
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+  .useful-links-list .useful-link:hover {
+    transform: translateX(10px);
+    background-color: #f8f9fa;
+  }
+  
+  /* Hiệu ứng fade-in cho tiêu đề */
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Footer */
+  .footer {
+    background-color: #f1f1f1;
+    padding: 20px 0;
+    color: #6c757d;
+    font-size: 0.9rem;
+    border-top: 1px solid #e7e7e7;
+  }
+  
