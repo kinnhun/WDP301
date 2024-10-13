@@ -1,261 +1,247 @@
 const Header = () => {
     return (
         <div>
-          <nav className="navbar navbar-expand navbar-light navbar-bg">
-				<a className="sidebar-toggle js-sidebar-toggle">
-					<i className="hamburger align-self-center"></i>
-				</a>
+            {/* Topbar Start */} 
+                    <div className="navbar-custom">
+                        <ul className="list-unstyled topbar-menu float-end mb-0">
+                            <li className="dropdown notification-list d-lg-none">
+                                <a className="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                    <i className="dripicons-search noti-icon"></i>
+                                </a>
+                                <div className="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
+                                    <form className="p-3">
+                                        <input type="text" className="form-control" placeholder="Search ..." aria-label="Recipient's username"></input>
+                                    </form>
+                                </div>
+                            </li>
+                            <li className="dropdown notification-list topbar-dropdown">
+                                <a className="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                    <img src="assets/images/flags/us.jpg" alt="user-image" className="me-0 me-sm-1" height="12"></img>
+                                    <span className="align-middle d-none d-sm-inline-block">English</span> <i className="mdi mdi-chevron-down d-none d-sm-inline-block align-middle"></i>
+                                </a>
+                                <div className="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu">
 
-				<form className="d-none d-sm-inline-block">
-					<div className="input-group input-group-navbar">
-						<input type="text" className="form-control" placeholder="Search…" aria-label="Search"></input>
-						<button className="btn" type="button">
-							<i className="align-middle" data-feather="search"></i>
-						</button>
-					</div>
-				</form>
+                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                        <img src="assets/images/flags/germany.jpg" alt="user-image" className="me-1" height="12"></img> <span className="align-middle">German</span>
+                                    </a>
 
-				<ul className="navbar-nav d-none d-lg-flex">
-					<li className="nav-item px-2 dropdown">
-						<a className="nav-link dropdown-toggle" href="#" id="megaDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
-							aria-expanded="false">
-							Mega Menu
-						</a>
-						<div className="dropdown-menu dropdown-menu-start dropdown-mega" aria-labelledby="megaDropdown">
-							<div className="d-md-flex align-items-start justify-content-start">
-								<div className="dropdown-mega-list">
-									<div className="dropdown-header">UI Elements</div>
-									<a className="dropdown-item" href="#">Alerts</a>
-									<a className="dropdown-item" href="#">Buttons</a>
-									<a className="dropdown-item" href="#">Cards</a>
-									<a className="dropdown-item" href="#">Carousel</a>
-									<a className="dropdown-item" href="#">General</a>
-									<a className="dropdown-item" href="#">Grid</a>
-									<a className="dropdown-item" href="#">Modals</a>
-									<a className="dropdown-item" href="#">Tabs</a>
-									<a className="dropdown-item" href="#">Typography</a>
-								</div>
-								<div className="dropdown-mega-list">
-									<div className="dropdown-header">Forms</div>
-									<a className="dropdown-item" href="#">Layouts</a>
-									<a className="dropdown-item" href="#">Basic Inputs</a>
-									<a className="dropdown-item" href="#">Input Groups</a>
-									<a className="dropdown-item" href="#">Advanced Inputs</a>
-									<a className="dropdown-item" href="#">Editors</a>
-									<a className="dropdown-item" href="#">Validation</a>
-									<a className="dropdown-item" href="#">Wizard</a>
-								</div>
-								<div className="dropdown-mega-list">
-									<div className="dropdown-header">Tables</div>
-									<a className="dropdown-item" href="#">Basic Tables</a>
-									<a className="dropdown-item" href="#">Responsive Table</a>
-									<a className="dropdown-item" href="#">Table with Buttons</a>
-									<a className="dropdown-item" href="#">Column Search</a>
-									<a className="dropdown-item" href="#">Muulti Selection</a>
-									<a className="dropdown-item" href="#">Ajax Sourced Data</a>
-								</div>
-							</div>
-						</div>
-					</li>
+                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                        <img src="assets/images/flags/italy.jpg" alt="user-image" className="me-1" height="12"></img> <span className="align-middle">Italian</span>
+                                    </a>
+                
+                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                        <img src="assets/images/flags/spain.jpg" alt="user-image" className="me-1" height="12"></img> <span className="align-middle">Spanish</span>
+                                    </a>
 
-					<li className="nav-item dropdown">
-						<a className="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
-							aria-expanded="false">
-							Resources
-						</a>
-						<div className="dropdown-menu" aria-labelledby="resourcesDropdown">
-							<a className="dropdown-item" href="https://adminkit.io/" target="_blank"><i className="align-middle me-1" data-feather="home"></i>
-								Homepage</a>
-							<a className="dropdown-item" href="https://adminkit.io/docs/" target="_blank"><i className="align-middle me-1" data-feather="book-open"></i>
-								Documentation</a>
-							<a className="dropdown-item" href="https://adminkit.io/docs/getting-started/changelog/" target="_blank"><i className="align-middle me-1"
-									data-feather="edit"></i> Changelog</a>
-						</div>
-					</li>
-				</ul>
+                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                        <img src="assets/images/flags/russia.jpg" alt="user-image" className="me-1" height="12"></img> <span className="align-middle">Russian</span>
+                                    </a>
 
-				<div className="navbar-collapse collapse">
-					<ul className="navbar-nav navbar-align">
-						<li className="nav-item dropdown">
-							<a className="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
-								<div className="position-relative">
-									<i className="align-middle" data-feather="bell"></i>
-									<span className="indicator">4</span>
-								</div>
-							</a>
-							<div className="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" aria-labelledby="alertsDropdown">
-								<div className="dropdown-menu-header">
-									4 New Notifications
-								</div>
-								<div className="list-group">
-									<a href="#" className="list-group-item">
-										<div className="row g-0 align-items-center">
-											<div className="col-2">
-												<i className="text-danger" data-feather="alert-circle"></i>
-											</div>
-											<div className="col-10">
-												<div className="text-dark">Update completed</div>
-												<div className="text-muted small mt-1">Restart server 12 to complete the update.</div>
-												<div className="text-muted small mt-1">30m ago</div>
-											</div>
-										</div>
-									</a>
-									<a href="#" className="list-group-item">
-										<div className="row g-0 align-items-center">
-											<div className="col-2">
-												<i className="text-warning" data-feather="bell"></i>
-											</div>
-											<div className="col-10">
-												<div className="text-dark">Lorem ipsum</div>
-												<div className="text-muted small mt-1">Aliquam ex eros, imperdiet vulputate hendrerit et.</div>
-												<div className="text-muted small mt-1">2h ago</div>
-											</div>
-										</div>
-									</a>
-									<a href="#" className="list-group-item">
-										<div className="row g-0 align-items-center">
-											<div className="col-2">
-												<i className="text-primary" data-feather="home"></i>
-											</div>
-											<div className="col-10">
-												<div className="text-dark">Login from 192.186.1.8</div>
-												<div className="text-muted small mt-1">5h ago</div>
-											</div>
-										</div>
-									</a>
-									<a href="#" className="list-group-item">
-										<div className="row g-0 align-items-center">
-											<div className="col-2">
-												<i className="text-success" data-feather="user-plus"></i>
-											</div>
-											<div className="col-10">
-												<div className="text-dark">New connection</div>
-												<div className="text-muted small mt-1">Christina accepted your request.</div>
-												<div className="text-muted small mt-1">14h ago</div>
-											</div>
-										</div>
-									</a>
-								</div>
-								<div className="dropdown-menu-footer">
-									<a href="#" className="text-muted">Show all notifications</a>
-								</div>
-							</div>
-						</li>
-						<li className="nav-item dropdown">
-							<a className="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-bs-toggle="dropdown">
-								<div className="position-relative">
-									<i className="align-middle" data-feather="message-square"></i>
-								</div>
-							</a>
-							<div className="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" aria-labelledby="messagesDropdown">
-								<div className="dropdown-menu-header">
-									<div className="position-relative">
-										4 New Messages
-									</div>
-								</div>
-								<div className="list-group">
-									<a href="#" className="list-group-item">
-										<div className="row g-0 align-items-center">
-											<div className="col-2">
-												<img src="img/avatars/avatar-5.jpg" className="avatar img-fluid rounded-circle" alt="Vanessa Tucker"></img>
-											</div>
-											<div className="col-10 ps-2">
-												<div className="text-dark">Vanessa Tucker</div>
-												<div className="text-muted small mt-1">Nam pretium turpis et arcu. Duis arcu tortor.</div>
-												<div className="text-muted small mt-1">15m ago</div>
-											</div>
-										</div>
-									</a>
-									<a href="#" className="list-group-item">
-										<div className="row g-0 align-items-center">
-											<div className="col-2">
-												<img src="img/avatars/avatar-2.jpg" className="avatar img-fluid rounded-circle" alt="William Harris"></img>
-											</div>
-											<div className="col-10 ps-2">
-												<div className="text-dark">William Harris</div>
-												<div className="text-muted small mt-1">Curabitur ligula sapien euismod vitae.</div>
-												<div className="text-muted small mt-1">2h ago</div>
-											</div>
-										</div>
-									</a>
-									<a href="#" className="list-group-item">
-										<div className="row g-0 align-items-center">
-											<div className="col-2">
-												<img src="img/avatars/avatar-4.jpg" className="avatar img-fluid rounded-circle" alt="Christina Mason"></img>
-											</div>
-											<div className="col-10 ps-2">
-												<div className="text-dark">Christina Mason</div>
-												<div className="text-muted small mt-1">Pellentesque auctor neque nec urna.</div>
-												<div className="text-muted small mt-1">4h ago</div>
-											</div>
-										</div>
-									</a>
-									<a href="#" className="list-group-item">
-										<div className="row g-0 align-items-center">
-											<div className="col-2">
-												<img src="img/avatars/avatar-3.jpg" className="avatar img-fluid rounded-circle" alt="Sharon Lessman"></img>
-											</div>
-											<div className="col-10 ps-2">
-												<div className="text-dark">Sharon Lessman</div>
-												<div className="text-muted small mt-1">Aenean tellus metus, bibendum sed, posuere ac, mattis non.</div>
-												<div className="text-muted small mt-1">5h ago</div>
-											</div>
-										</div>
-									</a>
-								</div>
-								<div className="dropdown-menu-footer">
-									<a href="#" className="text-muted">Show all messages</a>
-								</div>
-							</div>
-						</li>
-						<li className="nav-item dropdown">
-							<a className="nav-flag dropdown-toggle" href="#" id="languageDropdown" data-bs-toggle="dropdown">
-								<img src="img/flags/us.png" alt="English" />
-							</a>
-							<div className="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
-								<a className="dropdown-item" href="#">
-									<img src="img/flags/us.png" alt="English" width="20" className="align-middle me-1" />
-									<span className="align-middle">English</span>
-								</a>
-								<a className="dropdown-item" href="#">
-									<img src="img/flags/es.png" alt="Spanish" width="20" className="align-middle me-1" />
-									<span className="align-middle">Spanish</span>
-								</a>
-								<a className="dropdown-item" href="#">
-									<img src="img/flags/ru.png" alt="Russian" width="20" className="align-middle me-1" />
-									<span className="align-middle">Russian</span>
-								</a>
-								<a className="dropdown-item" href="#">
-									<img src="img/flags/de.png" alt="German" width="20" className="align-middle me-1" />
-									<span className="align-middle">German</span>
-								</a>
-							</div>
-						</li>
-						<li className="nav-item">
-							<a className="nav-icon js-fullscreen d-none d-lg-block" href="#">
-								<div className="position-relative">
-									<i className="align-middle" data-feather="maximize"></i>
-								</div>
-							</a>
-						</li>
-						<li className="nav-item dropdown">
-							<a className="nav-icon pe-md-0 dropdown-toggle" href="#" data-bs-toggle="dropdown">
-								<img src="img/avatars/avatar.jpg" className="avatar img-fluid rounded" alt="Charles Hall" />
-							</a>
-							<div className="dropdown-menu dropdown-menu-end">
-								<a className="dropdown-item" href="pages-profile.html"><i className="align-middle me-1" data-feather="user"></i> Profile</a>
-								<a className="dropdown-item" href="#"><i className="align-middle me-1" data-feather="pie-chart"></i> Analytics</a>
-								<div className="dropdown-divider"></div>
-								<a className="dropdown-item" href="pages-settings.html"><i className="align-middle me-1" data-feather="settings"></i> Settings &
-									Privacy</a>
-								<a className="dropdown-item" href="#"><i className="align-middle me-1" data-feather="help-circle"></i> Help Center</a>
-								<div className="dropdown-divider"></div>
-								<a className="dropdown-item" href="#">Log out</a>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</nav>
+                                </div>
+                            </li>
+
+                            <li className="dropdown notification-list">
+                                <a className="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                    <i className="dripicons-bell noti-icon"></i>
+                                    <span className="noti-icon-badge"></span>
+                                </a>
+                                <div className="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg">
+
+                                    <div className="dropdown-item noti-title px-3">
+                                        <h5 className="m-0">
+                                            <span className="float-end">
+                                                <a href="javascript: void(0);" className="text-dark">
+                                                    <small>Clear All</small>
+                                                </a>
+                                            </span>Notification
+                                        </h5>
+                                    </div>
+
+
+                                    <a href="javascript:void(0);" className="dropdown-item text-center text-primary notify-item border-top border-light py-2">
+                                        View All
+                                    </a>
+
+                                </div>
+                            </li>
+
+                            <li className="dropdown notification-list d-none d-sm-inline-block">
+                                <a className="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                    <i className="dripicons-view-apps noti-icon"></i>
+                                </a>
+                                <div className="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg p-0">
+
+                                    <div className="p-2">
+                                        <div className="row g-0">
+                                            <div className="col">
+                                                <a className="dropdown-icon-item" href="#">
+                                                    <img src="assets/images/brands/slack.png" alt="slack"></img>
+                                                    <span>Slack</span>
+                                                </a>
+                                            </div>
+                                            <div className="col">
+                                                <a className="dropdown-icon-item" href="#">
+                                                    <img src="assets/images/brands/github.png" alt="Github"></img>
+                                                    <span>GitHub</span>
+                                                </a>
+                                            </div>
+                                            <div className="col">
+                                                <a className="dropdown-icon-item" href="#">
+                                                    <img src="assets/images/brands/dribbble.png" alt="dribbble"></img>
+                                                    <span>Dribbble</span>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div className="row g-0">
+                                            <div className="col">
+                                                <a className="dropdown-icon-item" href="#">
+                                                    <img src="assets/images/brands/bitbucket.png" alt="bitbucket"></img>
+                                                    <span>Bitbucket</span>
+                                                </a>
+                                            </div>
+                                            <div className="col">
+                                                <a className="dropdown-icon-item" href="#">
+                                                    <img src="assets/images/brands/dropbox.png" alt="dropbox"></img>
+                                                    <span>Dropbox</span>
+                                                </a>
+                                            </div>
+                                            <div className="col">
+                                                <a className="dropdown-icon-item" href="#">
+                                                    <img src="assets/images/brands/g-suite.png" alt="G Suite"></img>
+                                                    <span>G Suite</span>
+                                                </a>
+                                            </div>
+                                        </div>  {/* end row*/}
+                                    </div>
+
+                                </div>
+                            </li>
+
+                            <li className="notification-list">
+                                <a className="nav-link end-bar-toggle" href="javascript: void(0);">
+                                    <i className="dripicons-gear noti-icon"></i>
+                                </a>
+                            </li>
+
+                            <li className="dropdown notification-list">
+                                <a className="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
+                                    aria-expanded="false">
+                                    <span className="account-user-avatar"> 
+                                        <img src="assets/images/users/avatar-1.jpg" alt="user-image" className="rounded-circle"></img>
+                                    </span>
+                                    <span>
+                                        <span className="account-user-name">Dominic Keller</span>
+                                        <span className="account-position">Founder</span>
+                                    </span>
+                                </a>
+                                <div className="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown">
+                                     {/* item*/}
+                                    <div className=" dropdown-header noti-title">
+                                        <h6 className="text-overflow m-0">Welcome !</h6>
+                                    </div>
+
+                                     {/* item*/}
+                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                        <i className="mdi mdi-account-circle me-1"></i>
+                                        <span>My Account</span>
+                                    </a>
+
+                                     {/* item*/}
+                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                        <i className="mdi mdi-account-edit me-1"></i>
+                                        <span>Settings</span>
+                                    </a>
+
+                                     {/* item*/}
+                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                        <i className="mdi mdi-lifebuoy me-1"></i>
+                                        <span>Support</span>
+                                    </a>
+
+                                     {/* item*/}
+                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                        <i className="mdi mdi-lock-outline me-1"></i>
+                                        <span>Lock Screen</span>
+                                    </a>
+
+                                     {/* item*/}
+                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                        <i className="mdi mdi-logout me-1"></i>
+                                        <span>Logout</span>
+                                    </a>
+                                </div>
+                            </li>
+
+                        </ul>
+                        <button className="button-menu-mobile open-left">
+                            <i className="mdi mdi-menu"></i>
+                        </button>
+                        <div className="app-search dropdown d-none d-lg-block">
+                            <form>
+                                <div className="input-group">
+                                    <input type="text" className="form-control dropdown-toggle"  placeholder="Search..." id="top-search"></input>
+                                    <span className="mdi mdi-magnify search-icon"></span>
+                                    <button className="input-group-text btn-primary" type="submit">Search</button>
+                                </div>
+                            </form>
+
+                            <div className="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
+                                 {/* item*/}
+                                <div className="dropdown-header noti-title">
+                                    <h5 className="text-overflow mb-2">Found <span className="text-danger">17</span> results</h5>
+                                </div>
+
+                                 {/* item*/}
+                                <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                    <i className="uil-notes font-16 me-1"></i>
+                                    <span>Analytics Report</span>
+                                </a>
+
+                                 {/* item*/}
+                                <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                    <i className="uil-life-ring font-16 me-1"></i>
+                                    <span>How can I help you?</span>
+                                </a>
+
+                                 {/* item*/}
+                                <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                    <i className="uil-cog font-16 me-1"></i>
+                                    <span>User profile settings</span>
+                                </a>
+
+                                 {/* item*/}
+                                <div className="dropdown-header noti-title">
+                                    <h6 className="text-overflow mb-2 text-uppercase">Users</h6>
+                                </div>
+
+                                <div className="notification-list">
+                                     {/* item*/}
+                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                        <div className="d-flex">
+                                            <img className="d-flex me-2 rounded-circle" src="assets/images/users/avatar-2.jpg" alt="Generic placeholder image" height="32"></img>
+                                            <div className="w-100">
+                                                <h5 className="m-0 font-14">Erwin Brown</h5>
+                                                <span className="font-12 mb-0">UI Designer</span>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                     {/* item*/}
+                                    <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                        <div className="d-flex">
+                                            <img className="d-flex me-2 rounded-circle" src="assets/images/users/avatar-5.jpg" alt="Generic placeholder image" height="32"></img>
+                                            <div className="w-100">
+                                                <h5 className="m-0 font-14">Jacob Deo</h5>
+                                                <span className="font-12 mb-0">Developer</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     {/* end Topbar */}
         </div>
     );
 };
