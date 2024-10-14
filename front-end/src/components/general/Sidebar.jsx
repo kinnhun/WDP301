@@ -24,7 +24,7 @@ const Sidebar = () => {
                                         Charles Hall
                                     </a>
                                     <div className="dropdown-menu dropdown-menu-start">
-                                        <a className="dropdown-item" href="pages-profile.html"><i className="align-middle me-1" data-feather="user"></i> Profile</a>
+                                        <a className="dropdown-item" href="/profile"><i className="align-middle me-1" data-feather="user"></i> Profile</a>
                                         <a className="dropdown-item" href="#"><i className="align-middle me-1" data-feather="pie-chart"></i> Analytics</a>
                                         <div className="dropdown-divider"></div>
                                         <a className="dropdown-item" href="pages-settings.html"><i className="align-middle me-1" data-feather="settings"></i> Settings &
@@ -101,7 +101,7 @@ const Sidebar = () => {
 
                            
                             <li className="sidebar-item">
-                                <a className="sidebar-link" href="pages-profile.html">
+                                <a className="sidebar-link" href="/profile">
                                     <i className="align-middle" data-feather="user"></i> <span className="align-middle">Profile</span>
                                 </a>
                             </li>
