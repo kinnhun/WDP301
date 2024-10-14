@@ -8,25 +8,26 @@ const Sidebar = () => {
             <div className="leftside-menu" >
 
 
-                {/* <!-- LOGO --> */}
-                <a href="home" className="logo text-center logo-light">
-                    <span className="logo-lg">
-                        <img src={`${baseUrl}/assets/images/logo.png`} alt="Logo Light" height="16" />
-                    </span>
-                    <span className="logo-sm">
-                        <img src={`${baseUrl}/assets/images/logo_sm.png`} alt="Logo Light Small" height="16" />
-                    </span>
-                </a>
+               {/* <!-- LOGO --> */}
+<a href={`${baseUrl}/home`} className="logo text-center logo-light">
+    <span className="logo-lg">
+        <img src={`${baseUrl}/assets/images/logo.png`} alt="Logo Light" height="16" />
+    </span>
+    <span className="logo-sm">
+        <img src={`${baseUrl}/assets/images/logo_sm.png`} alt="Logo Light Small" height="16" />
+    </span>
+</a>
 
-                {/* <!-- LOGO --> */}
-                <a href="home" className="logo text-center logo-dark">
-                    <span className="logo-lg">
-                        <img src={`${baseUrl}/assets/images/logo-dark.png`} alt="Logo Dark" height="16" />
-                    </span>
-                    <span className="logo-sm">
-                        <img src={`${baseUrl}/assets/images/logo_sm_dark.png`} alt="Logo Dark Small" height="16" />
-                    </span>
-                </a>
+{/* <!-- LOGO --> */}
+<a href={`${baseUrl}/home`} className="logo text-center logo-dark">
+    <span className="logo-lg">
+        <img src={`${baseUrl}/assets/images/logo-dark.png`} alt="Logo Dark" height="16" />
+    </span>
+    <span className="logo-sm">
+        <img src={`${baseUrl}/assets/images/logo_sm_dark.png`} alt="Logo Dark Small" height="16" />
+    </span>
+</a>
+
 
 
                 <div className="h-100" id="leftside-menu-container" data-simplebar>
