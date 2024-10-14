@@ -1,62 +1,22 @@
 const Header = () => {
+    const baseUrl = import.meta.env.VITE_PUBLIC_URL; 
+
     return (
         <div>
-          <nav className="navbar navbar-expand navbar-light navbar-bg">
-				<a className="sidebar-toggle js-sidebar-toggle">
-					<i className="hamburger align-self-center"></i>
-				</a>
-
-				<form className="d-none d-sm-inline-block">
-					<div className="input-group input-group-navbar">
-						<input type="text" className="form-control" placeholder="Search…" aria-label="Search"></input>
-						<button className="btn" type="button">
-							<i className="align-middle" data-feather="search"></i>
-						</button>
-					</div>
-				</form>
-
-				<ul className="navbar-nav d-none d-lg-flex">
-					<li className="nav-item px-2 dropdown">
-						<a className="nav-link dropdown-toggle" href="#" id="megaDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
-							aria-expanded="false">
-							Mega Menu
-						</a>
-						<div className="dropdown-menu dropdown-menu-start dropdown-mega" aria-labelledby="megaDropdown">
-							<div className="d-md-flex align-items-start justify-content-start">
-								<div className="dropdown-mega-list">
-									<div className="dropdown-header">UI Elements</div>
-									<a className="dropdown-item" href="#">Alerts</a>
-									<a className="dropdown-item" href="#">Buttons</a>
-									<a className="dropdown-item" href="#">Cards</a>
-									<a className="dropdown-item" href="#">Carousel</a>
-									<a className="dropdown-item" href="#">General</a>
-									<a className="dropdown-item" href="#">Grid</a>
-									<a className="dropdown-item" href="#">Modals</a>
-									<a className="dropdown-item" href="#">Tabs</a>
-									<a className="dropdown-item" href="#">Typography</a>
-								</div>
-								<div className="dropdown-mega-list">
-									<div className="dropdown-header">Forms</div>
-									<a className="dropdown-item" href="#">Layouts</a>
-									<a className="dropdown-item" href="#">Basic Inputs</a>
-									<a className="dropdown-item" href="#">Input Groups</a>
-									<a className="dropdown-item" href="#">Advanced Inputs</a>
-									<a className="dropdown-item" href="#">Editors</a>
-									<a className="dropdown-item" href="#">Validation</a>
-									<a className="dropdown-item" href="#">Wizard</a>
-								</div>
-								<div className="dropdown-mega-list">
-									<div className="dropdown-header">Tables</div>
-									<a className="dropdown-item" href="#">Basic Tables</a>
-									<a className="dropdown-item" href="#">Responsive Table</a>
-									<a className="dropdown-item" href="#">Table with Buttons</a>
-									<a className="dropdown-item" href="#">Column Search</a>
-									<a className="dropdown-item" href="#">Muulti Selection</a>
-									<a className="dropdown-item" href="#">Ajax Sourced Data</a>
-								</div>
-							</div>
-						</div>
-					</li>
+            {/* Topbar Start */}
+            <div className="navbar-custom">
+                <ul className="list-unstyled topbar-menu float-end mb-0">
+                    {/* Search Bar for Mobile */}
+                    <li className="dropdown notification-list d-lg-none">
+                        <a className="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                            <i className="dripicons-search noti-icon"></i>
+                        </a>
+                        <div className="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
+                            <form className="p-3">
+                                <input type="text" className="form-control" placeholder="Search ..." aria-label="Search"></input>
+                            </form>
+                        </div>
+                    </li>
 
 					<li className="nav-item dropdown">
 						<a className="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -243,7 +203,7 @@ const Header = () => {
 								<img src="img/avatars/avatar.jpg" className="avatar img-fluid rounded" alt="Charles Hall" />
 							</a>
 							<div className="dropdown-menu dropdown-menu-end">
-								<a className="dropdown-item" href="/profile"><i className="align-middle me-1" data-feather="user"></i> Profile</a>
+								<a className="dropdown-item" href="pages-profile.html"><i className="align-middle me-1" data-feather="user"></i> Profile</a>
 								<a className="dropdown-item" href="#"><i className="align-middle me-1" data-feather="pie-chart"></i> Analytics</a>
 								<div className="dropdown-divider"></div>
 								<a className="dropdown-item" href="pages-settings.html"><i className="align-middle me-1" data-feather="settings"></i> Settings &
