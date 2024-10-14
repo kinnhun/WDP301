@@ -6,21 +6,28 @@ import Home from "../pages/home/Home";
 import Login from "../pages/Login/Login";
 import Verify from "../pages/Login/Verify";
 import UserList from "../pages/Manager/ManageUser/UserList";
+
 import News from "../pages/news/news";
 import PaymentHistory from "../pages/paymentHistory/PaymentHistory";
 import Profile from "../pages/profile/Profile";
 import Requests from "../pages/requests/Requests";
 import ResidentHistories from "../pages/residentHistories/ResidentHistories";
 
-const PublicRouter = () => {
+
+import ResidentHistories from "../pages/residentHistories/ResidentHistories";
+import OTPPage from "../pages/Login/Verify";
+import UserList from "../pages/Manager/ManageUser/UserList";
+const publicRouter = () => {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/verify" element={<Verify />} />
+      <Route path="/verify" element={<OTPPage />} />
 
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/manager/manage-user" element={<UserList />} />
+        <Route path="/student/request" element={<Requests />} />
         <Route path="/home" element={<Home />} />
         {/* <Route path="/home" element={<Home />} /> */}
         <Route path="/news" element={<News></News>} />
@@ -35,4 +42,4 @@ const PublicRouter = () => {
   );
 };
 
-export default PublicRouter;
+export default publicRouter;
