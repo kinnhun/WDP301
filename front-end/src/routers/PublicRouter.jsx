@@ -29,7 +29,7 @@ const publicRouter = () => {
         <Route path="/Bookings" element={<Bookings />} />
         <Route path="/EWUsage" element={<EWUsage />} />
         <Route path="/PaymentHistory" element={<PaymentHistory />} />
-        <Route path="/Requests" element={<Requests />} />
+        <Route path="/student/Requests" element={<Requests />} />
       </Route>
     </Routes>
   );
