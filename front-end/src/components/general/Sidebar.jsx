@@ -4,39 +4,60 @@ const Sidebar = () => {
 
     return (
         <div>
-            <div >
-                <nav id="sidebar" className="sidebar js-sidebar">
-                    <div className="sidebar-content js-simplebar">
-                        <a className="sidebar-brand" href="index.html">
-                            <span className="sidebar-brand-text align-middle">
-                                AdminKit
-                                <sup><small className="badge bg-primary text-uppercase">Pro</small></sup>
-                            </span>
+            {/* <!-- ========== Left Sidebar Start ========== --> */}
+            <div className="leftside-menu" >
 
-                        </a>
 
-                        <div className="sidebar-user">
-                            <div className="d-flex justify-content-center">
-                                <div className="flex-shrink-0">
-                                    <img src="img/avatars/avatar.jpg" className="avatar img-fluid rounded me-1" alt="Charles Hall" />
-                                </div>
-                                <div className="flex-grow-1 ps-2">
-                                    <a className="sidebar-user-title dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                        Charles Hall
-                                    </a>
-                                    <div className="dropdown-menu dropdown-menu-start">
-                                        <a className="dropdown-item" href="pages-profile.html"><i className="align-middle me-1" data-feather="user"></i> Profile</a>
-                                        <a className="dropdown-item" href="#"><i className="align-middle me-1" data-feather="pie-chart"></i> Analytics</a>
-                                        <div className="dropdown-divider"></div>
-                                        <a className="dropdown-item" href="pages-settings.html"><i className="align-middle me-1" data-feather="settings"></i> Settings &
-                                            Privacy</a>
-                                        <a className="dropdown-item" href="#"><i className="align-middle me-1" data-feather="help-circle"></i> Help Center</a>
-                                        <div className="dropdown-divider"></div>
-                                        <a className="dropdown-item" href="#">Log out</a>
-                                    </div>
+               {/* <!-- LOGO --> */}
+<a href={`${baseUrl}/home`} className="logo text-center logo-light">
+    <span className="logo-lg">
+        <img src={`${baseUrl}/assets/images/logo.png`} alt="Logo Light" height="16" />
+    </span>
+    <span className="logo-sm">
+        <img src={`${baseUrl}/assets/images/logo_sm.png`} alt="Logo Light Small" height="16" />
+    </span>
+</a>
 
-                                    <div className="sidebar-user-subtitle">Designer</div>
-                                </div>
+{/* <!-- LOGO --> */}
+<a href={`${baseUrl}/home`} className="logo text-center logo-dark">
+    <span className="logo-lg">
+        <img src={`${baseUrl}/assets/images/logo-dark.png`} alt="Logo Dark" height="16" />
+    </span>
+    <span className="logo-sm">
+        <img src={`${baseUrl}/assets/images/logo_sm_dark.png`} alt="Logo Dark Small" height="16" />
+    </span>
+</a>
+
+
+
+                <div className="h-100" id="leftside-menu-container" data-simplebar>
+
+                    {/* <!--- Sidemenu --> */}
+                    <ul className="side-nav" style={{ backgroundColor: '#313A46' }}>
+
+                        <li className="side-nav-title side-nav-item">Navigation</li>
+
+                        <li className="side-nav-item">
+                            <a data-bs-toggle="collapse" href="#sidebarDashboards" aria-expanded="false" aria-controls="sidebarDashboards" className="side-nav-link">
+                                <i className="uil-home-alt"></i>
+                                <span className="badge bg-success float-end">4</span>
+                                <span> Dashboards </span>
+                            </a>
+                            <div className="collapse" id="sidebarDashboards">
+                                <ul className="side-nav-second-level">
+                                    <li>
+                                        <a href="dashboard-analytics.html">Analytics</a>
+                                    </li>
+                                    <li>
+                                        <a href="index.html">Ecommerce</a>
+                                    </li>
+                                    <li>
+                                        <a href="dashboard-projects.html">Projects</a>
+                                    </li>
+                                    <li>
+                                        <a href="dashboard-wallet.html">E-Wallet <span className="badge rounded bg-danger font-10 float-end">New</span></a>
+                                    </li>
+                                </ul>
                             </div>
                         </li>
 
@@ -119,13 +140,54 @@ const Sidebar = () => {
                             </div>
                         </li>
 
+                        <li className="side-nav-item">
+                            <a data-bs-toggle="collapse" href="#sidebarEmail" aria-expanded="false" aria-controls="sidebarEmail" className="side-nav-link">
+                                <i className="uil-envelope"></i>
+                                <span> Email </span>
+                                <span className="menu-arrow"></span>
+                            </a>
+                            <div className="collapse" id="sidebarEmail">
+                                <ul className="side-nav-second-level">
+                                    <li>
+                                        <a href="apps-email-inbox.html">Inbox</a>
+                                    </li>
+                                    <li>
+                                        <a href="apps-email-read.html">Read Email</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
 
-                           
-                            <li className="sidebar-item">
-                                <a className="sidebar-link" href="pages-profile.html">
-                                    <i className="align-middle" data-feather="user"></i> <span className="align-middle">Profile</span>
-                                </a>
-                            </li>
+                        <li className="side-nav-item">
+                            <a data-bs-toggle="collapse" href="#sidebarProjects" aria-expanded="false" aria-controls="sidebarProjects" className="side-nav-link">
+                                <i className="uil-briefcase"></i>
+                                <span> Projects </span>
+                                <span className="menu-arrow"></span>
+                            </a>
+                            <div className="collapse" id="sidebarProjects">
+                                <ul className="side-nav-second-level">
+                                    <li>
+                                        <a href="apps-projects-list.html">List</a>
+                                    </li>
+                                    <li>
+                                        <a href="apps-projects-details.html">Details</a>
+                                    </li>
+                                    <li>
+                                        <a href="apps-projects-gantt.html">Gantt <span className="badge rounded-pill bg-light text-dark font-10 float-end">New</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="apps-projects-add.html">Create Project</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li className="side-nav-item">
+                            <a href="apps-social-feed.html" className="side-nav-link">
+                                <i className="uil-rss"></i>
+                                <span> Social Feed </span>
+                            </a>
+                        </li>
 
                         <li className="side-nav-item">
                             <a data-bs-toggle="collapse" href="#sidebarTasks" aria-expanded="false" aria-controls="sidebarTasks" className="side-nav-link">

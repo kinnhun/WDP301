@@ -7,13 +7,16 @@ import Login from "../pages/login/Login";
 import News from "../pages/news/news";
 import PaymentHistory from "../pages/paymentHistory/PaymentHistory";
 import Requests from "../pages/requests/Requests";
+
 import ResidentHistories from "../pages/residentHistories/ResidentHistories";
+import OTPPage from "../pages/Login/Verify";
+import UserList from "../pages/Manager/ManageUser/UserList";
 const publicRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/verify" element={<Verify />} />
+      <Route path="/verify" element={<OTPPage />} />
 
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/login" />} />
@@ -31,4 +34,4 @@ const publicRouter = () => {
   );
 };
 
-export default PublicRouter;
+export default publicRouter;
