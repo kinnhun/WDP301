@@ -6,12 +6,15 @@ const Requests = () => {
     // Sample request data
     const requestData = [
         {
-            requestType: 'Đăng ký check out',
-            content: 'Check out giường 6 phòng A105R',
+            room_id: 1,
+            user_id: 1,
+            description: 'Check out giường 6 phòng A105R',
+            status: 'Checkout thành công',
+            created_at: '07/08/2023 18:08',
+            updated_at: '07/08/2023 19:00',
+            request_type: 'Đăng ký check out',
             reply: 'DONE',
             semester: 'Summer - 2023',
-            createdDate: '07/08/2023 18:08',
-            status: 'Checkout thành công',
         },
         // Add more request records as needed
     ];
@@ -56,24 +59,30 @@ const Requests = () => {
             <Table striped bordered hover className="mt-3">
                 <thead>
                     <tr>
+                        <th>Room ID</th>
+                        <th>User ID</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Created Date</th>
+                        <th>Updated Date</th>
                         <th>Request Type</th>
-                        <th>Content</th>
                         <th>Reply</th>
                         <th>Semester</th>
-                        <th>Created Date</th>
-                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {requestData.map((request, index) => (
                         <tr key={index}>
-                            <td>{request.requestType}</td>
-                            <td>{request.content}</td>
+                            <td>{request.room_id}</td>
+                            <td>{request.user_id}</td>
+                            <td>{request.description}</td>
+                            <td>{request.status}</td>
+                            <td>{request.created_at}</td>
+                            <td>{request.updated_at}</td>
+                            <td>{request.request_type}</td>
                             <td>{request.reply}</td>
                             <td>{request.semester}</td>
-                            <td>{request.createdDate}</td>
-                            <td>{request.status}</td>
                             <td>
                                 <Button variant="info" className="me-2" onClick={() => handleShowDetail(request)}>Details</Button>
                                 <Button variant="warning" onClick={handleShowRate}>Rate</Button>
@@ -91,12 +100,15 @@ const Requests = () => {
                 <Modal.Body>
                     {selectedRequest && (
                         <>
-                            <p><strong>Request Type:</strong> {selectedRequest.requestType}</p>
-                            <p><strong>Content:</strong> {selectedRequest.content}</p>
+                            <p><strong>Room ID:</strong> {selectedRequest.room_id}</p>
+                            <p><strong>User ID:</strong> {selectedRequest.user_id}</p>
+                            <p><strong>Description:</strong> {selectedRequest.description}</p>
+                            <p><strong>Status:</strong> {selectedRequest.status}</p>
+                            <p><strong>Created Date:</strong> {selectedRequest.created_at}</p>
+                            <p><strong>Updated Date:</strong> {selectedRequest.updated_at}</p>
+                            <p><strong>Request Type:</strong> {selectedRequest.request_type}</p>
                             <p><strong>Reply:</strong> {selectedRequest.reply}</p>
                             <p><strong>Semester:</strong> {selectedRequest.semester}</p>
-                            <p><strong>Created Date:</strong> {selectedRequest.createdDate}</p>
-                            <p><strong>Status:</strong> {selectedRequest.status}</p>
                         </>
                     )}
                 </Modal.Body>
