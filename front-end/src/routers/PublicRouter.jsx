@@ -21,6 +21,7 @@ const publicRouter = () => {
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/manager/manage-user" element={<UserList />} />
+        <Route path="/student/request" element={<Requests />} />
         <Route path="/home" element={<Home />} />
         {/* <Route path="/home" element={<Home />} /> */}
         <Route path="/news" element={<News></News>} />
