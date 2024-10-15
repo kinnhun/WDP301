@@ -42,11 +42,11 @@ const Login = () => {
 
         setIsLoading(false);
         reset();
-        if (user.role === "Student") {
+        if (user.role === 1) {
           navigate("/student");
-        } else if (user.role === "Manager") {
+        } else if (user.role === 2) {
           navigate("/manager");
-        } else if (user.role === "Admin") {
+        } else if (user.role === 4) {
           navigate("/admin");
         } else {
           navigate("/staff");
@@ -102,8 +102,8 @@ const Login = () => {
         }
       } catch (error) {
         setIsLoading(false);
-        toast.error("Đã có lỗi xảy ra trong quá trình đăng nhập với Google");
         console.error("Error during Google login:", error);
+        toast.error("Tài khoản Google chưa được liên kết với hệ thống");
       }
     },
     onError: () => {
