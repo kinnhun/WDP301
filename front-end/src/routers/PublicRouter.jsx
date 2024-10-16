@@ -4,12 +4,12 @@ import Bookings from "../pages/bookings/Bookings";
 import EWUsage from "../pages/EWUsage/EWUsage";
 import Home from "../pages/home/Home";
 import Login from "../pages/Login/Login";
-import UserList from "../pages/Manager/ManageUser/UserList";
-import News from "../pages/news/news";
-import PaymentHistory from "../pages/paymentHistory/PaymentHistory";
-import Requests from "../pages/requests/Requests";
-import ResidentHistories from "../pages/residentHistories/ResidentHistories";
 import Verify from "../pages/Login/Verify";
+import UserList from "../pages/Manager/ManageUser/UserList";
+import News from "../pages/pageStudent/news/news";
+import PaymentHistory from "../pages/pageStudent/paymentHistory/PaymentHistory";
+import Requests from "../pages/pageStudent/requests/Requests";
+import ResidentHistories from "../pages/pageStudent/residentHistories/ResidentHistories";
 
 const PublicRouter = () => {
   return (

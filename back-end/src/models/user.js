@@ -10,7 +10,7 @@ module.exports = {
       ,[email]
       ,[status]
       ,[role_id]
-    FROM [wdp2].[dbo].[Users]
+    FROM [dbo].[Users]
     WHERE email LIKE ${email}
     `;
   },
