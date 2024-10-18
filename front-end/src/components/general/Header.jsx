@@ -137,7 +137,7 @@ const Header = () => {
                             <div className="dropdown-header noti-title">
                                 <h6 className="text-overflow m-0">Welcome !</h6>
                             </div>
-                            <a href="javascript:void(0);" className="dropdown-item notify-item">
+                            <a href="/profile/account" className="dropdown-item notify-item">
                                 <i className="mdi mdi-account-circle me-1"></i>
                                 <span>My Account</span>
                             </a>
