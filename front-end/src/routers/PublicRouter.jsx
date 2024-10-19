@@ -17,6 +17,7 @@ import ResidentHistories from "../pages/residentHistories/ResidentHistories";
 
 import OTPPage from "../pages/Login/Verify";
 import Profile from "../pages/profile/profile";
+import NewsDetail from "../pages/news/newDetails";
 
 
 const publicRouter = () => {
@@ -33,6 +34,8 @@ const publicRouter = () => {
         <Route path="/home" element={<Home />} />
         {/* <Route path="/home" element={<Home />} /> */}
         <Route path="/news" element={<News></News>} />
+
+        <Route path="/news/view/:id" element={<NewsDetail></NewsDetail>} />
         <Route path="/ResidentHistories" element={<ResidentHistories></ResidentHistories>} />
         <Route path="/Bookings" element={<Bookings />} />
         <Route path="/EWUsage" element={<EWUsage />} />
