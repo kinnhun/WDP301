@@ -14,7 +14,7 @@ const Profile = () => {
 
     useEffect(() => {
         if (token) {
-            // Giải mã token để lấy userId
+            
             const payload = token.split('.')[1];
             const decodedPayload = JSON.parse(atob(payload));
             const userId = decodedPayload.id;
