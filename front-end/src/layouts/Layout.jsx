@@ -36,7 +36,7 @@ const Layout = () => {
 
   return (
     <div>
- <div className="backdrop-custom"></div>
+
    
     <div className="loading" data-layout-color="light" data-leftbar-theme="dark" data-layout-mode="fluid" data-rightbar-onstart="true">
    

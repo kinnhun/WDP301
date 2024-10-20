@@ -1,11 +1,11 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "../layouts/Layout";
-import Bookings from "../pages/bookings/Bookings";
-import EWUsage from "../pages/EWUsage/EWUsage";
-import Home from "../pages/home/Home";
 import Login from "../pages/Login/Login";
 import Verify from "../pages/Login/Verify";
 import UserList from "../pages/Manager/ManageUser/UserList";
+import Bookings from "../pages/pageStudent/bookings/Bookings";
+import EWUsage from "../pages/pageStudent/EWUsage/EWUsage";
+import Home from "../pages/pageStudent/home/Home";
 import News from "../pages/pageStudent/news/news";
 import PaymentHistory from "../pages/pageStudent/paymentHistory/PaymentHistory";
 import Requests from "../pages/pageStudent/requests/Requests";
