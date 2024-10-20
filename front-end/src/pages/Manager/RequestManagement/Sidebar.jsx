@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { sortByStatus } from "../../stores/slices/requestSlice";
+import { sortByStatus } from "../../../stores/slices/requestSlice";
 
 function Sidebar() {
   const dispatch = useDispatch();

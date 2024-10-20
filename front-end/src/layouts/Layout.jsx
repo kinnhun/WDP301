@@ -4,8 +4,6 @@ import Swal from "sweetalert2";
 import Header from "../components/general/Header";
 import Sidebar from "../components/general/Sidebar";
 
-import { Outlet } from "react-router-dom";
-
 const Layout = () => {
   const navigate = useNavigate();
 

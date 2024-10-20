@@ -4,16 +4,18 @@ import Login from "../pages/Login/Login";
 
 import UserList from "../pages/Manager/ManageUser/UserList";
 
-import News from "../pages/news/news";
-import PaymentHistory from "../pages/paymentHistory/PaymentHistory";
+import News from "../pages/Student/news/news";
+import PaymentHistory from "../pages/Student/paymentHistory/PaymentHistory";
 
-import Requests from "../pages/requests/Requests";
-import ResidentHistories from "../pages/residentHistories/ResidentHistories";
-import RequestManagement from "../pages/RequestManagement/RequestManagement";
-
+import Requests from "../pages/Student/requests/Requests";
+import ResidentHistories from "../pages/Student/residentHistories/ResidentHistories";
+import RequestManagement from "../pages/Manager/RequestManagement/RequestManagement";
+import Home from "../pages/Student/home/Home";
 import OTPPage from "../pages/Login/Verify";
 import Profile from "../pages/profile/profile";
-import NewsDetail from "../pages/news/newDetails";
+import NewsDetail from "../pages/Student/news/newDetails";
+import Bookings from "../pages/Student/bookings/Bookings";
+import EWUsage from "../pages/Student/ewUsage/EWUsage";
 
 const publicRouter = () => {
   return (
