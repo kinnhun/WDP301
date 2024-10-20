@@ -12,13 +12,11 @@ import PaymentHistory from "../pages/paymentHistory/PaymentHistory";
 
 import Requests from "../pages/requests/Requests";
 import ResidentHistories from "../pages/residentHistories/ResidentHistories";
-
-
+import RequestManagement from "../pages/RequestManagement/RequestManagement";
 
 import OTPPage from "../pages/Login/Verify";
 import Profile from "../pages/profile/profile";
 import NewsDetail from "../pages/news/newDetails";
-
 
 const publicRouter = () => {
   return (
@@ -30,11 +28,11 @@ const publicRouter = () => {
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/manager/manage-user" element={<UserList />} />
+        <Route path="/manager/requests" element={<RequestManagement />} />
         <Route path="/student/request" element={<Requests />} />
         <Route path="/home" element={<Home />} />
         {/* <Route path="/home" element={<Home />} /> */}
         <Route path="/news" element={<News></News>} />
-
         <Route path="/news/view/:id" element={<NewsDetail></NewsDetail>} />
         <Route path="/ResidentHistories" element={<ResidentHistories></ResidentHistories>} />
         <Route path="/Bookings" element={<Bookings />} />
