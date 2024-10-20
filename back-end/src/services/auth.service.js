@@ -62,7 +62,9 @@ const login = async (email, password) => {
 
 const loginWithGoogle = async (email) => {
   try {
+    
     const user = await User.getUserByEmail(email);
+    console.log(user)
     if (user.recordset.length === 0) {
       const error = new Error("User not found");
       error.status = 404;

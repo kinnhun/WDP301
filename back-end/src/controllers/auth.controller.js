@@ -28,7 +28,8 @@ const login = async (req, res) => {
 const loginWithGoogle = async (req, res) => {
   try {
     const { email } = req.body;
-    if (!email) {
+      if (!email) {
+
       const error = new Error("Email are required");
       error.status = 401;
       throw error;
