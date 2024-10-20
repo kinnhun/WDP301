@@ -7,7 +7,6 @@ const News = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 3;
 
-  
     const fetchNewsArticles = async () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/news`, {
@@ -15,7 +14,10 @@ const News = () => {
                     'Cache-Control': 'no-cache'
                 }
             });
-            setNewsArticles(response.data);
+
+            // Sort articles by created_at in descending order (most recent first)
+            const sortedArticles = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            setNewsArticles(sortedArticles);
         } catch (error) {
             console.error('Error fetching news articles:', error);
         }
@@ -24,6 +26,12 @@ const News = () => {
     useEffect(() => {
         fetchNewsArticles(); // Call the fetch function on component mount
     }, []);
+
+    // Helper function to truncate content to 50 words
+    const truncateContent = (content, wordLimit) => {
+        const words = content.split(' ');
+        return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : content;
+    };
 
     // Calculate the number of pages
     const totalPages = Math.ceil(newsArticles.length / itemsPerPage);
@@ -119,9 +127,14 @@ const News = () => {
                     <div className="col-md-4 mb-4" key={article.post_id}>
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title">{article.title}</h5>
-                                <p className="card-text">{article.content}</p>
-                                <p className="card-text"><small className="text-muted">{article.date}</small></p>
+                            <h5 className="card-title" style={{ color: '#004175' }}>{truncateContent(article.title, 14)}</h5>
+                                <p>
+                                    <small className="text-muted">
+                                        {new Date(article.created_at).toLocaleDateString("en-GB")}
+                                    </small>
+                                </p>
+                                {/* Truncate the content to 50 words */}
+                                <p className="card-text">{truncateContent(article.content, 7)}</p>
                                 <Link to={`/news/view/${article.post_id}`} className="btn btn-primary">Read More</Link>
                             </div>
                         </div>
