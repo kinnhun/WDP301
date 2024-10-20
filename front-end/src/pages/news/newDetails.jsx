@@ -28,12 +28,13 @@ const NewsDetail = () => {
     return (
         <div className="container mt-4">
             <h4>{article.post_type}</h4>
+            <h3 className="card-title" style={{ color: '#004175' }}>{article.title}</h3>
             <p>
     <small className="text-muted">
         {new Date(article.created_at).toLocaleDateString("en-GB")}
     </small>
 </p>
-            <h1>{article.title}</h1>
+
             
             <p>{article.content}</p>
           

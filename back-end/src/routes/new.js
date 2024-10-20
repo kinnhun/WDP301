@@ -9,12 +9,12 @@ Newrouter.get('/', postController.getAllPosts);
 Newrouter.get('/view/:id', postController.getPostById);
 
 // Tạo mới bài viết (chỉ admin và manager)
-Newrouter.post('/cr',  postController.createPost);
+Newrouter.post('/admin/cr',  postController.createPost);
 
 // Cập nhật bài viết (chỉ admin và manager)
-Newrouter.put('/up/:id', postController.updatePost);
+Newrouter.put('/admin/up/:id', postController.updatePost);
 
 // Xóa bài viết (chỉ admin)
-Newrouter.delete('/de/:id',  postController.deletePost);
+Newrouter.delete('/admin/de/:id',  postController.deletePost);
 
 module.exports = Newrouter;
