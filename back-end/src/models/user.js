@@ -10,7 +10,7 @@ module.exports = {
       ,[email]
       ,[status]
       ,[role_id]
-    FROM [wdp2].[dbo].[Users]
+    FROM [dbo].[Users]
     WHERE email LIKE ${email}
     `;
   },
@@ -50,10 +50,11 @@ module.exports = {
       ,[Users].[email]
       ,[Users].[status]
       ,[Users].[role_id]
+      ,[OTP_Temp].[otp_code] as otp
     FROM [dbo].[Users]
     JOIN [dbo].[OTP_Temp]
     ON [Users].[user_id] = [OTP_Temp].[user_id]
-    WHERE [user_id] = ${userId}
+    WHERE [Users].[user_id] = ${userId}
     `;
   },
 };

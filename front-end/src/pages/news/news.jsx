@@ -1,28 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Make sure to import Link
+import axios from "axios"; // Import axios or use fetch
 
 const News = () => {
-    // Sample data for news articles
-    const newsArticles = [
-        { id: 1, title: "Breaking News 1", content: "This is a brief description of breaking news 1.", date: "2024-10-01" },
-        { id: 2, title: "Breaking News 2", content: "This is a brief description of breaking news 2.", date: "2024-10-02" },
-        { id: 3, title: "Breaking News 3", content: "This is a brief description of breaking news 3.", date: "2024-10-03" },
-        { id: 4, title: "Breaking News 4", content: "This is a brief description of breaking news 4.", date: "2024-10-04" },
-        { id: 5, title: "Breaking News 5", content: "This is a brief description of breaking news 5.", date: "2024-10-05" },
-        { id: 6, title: "Breaking News 6", content: "This is a brief description of breaking news 6.", date: "2024-10-06" },
-        { id: 7, title: "Breaking News 7", content: "This is a brief description of breaking news 7.", date: "2024-10-07" },
-        { id: 8, title: "Breaking News 8", content: "This is a brief description of breaking news 8.", date: "2024-10-08" },
-        { id: 9, title: "Breaking News 9", content: "This is a brief description of breaking news 9.", date: "2024-10-09" },
-        { id: 10, title: "Breaking News 10", content: "This is a brief description of breaking news 10.", date: "2024-10-10" },
-    ];
-
-    const itemsPerPage = 3; // Number of articles to display per page
+    const [newsArticles, setNewsArticles] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 3;
+
+    const fetchNewsArticles = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/news`, {
+                headers: {
+                    'Cache-Control': 'no-cache'
+                }
+            });
+
+            // Sort articles by created_at in descending order (most recent first)
+            const sortedArticles = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            setNewsArticles(sortedArticles);
+        } catch (error) {
+            console.error('Error fetching news articles:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchNewsArticles(); // Call the fetch function on component mount
+    }, []);
+
+    // Helper function to truncate content to 50 words
+    const truncateContent = (content, wordLimit) => {
+        const words = content.split(' ');
+        return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : content;
+    };
 
     // Calculate the number of pages
     const totalPages = Math.ceil(newsArticles.length / itemsPerPage);
-
-    // Get current articles based on the page
     const indexOfLastArticle = currentPage * itemsPerPage;
     const indexOfFirstArticle = indexOfLastArticle - itemsPerPage;
     const currentArticles = newsArticles.slice(indexOfFirstArticle, indexOfLastArticle);
@@ -53,7 +65,6 @@ const News = () => {
             </li>
         );
 
-        // Logic for displaying page numbers with ellipses
         let startPage, endPage;
         if (totalPages <= 3) {
             startPage = 1;
@@ -112,15 +123,19 @@ const News = () => {
         <div className="container mt-4">
             <h1>Student News</h1>
             <div className="row">
-                
                 {currentArticles.map(article => (
-                    <div className="col-md-4 mb-4" key={article.id}>
+                    <div className="col-md-4 mb-4" key={article.post_id}>
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title">{article.title}</h5>
-                                <p className="card-text">{article.content}</p>
-                                <p className="card-text"><small className="text-muted">{article.date}</small></p>
-                                <Link to={`/news/${article.id}`} className="btn btn-primary">Read More</Link>
+                            <h5 className="card-title" style={{ color: '#004175' }}>{truncateContent(article.title, 14)}</h5>
+                                <p>
+                                    <small className="text-muted">
+                                        {new Date(article.created_at).toLocaleDateString("en-GB")}
+                                    </small>
+                                </p>
+                                {/* Truncate the content to 50 words */}
+                                <p className="card-text">{truncateContent(article.content, 7)}</p>
+                                <Link to={`/news/view/${article.post_id}`} className="btn btn-primary">Read More</Link>
                             </div>
                         </div>
                     </div>

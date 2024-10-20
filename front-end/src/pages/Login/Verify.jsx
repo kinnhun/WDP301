@@ -1,7 +1,15 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import Spinner from "../../components/Spinner/Spinner";
+import axios from "../../utils/axios";
+import { verifyAccessToken } from "../../utils/jwt";
 
 const OTPPage = () => {
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState();
+  const [seconds, setSeconds] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   // Hàm xử lý khi nhấn nút Clear All
   const handleClearAll = () => {
@@ -9,23 +17,71 @@ const OTPPage = () => {
   };
 
   // Hàm xử lý khi nhấn nút Submit
-  const handleSubmit = () => {
-    if (otp.length === 6) {
-      alert(`OTP Submitted: ${otp}`);
-    } else {
-      alert("Vui lòng nhập đầy đủ mã OTP (6 ký tự)");
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      const token = JSON.parse(localStorage.getItem("token"));
+      const user = verifyAccessToken(token);
+      if (!user) {
+        console.log("User not found");
+        toast.error("User not found");
+      }
+      const data = {
+        id: user.id,
+        email: user.email,
+        otp: otp,
+      };
+      setIsLoading(true);
+      const response = await axios.post("/auth/verify", data);
+      toast.success("Xác thực thành công");
+      if (response.data.success) {
+        const token = response.data.data;
+        localStorage.setItem("token", JSON.stringify(token));
+        setIsLoading(false);
+        navigate("/student");
+        return;
+      }
+    } catch (e) {
+      console.error(e);
+      setIsLoading(false);
+
+      toast.error("Xác thực thất bại");
     }
   };
 
   // Hàm xử lý khi nhấn nút Resend
-  const handleResend = () => {
-    alert("OTP Resent");
+  const handleResend = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem("token"));
+      const user = verifyAccessToken(token);
+      if (!user) {
+        console.error("User not found");
+      }
+      const data = {
+        id: user.id,
+        email: user.email,
+      };
+      const response = await axios.post("/auth/otp", data);
+      if (response.data.success) {
+        setSeconds(10);
+        toast.success("Gửi mã OTP thành công");
+        return;
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error("Gửi mã OTP thất bại");
+    }
   };
 
   // Hàm xử lý khi nhấn nút Back
   const handleBack = () => {
-    alert("Go Back");
+    navigate("/login");
+    localStorage.removeItem("token");
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>

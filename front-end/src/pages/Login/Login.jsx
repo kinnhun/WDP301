@@ -54,6 +54,7 @@ const Login = () => {
       }
     } catch (e) {
       setIsLoading(false);
+      console.log(e);
       if (e.status === 404 || e.status === 401) {
         toast.error("Sai email hoặc mật khẩu");
       } else {
@@ -91,11 +92,11 @@ const Login = () => {
 
         setIsLoading(false);
 
-        if (user.role === "Student") {
+        if (user.role === 1) {
           navigate("/student");
-        } else if (user.role === "Manager") {
+        } else if (user.role === 2) {
           navigate("/manager");
-        } else if (user.role === "Admin") {
+        } else if (user.role === 4) {
           navigate("/admin");
         } else {
           navigate("/staff");
@@ -110,7 +111,7 @@ const Login = () => {
       toast.error("Đăng nhập bằng Google thất bại");
     },
     scope:
-      "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/user.gender.read", // Các scope cần thiết
+      "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
   });
 
   if (isLoading) {
