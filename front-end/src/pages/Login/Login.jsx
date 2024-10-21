@@ -97,7 +97,7 @@ const Login = () => {
         } else if (user.role === 2) {
           navigate("/manager");
         } else if (user.role === 1) {
-          navigate("/admin");
+          navigate("/admin/dashboard");
         } else {
           navigate("/staff");
         }

@@ -7,6 +7,8 @@ import UserList from "../pages/Manager/ManageUser/UserList";
 import News from "../pages/Student/news/news";
 import PaymentHistory from "../pages/Student/paymentHistory/PaymentHistory";
 
+import LayoutAdmin from "../layouts/LayoutAdmin";
+import Dashboard from "../pages/Admin/Dashboard";
 import OTPPage from "../pages/Login/Verify";
 import RequestManagement from "../pages/Manager/RequestManagement/RequestManagement";
 import Profile from "../pages/profile/profile";
@@ -42,6 +44,12 @@ const publicRouter = () => {
         <Route path="/profile/:id" element={<Profile />} />
 
       </Route>
+      <Route element={<LayoutAdmin />}>
+      <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
+      <Route path="/admin/dashboard" element={<Dashboard />} />
+      </Route>
+
+
     </Routes>
   );
 };
