@@ -1,11 +1,11 @@
+import { useGoogleLogin } from "@react-oauth/google";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../../components/Spinner/Spinner";
 import axios from "../../utils/axios";
 import { verifyAccessToken } from "../../utils/jwt";
-import { useState } from "react";
-import Spinner from "../../components/Spinner/Spinner";
-import { useGoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -92,11 +92,11 @@ const Login = () => {
 
         setIsLoading(false);
 
-        if (user.role === 1) {
+        if (user.role === 4) {
           navigate("/student");
         } else if (user.role === 2) {
           navigate("/manager");
-        } else if (user.role === 4) {
+        } else if (user.role === 1) {
           navigate("/admin");
         } else {
           navigate("/staff");

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { verifyAccessToken } from "../utils/jwt";
 import NotFound from "../components/NotFound";
 import Spinner from "../components/Spinner/Spinner";
+import { verifyAccessToken } from "../utils/jwt";
 
 const AuthMiddleware = () => {
   const [isVerified, setIsVerified] = useState(false);
