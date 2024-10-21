@@ -15,7 +15,7 @@ import Bookings from "../pages/Student/bookings/Bookings";
 import EWUsage from "../pages/Student/ewUsage/EWUsage";
 import Home from "../pages/Student/home/Home";
 import NewsDetail from "../pages/Student/news/newDetails";
-import Requests from "../pages/Student/requests/Requests";
+import Requests from "../pages/student/requests/Requests";
 import ResidentHistories from "../pages/Student/residentHistories/ResidentHistories";
 
 const publicRouter = () => {
