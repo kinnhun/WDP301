@@ -1,6 +1,7 @@
 import { Table } from 'react-bootstrap';
-
+import { Link } from 'react-router-dom';
 const bookingsData = [
+    
     {
         dom: 'A',
         floor: 1,
@@ -49,9 +50,18 @@ const bookingsData = [
 ];
 
 const Bookings = () => {
+    const baseUrl = import.meta.env.VITE_PUBLIC_URL;
     return (
+
         <div className="container mt-4">
             <h1>Bookings</h1>
+            <Link to={`${baseUrl}/student/booking/book`} >
+            <button className="btn btn-primary float-right">
+                Add New Booking          
+            
+            </button>
+            </Link>
+           
             <Table striped bordered hover>
                 <thead className="thead-dark">
                     <tr>
