@@ -10,6 +10,7 @@ import PaymentHistory from "../pages/Student/paymentHistory/PaymentHistory";
 import OTPPage from "../pages/Login/Verify";
 import RequestManagement from "../pages/Manager/RequestManagement/RequestManagement";
 import Profile from "../pages/profile/profile";
+import Book from "../pages/Student/bookings/Book";
 import Bookings from "../pages/Student/bookings/Bookings";
 import EWUsage from "../pages/Student/ewUsage/EWUsage";
 import Home from "../pages/Student/home/Home";
@@ -35,9 +36,11 @@ const publicRouter = () => {
         <Route path="/student/news/view/:id" element={<NewsDetail></NewsDetail>} />
         <Route path="/student/residentHistories" element={<ResidentHistories></ResidentHistories>} />
         <Route path="/student/bookings" element={<Bookings />} />
+        <Route path="/student/booking/book" element={<Book />} />
         <Route path="/student/EWUsage" element={<EWUsage />} />
         <Route path="/student/paymentHistory" element={<PaymentHistory />} />
         <Route path="/profile/:id" element={<Profile />} />
+
       </Route>
     </Routes>
   );
