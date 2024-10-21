@@ -1,6 +1,6 @@
+import axios from "axios"; // Import axios or use fetch
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Make sure to import Link
-import axios from "axios"; // Import axios or use fetch
 
 const News = () => {
     const [newsArticles, setNewsArticles] = useState([]);
@@ -135,7 +135,7 @@ const News = () => {
                                 </p>
                                 {/* Truncate the content to 50 words */}
                                 <p className="card-text">{truncateContent(article.content, 7)}</p>
-                                <Link to={`/news/view/${article.post_id}`} className="btn btn-primary">Read More</Link>
+                                <Link to={`/student/news/view/${article.post_id}`} className="btn btn-primary">Read More</Link>
                             </div>
                         </div>
                     </div>

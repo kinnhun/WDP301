@@ -73,46 +73,46 @@ const Sidebar = () => {
             <li className="side-nav-title side-nav-item">Apps</li>
 
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/home`} className="side-nav-link">
+              <Link to={`${baseUrl}/student/home`} className="side-nav-link">
                 <i className="uil-store"></i>
                 <span> Home </span>
               </Link>
             </li>
 
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/news`} className="side-nav-link">
+              <Link to={`${baseUrl}/student/news`} className="side-nav-link">
                 <i className="uil-calender"></i>
                 <span> news </span>
               </Link>
             </li>
 
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/ResidentHistories`} className="side-nav-link">
+              <Link to={`${baseUrl}/student/residentHistories`} className="side-nav-link">
                 <i className="uil-comments-alt"></i>
                 <span> ResidentHistories </span>
               </Link>
             </li>
 
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/Bookings`} className="side-nav-link">
+              <Link to={`${baseUrl}/student/bookings`} className="side-nav-link">
                 <i className="uil-rss"></i>
                 <span> Bookings </span>
               </Link>
             </li>
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/EWUsage`} className="side-nav-link">
+              <Link to={`${baseUrl}/student/EWUsage`} className="side-nav-link">
                 <i className="uil-rss"></i>
                 <span> EWUsage </span>
               </Link>
             </li>
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/PaymentHistory`} className="side-nav-link">
+              <Link to={`${baseUrl}/student/paymentHistory`} className="side-nav-link">
                 <i className="uil-rss"></i>
                 <span> PaymentHistory </span>
               </Link>
             </li>
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/Requests`} className="side-nav-link">
+              <Link to={`${baseUrl}/student/request`} className="side-nav-link">
                 <i className="uil-rss"></i>
                 <span> Requests </span>
               </Link>
