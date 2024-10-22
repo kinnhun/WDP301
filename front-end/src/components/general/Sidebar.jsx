@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
+import "./Sidebar.scss";
 
 const Sidebar = () => {
-  const baseUrl = import.meta.env.VITE_PUBLIC_URL;
+  // const baseUrl = import.meta.env.VITE_PUBLIC_URL;
 
   return (
     <div>
@@ -9,28 +10,14 @@ const Sidebar = () => {
       <div className="leftside-menu">
         {/* <!-- LOGO --> */}
 
-        <Link to={`${baseUrl}/home`} className="logo text-center logo-light">
+        <Link to={`/student/home`} className="logo text-center logo-light">
           <span className="logo-lg">
-            <img src={`${baseUrl}/assets/images/logo.png`} alt="Logo Light" height="16" />
+            <img src={`/assets/images/logo.png`} alt="Logo Light" height="16" />
           </span>
           <span className="logo-sm">
-            <img src={`${baseUrl}/assets/images/logo_sm.png`} alt="Logo Light Small" height="16" />
+            <img src={`/assets/images/logo_sm.png`} alt="Logo Light Small" height="16" />
           </span>
         </Link>
-
-        {/* <!-- LOGO --> */}
-        <a href={`${baseUrl}/home`} className="logo text-center logo-dark">
-          <span className="logo-lg">
-            <img src={`${baseUrl}/assets/images/logo-dark.png`} alt="Logo Dark" height="16" />
-          </span>
-          <span className="logo-sm">
-            <img
-              src={`${baseUrl}/assets/images/logo_sm_dark.png`}
-              alt="Logo Dark Small"
-              height="16"
-            />
-          </span>
-        </a>
 
         <div className="h-100" id="leftside-menu-container" data-simplebar>
           {/* <!--- Sidemenu --> */}
@@ -73,46 +60,46 @@ const Sidebar = () => {
             <li className="side-nav-title side-nav-item">Apps</li>
 
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/student/home`} className="side-nav-link">
+              <Link to={`/student/home`} className="side-nav-link">
                 <i className="uil-store"></i>
                 <span> Home </span>
               </Link>
             </li>
 
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/student/news`} className="side-nav-link">
+              <Link to={`/student/news`} className="side-nav-link">
                 <i className="uil-calender"></i>
                 <span> news </span>
               </Link>
             </li>
 
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/student/residentHistories`} className="side-nav-link">
+              <Link to={`/student/residentHistories`} className="side-nav-link">
                 <i className="uil-comments-alt"></i>
                 <span> ResidentHistories </span>
               </Link>
             </li>
 
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/student/bookings`} className="side-nav-link">
+              <Link to={`/student/bookings`} className="side-nav-link">
                 <i className="uil-rss"></i>
                 <span> Bookings </span>
               </Link>
             </li>
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/student/EWUsage`} className="side-nav-link">
+              <Link to={`/student/EWUsage`} className="side-nav-link">
                 <i className="uil-rss"></i>
                 <span> EWUsage </span>
               </Link>
             </li>
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/student/paymentHistory`} className="side-nav-link">
+              <Link to={`/student/paymentHistory`} className="side-nav-link">
                 <i className="uil-rss"></i>
                 <span> PaymentHistory </span>
               </Link>
             </li>
             <li className="side-nav-item">
-              <Link to={`${baseUrl}/student/request`} className="side-nav-link">
+              <Link to={`/student/requests`} className="side-nav-link">
                 <i className="uil-rss"></i>
                 <span> Requests </span>
               </Link>

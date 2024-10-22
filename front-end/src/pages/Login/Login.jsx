@@ -43,13 +43,13 @@ const Login = () => {
         setIsLoading(false);
         reset();
         if (user.role === 1) {
-          navigate("/student");
+          navigate("/student/home");
         } else if (user.role === 2) {
-          navigate("/manager");
+          navigate("/manager/home");
         } else if (user.role === 4) {
-          navigate("/admin");
+          navigate("/admin/home");
         } else {
-          navigate("/staff");
+          navigate("/staff/home");
         }
       }
     } catch (e) {
