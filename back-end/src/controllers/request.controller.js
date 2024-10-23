@@ -55,6 +55,26 @@ const createRequest = async (req, res) => {
   }
 };
 
+const getRequestByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    console.log(userId);
+    const requests = await RequestService.getRequestByUserId(userId);
+    return successResponse({
+      res,
+      message: "Lấy yêu cầu thành công",
+      data: requests,
+    });
+  } catch (error) {
+    return errorResponse({
+      res,
+      status: 500,
+      message: "Lấy yêu cầu bảo trì thất bại",
+      errors: error.message,
+    });
+  }
+};
+
 // Lấy yêu cầu bảo trì theo ID
 const getRequestById = async (req, res) => {
   try {
@@ -123,4 +143,5 @@ module.exports = {
   getRequestById,
   updateRequest,
   deleteRequest,
+  getRequestByUserId,
 };

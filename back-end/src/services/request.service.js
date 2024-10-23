@@ -31,6 +31,14 @@ module.exports = {
       throw error;
     }
   },
+  getRequestByUserId: async (userId) => {
+    try {
+      const requests = await Request.getRequestByUserId(userId);
+      return requests.recordsets[0];
+    } catch (error) {
+      throw error;
+    }
+  },
   getRequestById: async (id) => {
     try {
       const request = await Request.getRequestById(id);
