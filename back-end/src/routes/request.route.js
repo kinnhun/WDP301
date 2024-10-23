@@ -8,6 +8,9 @@ requestRouter.get("/", RequestController.getAllRequests);
 // Tạo một yêu cầu bảo trì mới
 requestRouter.post("/", RequestController.createRequest);
 
+// Lấy yêu cầu theo id của người dùng
+requestRouter.get("/:userId/user", RequestController.getRequestByUserId);
+
 // Lấy chi tiết một yêu cầu bảo trì theo ID
 requestRouter.get("/:id", RequestController.getRequestById);
 

@@ -1,4 +1,5 @@
 const sql = require("mssql");
+const { getRequestByUserId } = require("../services/request.service");
 
 module.exports = {
   // Lấy tất cả các yêu cầu bảo trì
@@ -36,7 +37,6 @@ module.exports = {
         `;
   },
 
-  // Tạo yêu cầu bảo trì mới
   createRequest: async (
     roomId,
     userId,
@@ -66,7 +66,6 @@ module.exports = {
            ,SYSDATETIME())
         `;
   },
-
   getNewestRequest: async () => {
     return sql.query`
     SELECT TOP 1 [request_id]
@@ -81,6 +80,21 @@ module.exports = {
       FROM [wdp2].[dbo].[Requests]
       ORDER BY [Requests].[request_id] DESC
         `;
+  },
+  getRequestByUserId: async (userId) => {
+    return sql.query`
+    SELECT [request_id]
+      ,[room_id]
+      ,[user_id]
+      ,[request_type]
+      ,[description]
+      ,[reply]
+      ,[status]
+      ,[created_at]
+      ,[updated_at]
+  FROM [wdp2].[dbo].[Requests]
+  WHERE [Requests].[user_id] =${userId}
+    `;
   },
 
   // Cập nhật yêu cầu bảo trì

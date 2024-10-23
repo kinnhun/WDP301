@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Card, Modal, Table, Form } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { FaStar } from "react-icons/fa";
@@ -6,20 +6,20 @@ import axios from "../../../utils/axios";
 import { verifyAccessToken } from "../../../utils/jwt";
 
 const Requests = () => {
-  // Sample request data
-  const requestData = [
-    {
-      room_id: 1,
-      description: "Check out giường 6 phòng A105R",
-      status: "Pending",
-      created_at: "07/08/2023 18:08",
-      updated_at: "07/08/2023 19:00",
-      request_type: "Đăng ký check out",
-      reply: "",
-      semester: "Summer - 2023",
-    },
-    // Add more request records as needed
-  ];
+  const [requests, setRequests] = useState([]);
+
+  const toLocaleData = (isoDate) => {
+    const date = new Date(isoDate);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    const hours = String(date.getUTCHours()).padStart(2, "0");
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+    const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+
+    const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+    return formattedDate;
+  };
 
   // State for modal visibility and selected request
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -78,6 +78,23 @@ const Requests = () => {
     setShowCreateModal(false);
   };
 
+  const getRequests = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem("token"));
+      const userId = verifyAccessToken(token).id;
+      const response = await axios.get(`/requests/${userId}/user`);
+      if (response.status === 200) {
+        setRequests(response.data.data);
+      }
+    } catch (error) {
+      toast.error("Get requests failed");
+    }
+  };
+
+  useEffect(() => {
+    getRequests();
+  }, []);
+
   return (
     <div className="container mt-4">
       <h1>My Requests</h1>
@@ -105,15 +122,15 @@ const Requests = () => {
           </tr>
         </thead>
         <tbody>
-          {requestData.map((request, index) => (
+          {requests.map((request, index) => (
             <tr key={index}>
               <td>{request.room_id}</td>
               <td>{request.description}</td>
               <td>{request.status}</td>
               <td>{request.request_type}</td>
               <td>{request.reply}</td>
-              <td>{request.created_at}</td>
-              <td>{request.updated_at}</td>
+              <td>{toLocaleData(request.created_at)}</td>
+              <td>{toLocaleData(request.updated_at)}</td>
               <td>
                 <Button variant="info" className="me-2" onClick={() => handleShowDetail(request)}>
                   Details
@@ -148,10 +165,10 @@ const Requests = () => {
                 <strong>Status:</strong> {selectedRequest.status}
               </p>
               <p>
-                <strong>Created Date:</strong> {selectedRequest.created_at}
+                <strong>Created Date:</strong> {toLocaleData(selectedRequest.created_at)}
               </p>
               <p>
-                <strong>Updated Date:</strong> {selectedRequest.updated_at}
+                <strong>Updated Date:</strong> {toLocaleData(selectedRequest.updated_at)}
               </p>
               <p>
                 <strong>Request Type:</strong> {selectedRequest.request_type}
