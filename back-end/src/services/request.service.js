@@ -1,4 +1,3 @@
-const { getAllRequests, getRequestById } = require("../controllers/request.controller.js");
 const Request = require("../models/request.js"); // Mô hình cho yêu cầu bảo trì
 
 module.exports = {
@@ -7,7 +6,7 @@ module.exports = {
       const requests = await Request.getAllRequests();
       return requests.recordsets[0];
     } catch (error) {
-      throw new Error();
+      throw error;
     }
   },
 
@@ -39,6 +38,15 @@ module.exports = {
       throw error;
     }
   },
+  getRequestTypes: async () => {
+    try {
+      const requestTypes = await Request.getRequestTypes();
+      return requestTypes.recordsets[0];
+    } catch (error) {
+      throw error;
+    }
+  },
+
   getRequestById: async (id) => {
     try {
       const request = await Request.getRequestById(id);

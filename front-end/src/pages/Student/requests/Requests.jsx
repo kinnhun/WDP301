@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { FaStar } from "react-icons/fa";
 import axios from "../../../utils/axios";
 import { verifyAccessToken } from "../../../utils/jwt";
+import Spinner from "../../../components/Spinner/Spinner";
 
 const Requests = () => {
   const [requests, setRequests] = useState([]);
@@ -24,11 +25,13 @@ const Requests = () => {
   // State for modal visibility and selected request
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showRateModal, setShowRateModal] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false); // New state for Create modal
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [rating, setRating] = useState(0);
-  const [newRequestTitle, setNewRequestTitle] = useState(""); // State for selected title
-  const [newRequestContent, setNewRequestContent] = useState(""); // State for content
+  const [newRequestTitle, setNewRequestTitle] = useState("");
+  const [newRequestContent, setNewRequestContent] = useState("");
+  const [requestTypes, setRequestTypes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Handlers for showing modals
   const handleShowDetail = (request) => {
@@ -60,6 +63,10 @@ const Requests = () => {
 
   const handleSubmitNewRequest = async () => {
     try {
+      if (newRequestTitle === "" || newRequestContent === "") {
+        toast.error("Please fill in all fields");
+        return;
+      }
       const token = JSON.parse(localStorage.getItem("token"));
       const userId = verifyAccessToken(token).id;
       const response = await axios.post("/requests", {
@@ -68,32 +75,51 @@ const Requests = () => {
         request_type: newRequestTitle,
         description: newRequestContent,
       });
-      console.log(response);
+      if (response.status === 201) {
+        toast.success("Create request successfully");
+        handleClose();
+        getRequests();
+      }
     } catch (error) {
       toast.error("Create request failed");
-    } finally {
-      setNewRequestTitle("");
-      setNewRequestContent("");
     }
-    setShowCreateModal(false);
   };
 
   const getRequests = async () => {
     try {
       const token = JSON.parse(localStorage.getItem("token"));
       const userId = verifyAccessToken(token).id;
+      setIsLoading(true);
       const response = await axios.get(`/requests/${userId}/user`);
       if (response.status === 200) {
         setRequests(response.data.data);
+        setIsLoading(false);
       }
     } catch (error) {
       toast.error("Get requests failed");
+      setIsLoading(false);
+    }
+  };
+
+  const getRequestTypes = async () => {
+    try {
+      const response = await axios.get(`/requests/types`);
+      if (response.status === 200) {
+        setRequestTypes(response.data.data);
+      }
+    } catch (error) {
+      toast.error("Get request types failed");
     }
   };
 
   useEffect(() => {
     getRequests();
+    getRequestTypes();
   }, []);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="container mt-4">
@@ -104,7 +130,7 @@ const Requests = () => {
 
       <Card>
         <Card.Body>
-          <Card.Title>Your Processing CIM Request: 0</Card.Title>
+          <Card.Title>Your Processing CIM Request: {requests.length}</Card.Title>
         </Card.Body>
       </Card>
 
@@ -232,11 +258,14 @@ const Requests = () => {
                 value={newRequestTitle}
                 onChange={(e) => setNewRequestTitle(e.target.value)}
               >
-                <option value="">Choose...</option>
-                <option value="Maintenance">Maintenance</option>
-                <option value="Checkout">Checkout</option>
-                <option value="RoomChange">Room Change</option>
-                <option value="Other">Other</option>
+                <option value="" selected hidden>
+                  Choose...
+                </option>
+                {requestTypes.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.type_name}
+                  </option>
+                ))}
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="formRequestContent" className="mt-3">

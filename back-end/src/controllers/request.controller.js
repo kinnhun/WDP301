@@ -4,8 +4,7 @@ const { successResponse, errorResponse } = require("../utils/response.js");
 // Lấy tất cả yêu cầu bảo trì
 const getAllRequests = async (req, res) => {
   try {
-    const result = await RequestService.getAllRequests(); // Gọi đúng hàm getAllRequests từ model
-    const requests = result.recordset; // Truy xuất dữ liệu từ kết quả truy vấn SQL
+    const requests = await RequestService.getAllRequests(); // Gọi đúng hàm getAllRequests từ model
     return successResponse({
       res,
       message: "Lấy yêu cầu bảo trì thành công",
@@ -25,7 +24,6 @@ const getAllRequests = async (req, res) => {
 const createRequest = async (req, res) => {
   try {
     const { room_id, user_id, description, request_type } = req.body;
-    // console.log(room_id, user_id, description, request_type);
     if (!room_id || !user_id || !description || !request_type) {
       return errorResponse({
         res,
@@ -42,6 +40,7 @@ const createRequest = async (req, res) => {
 
     return successResponse({
       res,
+      status: 201,
       message: "Create request successfully",
       data: newRequest,
     });
@@ -58,7 +57,7 @@ const createRequest = async (req, res) => {
 const getRequestByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log(userId);
+    // console.log(userId);
     const requests = await RequestService.getRequestByUserId(userId);
     return successResponse({
       res,
@@ -70,6 +69,24 @@ const getRequestByUserId = async (req, res) => {
       res,
       status: 500,
       message: "Lấy yêu cầu bảo trì thất bại",
+      errors: error.message,
+    });
+  }
+};
+
+const getRequestTypes = async (req, res) => {
+  try {
+    const requestTypes = await RequestService.getRequestTypes();
+    return successResponse({
+      res,
+      message: "Lấy loại yêu cầu thành công",
+      data: requestTypes,
+    });
+  } catch (error) {
+    return errorResponse({
+      res,
+      status: 500,
+      message: "Lấy loại yêu cầu thất bại",
       errors: error.message,
     });
   }
@@ -144,4 +161,5 @@ module.exports = {
   updateRequest,
   deleteRequest,
   getRequestByUserId,
+  getRequestTypes,
 };

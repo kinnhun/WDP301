@@ -5,7 +5,7 @@ import MyPagination from "../../../components/Pagination/Pagination";
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 5; // Số lượng người dùng trên mỗi trang
+  const usersPerPage = 5;
 
   // Tính tổng số trang dựa trên số lượng người dùng
   const totalPages = Math.ceil(users.length / usersPerPage);
