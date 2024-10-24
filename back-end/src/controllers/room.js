@@ -155,6 +155,151 @@ const getAvailableRooms = async (req, res) => {
         });
     }
 };
+
+
+// getRoomCategory 
+const getRoomCategory = async (req, res) => {
+    try {
+        const result = await Room.getRoomCategory();
+        const roomCategory = result.recordset;
+
+        return successResponse({
+            res,
+            message: 'Lấy danh mục phòng thành công',
+            data: roomCategory,
+        });
+    } catch (error) {
+        return errorResponse({
+            res,
+            status: 500,
+            message: 'Lấy danh mục phòng thất bại',
+            errors: error.message,
+        });
+    }
+};
+
+
+const getAllFloor = async (req, res) => {
+    try {
+        const result = await Room.getAllFloor(); 
+        const floors = result.recordset; 
+
+        return successResponse({
+            res,
+            message: 'Lấy danh sách tầng phòng thành công',
+            data: floors,
+        });
+    } catch (error) {
+        return errorResponse({
+            res,
+            status: 500,
+            message: 'Lấy số tầng phòng thất bại',
+            errors: error.message,
+        });
+    }
+};
+
+const getBedAvailableFromRoom = async (req, res) => {
+    try {
+        const { id } = req.params; 
+        console.log('Room ID:', id); 
+
+        const result = await Room.getBedAvailableFromRoom(id);
+        const beds = result.recordset;
+
+        console.log('Available beds:', beds); 
+
+        if (beds.length === 0) {
+            return errorResponse({
+                res,
+                status: 404,
+                message: 'Không có giường nào có sẵn trong phòng này',
+            });
+        }
+
+        return successResponse({
+            res,
+            message: 'Lấy danh sách giường có sẵn thành công',
+            data: beds,
+        });
+    } catch (error) {
+        return errorResponse({
+            res,
+            status: 500,
+            message: 'Lấy danh sách giường có sẵn thất bại',
+            errors: error.message,
+        });
+    }
+};
+
+
+const getAllAvailableRooms = async (req, res, next) => {
+    try {
+        const result = await Room.getAllAvailableRooms();
+        const availableRooms = result.recordset;
+
+        return successResponse({
+            res,
+            message: 'Lấy danh sách phòng khả dụng thành công',
+            data: availableRooms,
+        });
+    } catch (error) {
+        return errorResponse({
+            res,
+            status: 500,
+            message: 'Lấy danh sách phòng khả dụng thất bại',
+            errors: error.message,
+        });
+    }
+};
+
+
+// Lấy danh sách phòng theo dorm, room type, và floor
+const getRoomsByDormRoomTypeFloor = async (req, res) => {
+    try {
+        // Lấy tham số từ params
+        const { roomTypeId, floorNumber, dormName } = req.params;
+
+        // Kiểm tra xem các tham số có hợp lệ không
+        if (!roomTypeId || !floorNumber || !dormName) {
+            return errorResponse({
+                res,
+                status: 400,
+                message: 'Thiếu thông tin cần thiết để tìm kiếm phòng',
+            });
+        }
+
+        // Thực hiện truy vấn
+        const result = await Room.getRoomsByDormRoomTypeFloor(roomTypeId, floorNumber, dormName);
+        const rooms = result.recordset;
+
+        // Kiểm tra xem có phòng nào không
+        if (rooms.length === 0) {
+            return errorResponse({
+                res,
+                status: 404,
+                message: 'Không tìm thấy phòng nào phù hợp',
+            });
+        }
+
+        return successResponse({
+            res,
+            message: 'Lấy danh sách phòng thành công',
+            data: rooms,
+        });
+    } catch (error) {
+        return errorResponse({
+            res,
+            status: 500,
+            message: 'Lấy danh sách phòng thất bại',
+            errors: error.message,
+        });
+    }
+};
+
+
+
+
 module.exports = {
     getAllRooms,
     getRoomById,
@@ -162,4 +307,9 @@ module.exports = {
     updateRoom,
     deleteRoom,
     getAvailableRooms, 
+    getRoomCategory,
+    getAllFloor,
+    getBedAvailableFromRoom,
+    getAllAvailableRooms,
+    getRoomsByDormRoomTypeFloor,
 };

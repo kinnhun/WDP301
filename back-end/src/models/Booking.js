@@ -100,11 +100,14 @@ const Booking = {
     // Lấy booking theo User ID
     getBookingsByUserId: async (userId) => {
         return sql.query`
-           SELECT 
+          SELECT 
             b.[booking_id],
             b.[user_id],
             b.[room_id],
             r.[room_number],
+            r.[room_type_id],
+            rc.[category_name],  
+            bd.[bed_id],
             bd.[bed_number],
             b.[start_date],
             b.[end_date],
@@ -113,13 +116,34 @@ const Booking = {
             b.[booking_status],
             b.[created_at],
             b.[updated_at],
-            b.[bed_id]
-        FROM [dbo].[Bookings] b
-        JOIN [dbo].[Rooms] r ON b.[room_id] = r.[room_id]
-        JOIN [dbo].[Beds] bd ON b.[bed_id] = bd.[bed_id]
+            r.[price],
+            r.[availability_status] ,
+            r.[floor_number],
+            r.[dorm],
+            r.[created_at] ,
+            r.[updated_at] ,
+            bd.[availability_status] 
+        FROM 
+            [dbo].[Bookings] b
+        JOIN 
+            [dbo].[Rooms] r ON b.[room_id] = r.[room_id]
+        JOIN 
+            [dbo].[Beds] bd ON b.[bed_id] = bd.[bed_id]
+        JOIN 
+            [wdp3].[dbo].[RoomCategories] rc ON r.[room_type_id] = rc.[room_type_id]
+
         WHERE b.[user_id] = ${userId}
         `;
+    },
+
+    getAllFloor: async () => {
+        return sql.query`
+            SELECT DISTINCT [floor_number]
+            FROM [dbo].[Rooms]
+            WHERE [floor_number] IS NOT NULL;
+        `;
     }
+    
 };
 
 module.exports = Booking;

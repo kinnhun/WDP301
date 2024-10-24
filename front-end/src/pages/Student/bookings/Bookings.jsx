@@ -37,7 +37,7 @@ const Bookings = () => {
     return (
         <div className="container mt-4">
             <h1>Bookings</h1>
-            <Link to={`${baseUrl}/student/booking/book`}>
+            <Link to={`${baseUrl}/student/booking/create-booking`}>
                 <button className="btn btn-primary float-right">
                     Add New Booking          
                 </button>
@@ -46,7 +46,8 @@ const Bookings = () => {
             <Table striped bordered hover responsive className="table-sm">
     <thead className="">
         <tr>
-            <th>Booking ID</th>
+            <th>Dom</th>
+            <th>floor</th>
             <th>Room Number</th>
             <th>Bed Number</th>
             <th>Start Date</th>
@@ -60,7 +61,8 @@ const Bookings = () => {
     <tbody>
         {bookingsData.map((booking, index) => (
             <tr key={index}>
-                <td>{booking.booking_id}</td>
+                <td>{booking.dorm}</td>
+                <td>{booking.category_name}</td>
                 <td>{booking.room_number}</td>
                 <td>{booking.bed_number}</td>
                 <td>{new Date(booking.start_date).toLocaleDateString()}</td>

@@ -1,29 +1,51 @@
-.table-custom {
+.table-sm {
     width: 100%;
-    margin-top: 20px;
     border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9em;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
 }
 
-.table-custom th,
-.table-custom td {
-    border: 1px solid #dee2e6;
-    padding: 8px;
-    text-align: left;
+.table-sm thead tr {
+    background-color: #727CF5; /* Màu nền cho tiêu đề bảng */
+    color: #ffffff; /* Màu chữ cho tiêu đề */
 }
 
-.table-custom th {
-    background-color: #343a40;
-    color: white;
+.table-sm th, .table-sm td {
+    padding: 12px 15px; /* Khoảng cách cho ô */
+    text-align: left; /* Canh trái cho chữ */
+    border-bottom: 1px solid #dddddd; /* Đường viền dưới ô */
 }
 
-.table-custom tbody tr:hover {
+.table-sm tbody tr:hover {
     background-color: #f1f1f1; /* Màu nền khi hover */
 }
 
-.table-custom tbody tr:nth-child(even) {
+.table-sm tbody tr:nth-of-type(even) {
     background-color: #f9f9f9; /* Màu nền cho hàng chẵn */
 }
 
-.table-custom tbody tr:nth-child(odd) {
+.table-sm tbody tr:nth-of-type(odd) {
     background-color: #ffffff; /* Màu nền cho hàng lẻ */
+}
+
+.table-sm th {
+    position: sticky; /* Để tiêu đề luôn ở trên cùng */
+    top: 0; /* Dính vào đầu khi cuộn */
+}
+
+.table-sm td {
+    font-size: 14px; /* Kích thước chữ cho ô */
+    color: #333; /* Màu chữ cho ô */
+}
+
+.table-sm th:first-child,
+.table-sm td:first-child {
+    border-left: 2px solid #727CF5; /* Đường viền trái cho ô đầu tiên */
+}
+
+.table-sm th:last-child,
+.table-sm td:last-child {
+    border-right: 2px solid #727CF5; /* Đường viền phải cho ô cuối cùng */
 }
