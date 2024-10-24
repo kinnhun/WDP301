@@ -92,9 +92,11 @@ const Room = {
     // Lấy danh sách loại phòng
     getAllFloor: async () => {
         return sql.query`
-              SELECT DISTINCT [dorm]
-              FROM [dbo].[Rooms]
-              WHERE [dorm] IS NOT NULL;
+             
+			  SELECT DISTINCT [floor_number]
+FROM [dbo].[Rooms]
+WHERE [floor_number] IS NOT NULL;
+
         `;
     },
     // Lấy danh sách giường có sẵn từ một phòng theo ID
@@ -152,8 +154,25 @@ getRoomsByDormRoomTypeFloor: async (roomTypeId, floorNumber, dormName) => {
             [dorm] = ${dormName}
     `;
 },
+getRoomCategory : async () =>{
+    return sql.query`
+    SELECT  [room_type_id]
+      ,[category_name]
+  FROM [wdp3].[dbo].[RoomCategories]
+
+    `;
+},
+getDorm : async () =>{
+    return sql.query`
+      SELECT DISTINCT [dorm]
+              FROM [dbo].[Rooms]
+              WHERE [dorm] IS NOT NULL;
+              `;
+},
 
 
 };
+
+
 
 module.exports = Room;

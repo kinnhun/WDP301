@@ -36,7 +36,8 @@ roomRouter.get("/bed/available", roomController.getAllAvailableRooms);
 // lẩy ra phòng từ type, floor, dorm  
 roomRouter.get("/rooms/type/:roomTypeId/floor/:floorNumber/dorm/:dormName", roomController.getRoomsByDormRoomTypeFloor);
 
-
+// lấy ra danh sách dorm 
+roomRouter.get("/dorms/all", roomController.getDorm);
 
 
 module.exports = roomRouter;

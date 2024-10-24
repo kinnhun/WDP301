@@ -298,6 +298,26 @@ const getRoomsByDormRoomTypeFloor = async (req, res) => {
 };
 
 
+const getDorm =async (req, res) => {
+    try {
+        const result = await Room.getDorm();
+        const dorms = result.recordset;
+
+        return successResponse({
+            res,
+            message: 'Lấy danh sách phòng thành công',
+            data: dorms,
+        });
+    } catch (error) {
+        return errorResponse({
+            res,
+            status: 500,
+            message: 'Lấy danh sách phòng thất bại',
+            errors: error.message,
+        });
+    }
+}
+
 
 
 module.exports = {
@@ -312,4 +332,5 @@ module.exports = {
     getBedAvailableFromRoom,
     getAllAvailableRooms,
     getRoomsByDormRoomTypeFloor,
+    getDorm,
 };

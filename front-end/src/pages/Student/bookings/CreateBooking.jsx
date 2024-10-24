@@ -5,10 +5,11 @@ import { Button, Table } from 'react-bootstrap';
 const Book = () => {
     const [roomType, setRoomType] = useState('');
     const [dorm, setDorm] = useState('');
-    const [floor, setFloor] = useState(''); // Thêm state cho tầng đã chọn
+    const [dorms, setDorms] = useState([]);
+    const [floor, setFloor] = useState('');
     const [availableRooms, setAvailableRooms] = useState([]);
     const [roomCategory, setRoomCategory] = useState([]);
-    const [floors, setFloors] = useState([]); // Đổi tên state để dễ phân biệt
+    const [floors, setFloors] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState('');
     const [beds, setBeds] = useState([]);
 
@@ -22,6 +23,19 @@ const Book = () => {
             }
         } catch (error) {
             console.error('Error fetching room categories:', error);
+        }
+    };
+
+    const fetchDorms = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/room/dorms/all`);
+            if (response.data.success) {
+                setDorms(response.data.data);
+            } else {
+                console.error('Không thể lấy dữ liệu dorm:', response.data.message);
+            }
+        } catch (error) {
+            console.error('Error fetching dorms:', error);
         }
     };
 
@@ -39,7 +53,7 @@ const Book = () => {
     };
 
     const fetchAvailableRooms = async () => {
-        if (!roomType || !dorm || !floor) return; // Kiểm tra xem có giá trị hợp lệ không
+        if (!roomType || !dorm || !floor) return;
         try {
             const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/room/rooms/type/${roomType}/floor/${floor}/dorm/${dorm}`);
             if (response.data.success) {
@@ -68,10 +82,11 @@ const Book = () => {
     useEffect(() => {
         fetchRoomCategory();
         fetchFloors();
+        fetchDorms();
     }, []);
 
     useEffect(() => {
-        fetchAvailableRooms(); // Gọi API để lấy phòng có sẵn mỗi khi người dùng thay đổi loại phòng, ký túc xá hoặc tầng
+        fetchAvailableRooms(); 
     }, [roomType, dorm, floor]);
 
     return (
@@ -91,9 +106,9 @@ const Book = () => {
             {/* Chọn ký túc xá */}
             <select value={dorm} onChange={(e) => setDorm(e.target.value)}>
                 <option value="">Select Dorm</option>
-                {floors.map(f => (
-                    <option key={f.dorm} value={f.dorm}>
-                        {f.dorm}
+                {dorms.map(dorm => (
+                    <option key={dorm.dorm} value={dorm.dorm}>
+                        {dorm.dorm}
                     </option>
                 ))}
             </select>
@@ -102,8 +117,8 @@ const Book = () => {
             <select value={floor} onChange={(e) => setFloor(e.target.value)}>
                 <option value="">Select Floor</option>
                 {floors.map(f => (
-                    <option key={f.floor_id} value={f.floor_id}>
-                        {f.floor_name}
+                    <option key={f.floor_number} value={f.floor_number}>
+                        {f.floor_number}
                     </option>
                 ))}
             </select>
