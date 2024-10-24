@@ -1,5 +1,4 @@
 const sql = require("mssql");
-const { getRequestByUserId } = require("../services/request.service");
 
 module.exports = {
   // Lấy tất cả các yêu cầu bảo trì
@@ -15,7 +14,7 @@ module.exports = {
                 ,[request_type]
                 ,[reply]
                 ,[semester]
-            FROM [dbo].[MaintenanceRequests]
+            FROM [dbo].[Requests]
         `;
   },
 
@@ -68,33 +67,47 @@ module.exports = {
   },
   getNewestRequest: async () => {
     return sql.query`
-    SELECT TOP 1 [request_id]
-          ,[room_id]
-          ,[user_id]
-          ,[request_type]
-          ,[description]
-          ,[reply]
-          ,[status]
-          ,[created_at]
-          ,[updated_at]
-      FROM [wdp2].[dbo].[Requests]
+   SELECT TOP 1 [Requests].[request_id]
+                ,[Requests].[room_id]
+                ,[Requests].[user_id]
+                ,[Requests].[description]
+                ,[Requests].[status]
+                ,[Requests].[created_at]
+                ,[Requests].[updated_at]
+                ,[request_type].[type_name]
+                ,[Requests].[reply]
+            FROM [dbo].[Requests]
+			LEFT JOIN [dbo].[request_type]
+			ON [Requests].[request_type] = [request_type].[id]
       ORDER BY [Requests].[request_id] DESC
         `;
   },
   getRequestByUserId: async (userId) => {
     return sql.query`
-    SELECT [request_id]
-      ,[room_id]
-      ,[user_id]
-      ,[request_type]
-      ,[description]
-      ,[reply]
-      ,[status]
-      ,[created_at]
-      ,[updated_at]
-  FROM [wdp2].[dbo].[Requests]
-  WHERE [Requests].[user_id] =${userId}
+ SELECT [Requests].[request_id]
+                ,[Requests].[room_id]
+                ,[Requests].[user_id]
+                ,[Requests].[description]
+                ,[Requests].[status]
+                ,[Requests].[created_at]
+                ,[Requests].[updated_at]
+                ,[request_type].[type_name] as request_type
+                ,[Requests].[reply]
+            FROM [dbo].[Requests]
+			LEFT JOIN [dbo].[request_type]
+			ON [Requests].[request_type] = [request_type].[id]
+      WHERE [Requests].[user_id] = ${userId}
+      ORDER BY [Requests].[request_id] DESC
     `;
+  },
+
+  getRequestTypes: async () => {
+    return sql.query`
+        SELECT [id]
+      ,[type_name]
+      ,[description]
+  FROM [dbo].[request_type]
+        `;
   },
 
   // Cập nhật yêu cầu bảo trì

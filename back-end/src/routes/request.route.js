@@ -11,7 +11,10 @@ requestRouter.post("/", RequestController.createRequest);
 // Lấy yêu cầu theo id của người dùng
 requestRouter.get("/:userId/user", RequestController.getRequestByUserId);
 
-// Lấy chi tiết một yêu cầu bảo trì theo ID
+// Lấy danh sách loại yêu cầu
+requestRouter.get("/types", RequestController.getRequestTypes);
+
+// Lấy chi tiết một yêu cầu theo ID
 requestRouter.get("/:id", RequestController.getRequestById);
 
 // Cập nhật một yêu cầu bảo trì theo ID
