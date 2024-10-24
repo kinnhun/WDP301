@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header from "../components/general/Header";
 import Sidebar from "../components/general/Sidebar";
+import "./Layout.scss";
 
 const Layout = () => {
   const navigate = useNavigate();

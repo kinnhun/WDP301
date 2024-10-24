@@ -6,7 +6,7 @@ module.exports = {
       const requests = await Request.getAllRequests();
       return requests.recordsets[0];
     } catch (error) {
-      throw new Error();
+      throw error;
     }
   },
 

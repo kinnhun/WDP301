@@ -4,8 +4,7 @@ const { successResponse, errorResponse } = require("../utils/response.js");
 // Lấy tất cả yêu cầu bảo trì
 const getAllRequests = async (req, res) => {
   try {
-    const result = await RequestService.getAllRequests(); // Gọi đúng hàm getAllRequests từ model
-    const requests = result.recordsets[0]; // Truy xuất dữ liệu từ kết quả truy vấn SQL
+    const requests = await RequestService.getAllRequests(); // Gọi đúng hàm getAllRequests từ model
     return successResponse({
       res,
       message: "Lấy yêu cầu bảo trì thành công",

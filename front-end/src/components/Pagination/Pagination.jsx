@@ -18,15 +18,17 @@ const MyPagination = ({ totalPages, currentPage, onPageChange }) => {
   //   setCurrentPage(pageNumber);
   // };
   return (
-    <Pagination.Root total={10} value={currentPage} onChange={onPageChange}>
-      <Group gap={5} justify="center">
-        <Pagination.First />
-        <Pagination.Previous />
-        <Pagination.Items />
-        <Pagination.Next />
-        <Pagination.Last />
-      </Group>
-    </Pagination.Root>
+    <div className="my-pagination">
+      <Pagination.Root total={totalPages} value={currentPage} onChange={onPageChange}>
+        <Group gap={5} justify="center">
+          <Pagination.First />
+          <Pagination.Previous />
+          <Pagination.Items />
+          <Pagination.Next />
+          <Pagination.Last />
+        </Group>
+      </Pagination.Root>
+    </div>
   );
 };
 

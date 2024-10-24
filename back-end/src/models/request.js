@@ -4,17 +4,22 @@ module.exports = {
   // Lấy tất cả các yêu cầu bảo trì
   getAllRequests: async () => {
     return sql.query`
-            SELECT [request_id]
-                ,[room_id]
-                ,[user_id]
-                ,[description]
-                ,[status]
-                ,[created_at]
-                ,[updated_at]
-                ,[request_type]
-                ,[reply]
-                ,[semester]
+            		  SELECT [Requests].[request_id]
+                ,[Rooms].[room_number]
+                ,[Users].[email]
+                ,[Requests].[description]
+                ,[Requests].[status]
+				 ,[request_type].[type_name] as request_type
+				 ,[Requests].[reply]
+                ,[Requests].[created_at]
+                ,[Requests].[updated_at]           
             FROM [dbo].[Requests]
+			LEFT JOIN [dbo].[Users]
+			ON [Users].[user_id] = [Requests].[user_id]
+			LEFT JOIN [dbo].[request_type]
+			ON [request_type].[id] = [Requests].[request_type]
+			LEFT JOIN [dbo].[Rooms]
+			ON [Rooms].[room_id] = [Requests].[room_id]
         `;
   },
 

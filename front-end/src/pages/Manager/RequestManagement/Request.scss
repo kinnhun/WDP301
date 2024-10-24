@@ -1,7 +1,7 @@
 // App.scss
 .request-management {
   display: flex;
-  height: 100vh;
+  height: 100%;
 }
 
 .sidebar {
@@ -25,6 +25,9 @@
         padding: 3px 8px;
         border-radius: 12px;
       }
+      &.active {
+        background-color: #e0e0e0;
+      }
       &:hover {
         background-color: #e0e0e0;
       }
@@ -35,7 +38,8 @@
 .request-table {
   flex: 1;
   background-color: #fff;
-
+  display: grid;
+  grid-template-rows: 600px auto;
   table {
     width: 100%;
     border-collapse: collapse;
@@ -58,6 +62,7 @@
       td {
         padding: 10px;
         border-bottom: 1px solid #e0e0e0;
+        height: 50px;
       }
     }
   }
