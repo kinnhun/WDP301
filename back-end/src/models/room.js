@@ -151,7 +151,8 @@ getRoomsByDormRoomTypeFloor: async (roomTypeId, floorNumber, dormName) => {
         WHERE 
             [room_type_id] = ${roomTypeId} AND
             [floor_number] = ${floorNumber} AND
-            [dorm] = ${dormName}
+            [dorm] = ${dormName} AND
+            [availability_status] = 'available'
     `;
 },
 getRoomCategory : async () =>{

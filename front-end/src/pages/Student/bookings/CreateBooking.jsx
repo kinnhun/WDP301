@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Button, Table } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 
 const Book = () => {
     const [roomType, setRoomType] = useState('');
@@ -12,6 +12,7 @@ const Book = () => {
     const [floors, setFloors] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState('');
     const [beds, setBeds] = useState([]);
+    const [noRoomsAvailable, setNoRoomsAvailable] = useState(false);
 
     const fetchRoomCategory = async () => {
         try {
@@ -57,12 +58,16 @@ const Book = () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/room/rooms/type/${roomType}/floor/${floor}/dorm/${dorm}`);
             if (response.data.success) {
-                setAvailableRooms(response.data.data);
+                const rooms = response.data.data;
+                setAvailableRooms(rooms);
+                setNoRoomsAvailable(rooms.length === 0); // Update noRoomsAvailable state
             } else {
                 console.error('Không thể lấy dữ liệu phòng:', response.data.message);
+                setNoRoomsAvailable(true); // Set noRoomsAvailable to true if the request fails
             }
         } catch (error) {
             console.error('Error fetching available rooms:', error);
+            setNoRoomsAvailable(true);
         }
     };
 
@@ -93,7 +98,7 @@ const Book = () => {
         <div className="container mt-4">
             <h1>New Booking</h1>
 
-            {/* Chọn loại phòng */}
+            {/* Select Room Type */}
             <select value={roomType} onChange={(e) => setRoomType(e.target.value)}>
                 <option value="">Select Room Type</option>
                 {roomCategory.map(category => (
@@ -103,7 +108,7 @@ const Book = () => {
                 ))}
             </select>
 
-            {/* Chọn ký túc xá */}
+            {/* Select Dorm */}
             <select value={dorm} onChange={(e) => setDorm(e.target.value)}>
                 <option value="">Select Dorm</option>
                 {dorms.map(dorm => (
@@ -113,7 +118,7 @@ const Book = () => {
                 ))}
             </select>
 
-            {/* Chọn tầng */}
+            {/* Select Floor */}
             <select value={floor} onChange={(e) => setFloor(e.target.value)}>
                 <option value="">Select Floor</option>
                 {floors.map(f => (
@@ -123,46 +128,55 @@ const Book = () => {
                 ))}
             </select>
 
-            {/* Chọn phòng có sẵn */}
-            <select value={selectedRoom} onChange={(e) => {
-                const roomId = e.target.value;
-                setSelectedRoom(roomId);
-                fetchGetBedAvailableFromRoom(roomId);
-            }}>
-                <option value="">Select Room</option>
-                {availableRooms.map(room => (
-                    <option key={room.room_id} value={room.room_id}>
-                        {room.room_number} - {room.price} VND
-                    </option>
-                ))}
-            </select>
+           
 
-            <Button variant="primary" className="mt-3">Confirm Booking</Button>
-
-            {/* Hiển thị danh sách phòng có sẵn */}
-            <h2 className="mt-4">Available Rooms</h2>
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>Room Number</th>
-                        <th>Room Type ID</th>
-                        <th>Price (VND)</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
+            {/* Room selection dropdown if rooms are available */}
+            {availableRooms.length > 0 && (
+                <select value={selectedRoom} onChange={(e) => {
+                    const roomId = e.target.value;
+                    setSelectedRoom(roomId);
+                    fetchGetBedAvailableFromRoom(roomId);
+                }}>
+                    <option value="">Select Room</option>
                     {availableRooms.map(room => (
-                        <tr key={room.room_id}>
-                            <td>{room.room_number}</td>
-                            <td>{room.room_type_id}</td>
-                            <td>{room.price}</td>
-                            <td>{room.availability_status}</td>
-                        </tr>
+                        <option key={room.room_id} value={room.room_id}>
+                            {room.room_number} - {room.price} VND
+                        </option>
                     ))}
-                </tbody>
-            </Table>
+                </select>
+            )}
 
-            {/* Hiển thị danh sách giường có sẵn nếu có */}
+          
+ {/* Display message if no rooms available */}
+ {noRoomsAvailable && <p>No available rooms found for the selected criteria.</p>}
+            {/* Display table for available rooms if there are rooms */}
+            {availableRooms.length > 0 && (
+                <>
+                    <h2 className="mt-4">Available Rooms</h2>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Room Number</th>
+                                <th>Room Type ID</th>
+                                <th>Price (VND)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {availableRooms.map(room => (
+                                <tr key={room.room_id}>
+                                    <td>{room.room_number}</td>
+                                    <td>{room.room_type_id}</td>
+                                    <td>{room.price}</td>
+                                    <td>{room.availability_status}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </>
+            )}
+
+            {/* Display available beds if any */}
             {beds.length > 0 && (
                 <div>
                     <h3>Available Beds</h3>
