@@ -1,6 +1,8 @@
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
-import { Alert, Col, Container, Form, Row, Table } from 'react-bootstrap';
+import { Alert, Button, Col, Container, Form, Modal, Row, Table } from 'react-bootstrap';
+
 
 const Book = () => {
     const [roomType, setRoomType] = useState('');
@@ -13,7 +15,13 @@ const Book = () => {
     const [selectedRoom, setSelectedRoom] = useState('');
     const [beds, setBeds] = useState([]);
     const [noRoomsAvailable, setNoRoomsAvailable] = useState(false);
+    const [selectedBed, setSelectedBed] = useState('');
 
+    // State to manage booking details
+    const [showBookingDetails, setShowBookingDetails] = useState(false);
+    const [bookingDetails, setBookingDetails] = useState({});
+
+    // Fetch functions
     const fetchRoomCategory = async () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/room/roomCategories/all`);
@@ -76,6 +84,7 @@ const Book = () => {
             const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/room/bed/available/room/${roomId}`);
             if (response.data.success) {
                 setBeds(response.data.data);
+                setSelectedBed(''); // Reset selected bed when fetching new beds
             } else {
                 console.error('Không thể lấy dữ liệu giường:', response.data.message);
                 setBeds([]);  // Reset beds if there's an error
@@ -85,6 +94,38 @@ const Book = () => {
             setBeds([]); // Reset beds if there's an error
         }
     };
+
+    const handleConfirmBooking = async () => {
+        const totalAmount = availableRooms.find(room => room.room_id === selectedRoom).price; // Giả sử giá phòng
+        const userId = 1; // ID của người dùng, cần lấy từ context hoặc state quản lý người dùng
+        const startDate = new Date(); // Ngày bắt đầu booking
+        const endDate = new Date(); // Ngày kết thúc booking, có thể tùy chỉnh theo yêu cầu
+    
+        // Tạo đối tượng booking
+        const bookingInfo = {
+            room_id: selectedRoom,
+            user_id: userId,
+            start_date: startDate.toISOString(), // Chuyển đổi thành định dạng ISO
+            end_date: endDate.toISOString(),
+            total_amount: totalAmount,
+            payment_status: 'Pending', // Hoặc giá trị mặc định bạn muốn
+            booking_status: 'Confirmed', // Hoặc giá trị mặc định bạn muốn
+            bed_id: selectedBed,
+        };
+    
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/booking/create`, bookingInfo);
+            if (response.data.success) {
+                setBookingDetails(bookingInfo); // Cập nhật thông tin booking
+                setShowBookingDetails(true); // Hiển thị popup với chi tiết booking
+            } else {
+                console.error('Không thể xác nhận booking:', response.data.message);
+            }
+        } catch (error) {
+            console.error('Error confirming booking:', error);
+        }
+    };
+    
 
     useEffect(() => {
         fetchRoomCategory();
@@ -101,6 +142,7 @@ const Book = () => {
         setAvailableRooms([]);  // Reset available rooms
         setSelectedRoom('');     // Reset selected room
         setBeds([]);             // Reset available beds
+        setSelectedBed('');      // Reset selected bed
     };
 
     const handleDormChange = (e) => {
@@ -108,6 +150,7 @@ const Book = () => {
         setAvailableRooms([]);  // Reset available rooms
         setSelectedRoom('');     // Reset selected room
         setBeds([]);             // Reset available beds
+        setSelectedBed('');      // Reset selected bed
     };
 
     const handleFloorChange = (e) => {
@@ -115,6 +158,7 @@ const Book = () => {
         setAvailableRooms([]);  // Reset available rooms
         setSelectedRoom('');     // Reset selected room
         setBeds([]);             // Reset available beds
+        setSelectedBed('');      // Reset selected bed
     };
 
     return (
@@ -193,18 +237,14 @@ const Book = () => {
                                 <thead>
                                     <tr>
                                         <th>Room Number</th>
-                                        <th>Room Type ID</th>
-                                        <th>Price (VND)</th>
-                                        <th>Status</th>
+                                        <th>Price</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {availableRooms.map(room => (
-                                        <tr key={room.room_id} onClick={() => fetchGetBedAvailableFromRoom(room.room_id)}>
+                                        <tr key={room.room_id}>
                                             <td>{room.room_number}</td>
-                                            <td>{room.room_type_id}</td>
-                                            <td>{room.price}</td>
-                                            <td>{room.availability_status}</td>
+                                            <td>{room.price} VND</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -218,6 +258,17 @@ const Book = () => {
                     {selectedRoom && beds.length > 0 ? (
                         <div>
                             <h3 className="mt-4">Available Beds for Room {selectedRoom}</h3>
+                            <Form.Group controlId="bedSelect">
+                                <Form.Label>Select Bed</Form.Label>
+                                <Form.Control as="select" value={selectedBed} onChange={(e) => setSelectedBed(e.target.value)}>
+                                    <option value="">Select Bed</option>
+                                    {beds.map(bed => (
+                                        <option key={bed.bed_id} value={bed.bed_id}>
+                                            {bed.bed_number} - {bed.availability_status}
+                                        </option>
+                                    ))}
+                                </Form.Control>
+                            </Form.Group>
                             <Table striped bordered hover>
                                 <thead>
                                     <tr>
@@ -234,6 +285,13 @@ const Book = () => {
                                     ))}
                                 </tbody>
                             </Table>
+
+                            {/* Hiển thị nút Confirm Booking khi có giường được chọn */}
+                            {selectedBed && (
+                                <Button variant="primary" className="mt-3" onClick={handleConfirmBooking}>
+                                    Confirm Booking
+                                </Button>
+                            )}
                         </div>
                     ) : selectedRoom && beds.length === 0 ? (
                         <Alert variant="info">No available beds for the selected room.</Alert>
@@ -242,6 +300,28 @@ const Book = () => {
                     )}
                 </Col>
             </Row>
+
+            {/* Modal để hiển thị thông tin booking */}
+            <Modal show={showBookingDetails} onHide={() => setShowBookingDetails(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Booking Details</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p><strong>Room ID:</strong> {bookingDetails.room_id}</p>
+                    <p><strong>User ID:</strong> {bookingDetails.user_id}</p>
+                    <p><strong>Start Date:</strong> {new Date(bookingDetails.start_date).toLocaleString()}</p>
+                    <p><strong>End Date:</strong> {new Date(bookingDetails.end_date).toLocaleString()}</p>
+                    <p><strong>Total Amount:</strong> {bookingDetails.total_amount} VND</p>
+                    <p><strong>Payment Status:</strong> {bookingDetails.payment_status}</p>
+                    <p><strong>Booking Status:</strong> {bookingDetails.booking_status}</p>
+                    <p><strong>Bed ID:</strong> {bookingDetails.bed_id}</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowBookingDetails(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Container>
     );
 };
