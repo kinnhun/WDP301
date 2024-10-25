@@ -1,92 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "../../utils/axios";
 
 export const requestSlice = createSlice({
   name: "request",
   initialState: {
-    requestList: [
-      {
-        room: "101",
-        student: "Hilma Wisozk",
-        requestType: "Fridge Issue",
-        description: "Lobster in the fridge",
-        createdAt: "11:35",
-        status: "closed",
-      },
-      {
-        room: "102",
-        student: "Alfonso Dooley",
-        requestType: "Grocery Reminder",
-        description: "Don't forget the milk",
-        createdAt: "09:46",
-        status: "closed",
-      },
-      {
-        room: "103",
-        student: "Amir Barrows",
-        requestType: "Fridge Issue",
-        description: "My fridge stopped cooling down",
-        createdAt: "05:28",
-        status: "open",
-      },
-      {
-        room: "104",
-        student: "Matt Monahan",
-        requestType: "Warranty Inquiry",
-        description: "Warranty validity",
-        createdAt: "05:20",
-        status: "pending",
-      },
-      {
-        room: "105",
-        student: "Evie Sawyn",
-        requestType: "Fridge Issue",
-        description: "Strange sound from SuperCooler",
-        createdAt: "02:30",
-        status: "open",
-      },
-    ],
-    sortedList: [
-      {
-        room: "101",
-        student: "Hilma Wisozk",
-        requestType: "Fridge Issue",
-        description: "Lobster in the fridge",
-        createdAt: "11:35",
-        status: "closed",
-      },
-      {
-        room: "102",
-        student: "Alfonso Dooley",
-        requestType: "Grocery Reminder",
-        description: "Don't forget the milk",
-        createdAt: "09:46",
-        status: "closed",
-      },
-      {
-        room: "103",
-        student: "Amir Barrows",
-        requestType: "Fridge Issue",
-        description: "My fridge stopped cooling down",
-        createdAt: "05:28",
-        status: "open",
-      },
-      {
-        room: "104",
-        student: "Matt Monahan",
-        requestType: "Warranty Inquiry",
-        description: "Warranty validity",
-        createdAt: "05:20",
-        status: "pending",
-      },
-      {
-        room: "105",
-        student: "Evie Sawyn",
-        requestType: "Fridge Issue",
-        description: "Strange sound from SuperCooler",
-        createdAt: "02:30",
-        status: "open",
-      },
-    ],
+    requestList: [],
+    sortedList: [],
     status: "idle",
     page: 1,
   },
@@ -99,7 +18,28 @@ export const requestSlice = createSlice({
       }
     },
   },
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder.addCase(getRequests.pending, (state) => {
+      state.status = "pending";
+    });
+    builder.addCase(getRequests.fulfilled, (state, action) => {
+      state.requestList = action.payload;
+      state.sortedList = action.payload;
+      state.status = "idle";
+    });
+    builder.addCase(getRequests.rejected, (state) => {
+      state.status = "failed";
+    });
+  },
+});
+
+export const getRequests = createAsyncThunk("getRequest", async (_, { rejectedWithValue }) => {
+  const response = await axios.get(`/requests`);
+  if (!response.status === 200) {
+    return rejectedWithValue("data");
+  }
+  const requests = response.data.data;
+  return requests;
 });
 
 export const { sortByStatus } = requestSlice.actions;

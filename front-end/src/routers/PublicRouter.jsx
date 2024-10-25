@@ -31,12 +31,15 @@ const publicRouter = () => {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/manager/manage-user" element={<UserList />} />
         <Route path="/manager/requests" element={<RequestManagement />} />
-        <Route path="/student/request" element={<Requests />} />
+        <Route path="/request" element={<Requests />} />
         <Route path="/student/home" element={<Home />} />
-        {/* <Route path="/home" element={<Home />} /> */}
+        <Route path="/student/requests" element={<Requests />} />
         <Route path="/student/news" element={<News></News>} />
         <Route path="/student/news/view/:id" element={<NewsDetail></NewsDetail>} />
-        <Route path="/student/residentHistories" element={<ResidentHistories></ResidentHistories>} />
+        <Route
+          path="/student/residentHistories"
+          element={<ResidentHistories></ResidentHistories>}
+        />
         <Route path="/student/bookings" element={<Bookings />} />
         <Route path="/student/booking/create-booking" element={<Book />} />
         <Route path="/student/EWUsage" element={<EWUsage />} />
