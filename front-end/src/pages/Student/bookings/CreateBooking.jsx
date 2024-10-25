@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Table } from 'react-bootstrap';
+import { Alert, Col, Container, Form, Row, Table } from 'react-bootstrap';
 
 const Book = () => {
     const [roomType, setRoomType] = useState('');
@@ -60,10 +60,10 @@ const Book = () => {
             if (response.data.success) {
                 const rooms = response.data.data;
                 setAvailableRooms(rooms);
-                setNoRoomsAvailable(rooms.length === 0); // Update noRoomsAvailable state
+                setNoRoomsAvailable(rooms.length === 0);
             } else {
                 console.error('Không thể lấy dữ liệu phòng:', response.data.message);
-                setNoRoomsAvailable(true); // Set noRoomsAvailable to true if the request fails
+                setNoRoomsAvailable(true);
             }
         } catch (error) {
             console.error('Error fetching available rooms:', error);
@@ -95,61 +95,71 @@ const Book = () => {
     }, [roomType, dorm, floor]);
 
     return (
-        <div className="container mt-4">
-            <h1>New Booking</h1>
+        <Container className="mt-4">
+            <h1 className="mb-4 text-center">New Booking</h1>
 
-            {/* Select Room Type */}
-            <select value={roomType} onChange={(e) => setRoomType(e.target.value)}>
-                <option value="">Select Room Type</option>
-                {roomCategory.map(category => (
-                    <option key={category.room_type_id} value={category.room_type_id}>
-                        {category.category_name}
-                    </option>
-                ))}
-            </select>
+            <Row className="mb-3">
+                <Col md={4}>
+                    <Form.Group controlId="roomType">
+                        <Form.Label>Room Type</Form.Label>
+                        <Form.Control as="select" value={roomType} onChange={(e) => setRoomType(e.target.value)}>
+                            <option value="">Select Room Type</option>
+                            {roomCategory.map(category => (
+                                <option key={category.room_type_id} value={category.room_type_id}>
+                                    {category.category_name}
+                                </option>
+                            ))}
+                        </Form.Control>
+                    </Form.Group>
+                </Col>
+                <Col md={4}>
+                    <Form.Group controlId="dorm">
+                        <Form.Label>Dorm</Form.Label>
+                        <Form.Control as="select" value={dorm} onChange={(e) => setDorm(e.target.value)}>
+                            <option value="">Select Dorm</option>
+                            {dorms.map(d => (
+                                <option key={d.dorm} value={d.dorm}>
+                                    {d.dorm}
+                                </option>
+                            ))}
+                        </Form.Control>
+                    </Form.Group>
+                </Col>
+                <Col md={4}>
+                    <Form.Group controlId="floor">
+                        <Form.Label>Floor</Form.Label>
+                        <Form.Control as="select" value={floor} onChange={(e) => setFloor(e.target.value)}>
+                            <option value="">Select Floor</option>
+                            {floors.map(f => (
+                                <option key={f.floor_number} value={f.floor_number}>
+                                    {f.floor_number}
+                                </option>
+                            ))}
+                        </Form.Control>
+                    </Form.Group>
+                </Col>
+            </Row>
 
-            {/* Select Dorm */}
-            <select value={dorm} onChange={(e) => setDorm(e.target.value)}>
-                <option value="">Select Dorm</option>
-                {dorms.map(dorm => (
-                    <option key={dorm.dorm} value={dorm.dorm}>
-                        {dorm.dorm}
-                    </option>
-                ))}
-            </select>
-
-            {/* Select Floor */}
-            <select value={floor} onChange={(e) => setFloor(e.target.value)}>
-                <option value="">Select Floor</option>
-                {floors.map(f => (
-                    <option key={f.floor_number} value={f.floor_number}>
-                        {f.floor_number}
-                    </option>
-                ))}
-            </select>
-
-           
-
-            {/* Room selection dropdown if rooms are available */}
-            {availableRooms.length > 0 && (
-                <select value={selectedRoom} onChange={(e) => {
-                    const roomId = e.target.value;
-                    setSelectedRoom(roomId);
-                    fetchGetBedAvailableFromRoom(roomId);
-                }}>
-                    <option value="">Select Room</option>
-                    {availableRooms.map(room => (
-                        <option key={room.room_id} value={room.room_id}>
-                            {room.room_number} - {room.price} VND
-                        </option>
-                    ))}
-                </select>
+            {availableRooms.length > 0 ? (
+                <Form.Group controlId="roomSelect" className="mb-4">
+                    <Form.Label>Select Room</Form.Label>
+                    <Form.Control as="select" value={selectedRoom} onChange={(e) => {
+                        const roomId = e.target.value;
+                        setSelectedRoom(roomId);
+                        fetchGetBedAvailableFromRoom(roomId);
+                    }}>
+                        <option value="">Select Room</option>
+                        {availableRooms.map(room => (
+                            <option key={room.room_id} value={room.room_id}>
+                                {room.room_number} - {room.price} VND
+                            </option>
+                        ))}
+                    </Form.Control>
+                </Form.Group>
+            ) : noRoomsAvailable && (
+                <Alert variant="warning">No available rooms found for the selected criteria.</Alert>
             )}
 
-          
- {/* Display message if no rooms available */}
- {noRoomsAvailable && <p>No available rooms found for the selected criteria.</p>}
-            {/* Display table for available rooms if there are rooms */}
             {availableRooms.length > 0 && (
                 <>
                     <h2 className="mt-4">Available Rooms</h2>
@@ -176,10 +186,9 @@ const Book = () => {
                 </>
             )}
 
-            {/* Display available beds if any */}
             {beds.length > 0 && (
                 <div>
-                    <h3>Available Beds</h3>
+                    <h3 className="mt-4">Available Beds</h3>
                     <Table striped bordered hover>
                         <thead>
                             <tr>
@@ -198,7 +207,7 @@ const Book = () => {
                     </Table>
                 </div>
             )}
-        </div>
+        </Container>
     );
 };
 

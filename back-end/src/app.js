@@ -23,7 +23,6 @@ app.use("/requests", requestRouter);
 app.use("/profile", profileRouter);
 app.use("/news",Newrouter);
 app.use("/auth", authRouter);
-app.use("/api/maintenanceRequests", maintenanceRequests);
 app.use("/profile", profileRouter);
 app.use("/api/booking", bookingRouter);
 app.use("/api/room", roomRouter);
