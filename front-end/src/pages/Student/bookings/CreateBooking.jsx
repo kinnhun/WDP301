@@ -78,9 +78,11 @@ const Book = () => {
                 setBeds(response.data.data);
             } else {
                 console.error('Không thể lấy dữ liệu giường:', response.data.message);
+                setBeds([]);  // Reset beds if there's an error
             }
         } catch (error) {
             console.error('Error fetching beds:', error);
+            setBeds([]); // Reset beds if there's an error
         }
     };
 
@@ -94,6 +96,27 @@ const Book = () => {
         fetchAvailableRooms(); 
     }, [roomType, dorm, floor]);
 
+    const handleRoomTypeChange = (e) => {
+        setRoomType(e.target.value);
+        setAvailableRooms([]);  // Reset available rooms
+        setSelectedRoom('');     // Reset selected room
+        setBeds([]);             // Reset available beds
+    };
+
+    const handleDormChange = (e) => {
+        setDorm(e.target.value);
+        setAvailableRooms([]);  // Reset available rooms
+        setSelectedRoom('');     // Reset selected room
+        setBeds([]);             // Reset available beds
+    };
+
+    const handleFloorChange = (e) => {
+        setFloor(e.target.value);
+        setAvailableRooms([]);  // Reset available rooms
+        setSelectedRoom('');     // Reset selected room
+        setBeds([]);             // Reset available beds
+    };
+
     return (
         <Container className="mt-4">
             <h1 className="mb-4 text-center">New Booking</h1>
@@ -102,7 +125,7 @@ const Book = () => {
                 <Col md={4}>
                     <Form.Group controlId="roomType">
                         <Form.Label>Room Type</Form.Label>
-                        <Form.Control as="select" value={roomType} onChange={(e) => setRoomType(e.target.value)}>
+                        <Form.Control as="select" value={roomType} onChange={handleRoomTypeChange}>
                             <option value="">Select Room Type</option>
                             {roomCategory.map(category => (
                                 <option key={category.room_type_id} value={category.room_type_id}>
@@ -115,7 +138,7 @@ const Book = () => {
                 <Col md={4}>
                     <Form.Group controlId="dorm">
                         <Form.Label>Dorm</Form.Label>
-                        <Form.Control as="select" value={dorm} onChange={(e) => setDorm(e.target.value)}>
+                        <Form.Control as="select" value={dorm} onChange={handleDormChange}>
                             <option value="">Select Dorm</option>
                             {dorms.map(d => (
                                 <option key={d.dorm} value={d.dorm}>
@@ -128,7 +151,7 @@ const Book = () => {
                 <Col md={4}>
                     <Form.Group controlId="floor">
                         <Form.Label>Floor</Form.Label>
-                        <Form.Control as="select" value={floor} onChange={(e) => setFloor(e.target.value)}>
+                        <Form.Control as="select" value={floor} onChange={handleFloorChange}>
                             <option value="">Select Floor</option>
                             {floors.map(f => (
                                 <option key={f.floor_number} value={f.floor_number}>
@@ -160,53 +183,65 @@ const Book = () => {
                 <Alert variant="warning">No available rooms found for the selected criteria.</Alert>
             )}
 
-            {availableRooms.length > 0 && (
-                <>
-                    <h2 className="mt-4">Available Rooms</h2>
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>Room Number</th>
-                                <th>Room Type ID</th>
-                                <th>Price (VND)</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {availableRooms.map(room => (
-                                <tr key={room.room_id}>
-                                    <td>{room.room_number}</td>
-                                    <td>{room.room_type_id}</td>
-                                    <td>{room.price}</td>
-                                    <td>{room.availability_status}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </>
-            )}
+            <Row>
+                {/* Available Rooms - 2/3 of width */}
+                <Col md={8}>
+                    {availableRooms.length > 0 && (
+                        <>
+                            <h2 className="mt-4">Available Rooms</h2>
+                            <Table striped bordered hover>
+                                <thead>
+                                    <tr>
+                                        <th>Room Number</th>
+                                        <th>Room Type ID</th>
+                                        <th>Price (VND)</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {availableRooms.map(room => (
+                                        <tr key={room.room_id} onClick={() => fetchGetBedAvailableFromRoom(room.room_id)}>
+                                            <td>{room.room_number}</td>
+                                            <td>{room.room_type_id}</td>
+                                            <td>{room.price}</td>
+                                            <td>{room.availability_status}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </>
+                    )}
+                </Col>
 
-            {beds.length > 0 && (
-                <div>
-                    <h3 className="mt-4">Available Beds</h3>
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>Bed Number</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {beds.map(bed => (
-                                <tr key={bed.bed_id}>
-                                    <td>{bed.bed_number}</td>
-                                    <td>{bed.availability_status}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </div>
-            )}
+                {/* Available Beds - 1/3 of width */}
+                <Col md={4}>
+                    {selectedRoom && beds.length > 0 ? (
+                        <div>
+                            <h3 className="mt-4">Available Beds for Room {selectedRoom}</h3>
+                            <Table striped bordered hover>
+                                <thead>
+                                    <tr>
+                                        <th>Bed Number</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {beds.map(bed => (
+                                        <tr key={bed.bed_id}>
+                                            <td>{bed.bed_number}</td>
+                                            <td>{bed.availability_status}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </div>
+                    ) : selectedRoom && beds.length === 0 ? (
+                        <Alert variant="info">No available beds for the selected room.</Alert>
+                    ) : (
+                        <Alert variant="info">Please select a room to see available beds.</Alert>
+                    )}
+                </Col>
+            </Row>
         </Container>
     );
 };
