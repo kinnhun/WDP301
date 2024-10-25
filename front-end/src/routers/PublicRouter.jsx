@@ -7,11 +7,13 @@ import UserList from "../pages/Manager/ManageUser/UserList";
 import News from "../pages/Student/news/news";
 import PaymentHistory from "../pages/Student/paymentHistory/PaymentHistory";
 
+import LayoutAdmin from "../layouts/LayoutAdmin";
+import Dashboard from "../pages/Admin/Dashboard";
 import OTPPage from "../pages/Login/Verify";
 import RequestManagement from "../pages/Manager/RequestManagement/RequestManagement";
 import Profile from "../pages/profile/profile";
-import Book from "../pages/Student/bookings/Book";
 import Bookings from "../pages/Student/bookings/Bookings";
+import Book from "../pages/Student/bookings/CreateBooking";
 import EWUsage from "../pages/Student/ewUsage/EWUsage";
 import Home from "../pages/Student/home/Home";
 import NewsDetail from "../pages/Student/news/newDetails";
@@ -39,12 +41,18 @@ const publicRouter = () => {
           element={<ResidentHistories></ResidentHistories>}
         />
         <Route path="/student/bookings" element={<Bookings />} />
-        <Route path="/student/booking/book" element={<Book />} />
+        <Route path="/student/booking/create-booking" element={<Book />} />
         <Route path="/student/EWUsage" element={<EWUsage />} />
         <Route path="/student/paymentHistory" element={<PaymentHistory />} />
         <Route path="/profile/:id" element={<Profile />} />
 
       </Route>
+      <Route element={<LayoutAdmin />}>
+      <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
+      <Route path="/admin/dashboard" element={<Dashboard />} />
+      </Route>
+
+
     </Routes>
   );
 };

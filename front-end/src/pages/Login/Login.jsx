@@ -93,11 +93,11 @@ const Login = () => {
         setIsLoading(false);
 
         if (user.role === 4) {
-          navigate("/student");
+          navigate("/student/home");
         } else if (user.role === 2) {
           navigate("/manager");
         } else if (user.role === 1) {
-          navigate("/admin");
+          navigate("/admin/dashboard");
         } else {
           navigate("/staff");
         }
