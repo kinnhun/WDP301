@@ -2,7 +2,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
 import { Alert, Button, Col, Container, Form, Modal, Row, Table } from 'react-bootstrap';
-
+import { verifyAccessToken } from "../../../utils/jwt";
 
 const Book = () => {
     const [roomType, setRoomType] = useState('');
@@ -95,38 +95,69 @@ const Book = () => {
         }
     };
 
-    const handleConfirmBooking = async () => {
-        const totalAmount = availableRooms.find(room => room.room_id === selectedRoom).price; // Giả sử giá phòng
-        const userId = 1; // ID của người dùng, cần lấy từ context hoặc state quản lý người dùng
-        const startDate = new Date(); // Ngày bắt đầu booking
-        const endDate = new Date(); // Ngày kết thúc booking, có thể tùy chỉnh theo yêu cầu
     
-        // Tạo đối tượng booking
+    const handleConfirmBooking = async () => {
+        console.log('Selected Room:', selectedRoom);
+        console.log('Available Rooms:', availableRooms);
+    
+        const selectedRoomDetails = availableRooms.find(room => room.room_id === Number(selectedRoom));
+        if (!selectedRoomDetails) {
+            console.error('Selected room not found in available rooms');
+            return;
+        }
+    
+        console.log('Selected Room Details:', selectedRoomDetails);
+    
+        const totalAmount = selectedRoomDetails?.price || 0;
+    
+        // Lấy userId từ token
+        const token = JSON.parse(localStorage.getItem("token"));
+        console.log('Token:', token);
+    
+        const user = verifyAccessToken(token);
+        console.log('Decoded User:', user);
+        const userId = user ? user.id : null;
+    
+        if (!userId) {
+            console.error('User ID is not available');
+            return;
+        }
+    
+        const startDate = new Date();
+        const endDate = new Date();
+    
+        console.log('Selected Room Type:', roomType);
+        console.log('Room Categories:', roomCategory);
+    
+        const roomTypeName = roomCategory.find(category => category.room_type_id === roomType);
+        console.log('Found Room Type:', roomTypeName);
+    
         const bookingInfo = {
             room_id: selectedRoom,
             user_id: userId,
-            start_date: startDate.toISOString(), // Chuyển đổi thành định dạng ISO
+            start_date: startDate.toISOString(),
             end_date: endDate.toISOString(),
             total_amount: totalAmount,
-            payment_status: 'Pending', // Hoặc giá trị mặc định bạn muốn
-            booking_status: 'Confirmed', // Hoặc giá trị mặc định bạn muốn
+            payment_status: 'Pending',
+            booking_status: 'Confirmed',
             bed_id: selectedBed,
+            roomType: roomTypeName ? roomTypeName.category_name : 'Unknown',
+            dorm,
+            floor,
         };
     
-        try {
-            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/booking/create`, bookingInfo);
-            if (response.data.success) {
-                setBookingDetails(bookingInfo); // Cập nhật thông tin booking
-                setShowBookingDetails(true); // Hiển thị popup với chi tiết booking
-            } else {
-                console.error('Không thể xác nhận booking:', response.data.message);
-            }
-        } catch (error) {
-            console.error('Error confirming booking:', error);
-        }
+        console.log('Booking Info:', bookingInfo);
+    
+        // await axios.post('/api/bookings', bookingInfo); // Gửi bookingInfo nếu cần
+    
+        setBookingDetails(bookingInfo);
+        setShowBookingDetails(true);
     };
     
-
+    
+    
+    
+    
     useEffect(() => {
         fetchRoomCategory();
         fetchFloors();
@@ -134,7 +165,7 @@ const Book = () => {
     }, []);
 
     useEffect(() => {
-        fetchAvailableRooms(); 
+        fetchAvailableRooms();
     }, [roomType, dorm, floor]);
 
     const handleRoomTypeChange = (e) => {
@@ -301,20 +332,18 @@ const Book = () => {
                 </Col>
             </Row>
 
-            {/* Modal để hiển thị thông tin booking */}
             <Modal show={showBookingDetails} onHide={() => setShowBookingDetails(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Booking Details</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <p><strong>Room Type:</strong> {bookingDetails.roomType}</p>
+                    <p><strong>Dorm:</strong> {bookingDetails.dorm}</p>
+                    <p><strong>Floor:</strong> {bookingDetails.floor}</p>
                     <p><strong>Room ID:</strong> {bookingDetails.room_id}</p>
-                    <p><strong>User ID:</strong> {bookingDetails.user_id}</p>
-                    <p><strong>Start Date:</strong> {new Date(bookingDetails.start_date).toLocaleString()}</p>
-                    <p><strong>End Date:</strong> {new Date(bookingDetails.end_date).toLocaleString()}</p>
-                    <p><strong>Total Amount:</strong> {bookingDetails.total_amount} VND</p>
-                    <p><strong>Payment Status:</strong> {bookingDetails.payment_status}</p>
-                    <p><strong>Booking Status:</strong> {bookingDetails.booking_status}</p>
                     <p><strong>Bed ID:</strong> {bookingDetails.bed_id}</p>
+                    <p><strong>User ID:</strong> {bookingDetails.user_id}</p>
+                    <p><strong>Total Amount:</strong> {bookingDetails.total_amount} VND</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowBookingDetails(false)}>
