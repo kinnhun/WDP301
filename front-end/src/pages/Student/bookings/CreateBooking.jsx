@@ -126,10 +126,8 @@ const Book = () => {
         const startDate = new Date();
         const endDate = new Date();
     
-        console.log('Selected Room Type:', roomType);
-        console.log('Room Categories:', roomCategory);
-    
-        const roomTypeName = roomCategory.find(category => category.room_type_id === roomType);
+        // Lấy roomType từ selectedRoomDetails
+        const roomTypeName = roomCategory.find(category => category.room_type_id === selectedRoomDetails.room_type_id);
         console.log('Found Room Type:', roomTypeName);
     
         const bookingInfo = {
@@ -139,7 +137,7 @@ const Book = () => {
             end_date: endDate.toISOString(),
             total_amount: totalAmount,
             payment_status: 'Pending',
-            booking_status: 'Confirmed',
+            booking_status: 'Pending',
             bed_id: selectedBed,
             roomType: roomTypeName ? roomTypeName.category_name : 'Unknown',
             dorm,
@@ -288,7 +286,8 @@ const Book = () => {
                 <Col md={4}>
                     {selectedRoom && beds.length > 0 ? (
                         <div>
-                            <h3 className="mt-4">Available Beds for Room {selectedRoom}</h3>
+                            <h3 className="mt-4">Available Beds for Room {availableRooms.find(room => room.room_id === Number(selectedRoom))?.room_number}</h3>
+
                             <Form.Group controlId="bedSelect">
                                 <Form.Label>Select Bed</Form.Label>
                                 <Form.Control as="select" value={selectedBed} onChange={(e) => setSelectedBed(e.target.value)}>
@@ -348,6 +347,9 @@ const Book = () => {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowBookingDetails(false)}>
                         Close
+                    </Button>
+                    <Button  >
+                        Payment
                     </Button>
                 </Modal.Footer>
             </Modal>
