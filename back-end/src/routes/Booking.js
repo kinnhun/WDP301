@@ -6,7 +6,7 @@ const bookingRouter = express.Router();
 bookingRouter.get("/", bookingController.getAllBookings);
 
 // Tạo booking mới
-bookingRouter.post("/", bookingController.createBooking);
+bookingRouter.post("/create", bookingController.createBooking);
 
 // Lấy booking theo ID
 bookingRouter.get("/:id", bookingController.getBookingById);
