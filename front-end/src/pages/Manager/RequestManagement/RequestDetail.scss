@@ -1,0 +1,120 @@
+.request-detail {
+  width: 100%;
+
+  &__title {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+}
+
+.request-detail-content {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  width: 100%;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #666;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+
+  &:hover {
+    color: #333;
+  }
+}
+
+.detail-item {
+  margin: 10px 0;
+
+  strong {
+    display: inline-block;
+    width: 120px;
+    font-weight: bold;
+    color: #333;
+  }
+}
+
+/* Styles for the message input */
+.message-input {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+
+  label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+  }
+
+  input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    outline: none;
+
+    &:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
+    }
+  }
+}
+
+/* Styles for the status select */
+.status-select {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+
+  label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+  }
+
+  select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    outline: none;
+
+    &:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
+    }
+  }
+}
+
+/* Styles for the submit button */
+.submit-button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 20px;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:active {
+    background-color: #004494;
+  }
+}

@@ -1,4 +1,3 @@
-import React from "react";
 import "./Request.scss";
 import RequestTable from "./RequestTable";
 import Sidebar from "./Sidebar";

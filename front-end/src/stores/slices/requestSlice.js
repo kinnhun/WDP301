@@ -7,7 +7,7 @@ export const requestSlice = createSlice({
     requestList: [],
     sortedList: [],
     status: "idle",
-    page: 1,
+    request: {},
   },
   reducers: {
     sortByStatus: (state, action) => {
@@ -16,6 +16,9 @@ export const requestSlice = createSlice({
       } else {
         state.sortedList = state.requestList.filter((request) => request.status === action.payload);
       }
+    },
+    getRequestById: (state, action) => {
+      state.request = state.requestList.find((request) => request.request_id === action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -42,4 +45,4 @@ export const getRequests = createAsyncThunk("getRequest", async (_, { rejectedWi
   return requests;
 });
 
-export const { sortByStatus } = requestSlice.actions;
+export const { sortByStatus, getRequestById } = requestSlice.actions;

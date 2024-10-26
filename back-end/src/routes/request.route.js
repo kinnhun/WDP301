@@ -18,7 +18,7 @@ requestRouter.get("/types", RequestController.getRequestTypes);
 requestRouter.get("/:id", RequestController.getRequestById);
 
 // Cập nhật một yêu cầu bảo trì theo ID
-requestRouter.put("/:id", RequestController.updateRequest);
+requestRouter.patch("/:id", RequestController.updateRequest);
 
 // Xóa một yêu cầu bảo trì theo ID
 requestRouter.delete("/:id", RequestController.deleteRequest);
