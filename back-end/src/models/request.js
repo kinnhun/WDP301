@@ -26,17 +26,22 @@ module.exports = {
   // Lấy yêu cầu bảo trì theo ID
   getRequestById: async (requestId) => {
     return sql.query`
-            SELECT [request_id]
-                ,[room_id]
-                ,[user_id]
-                ,[description]
-                ,[status]
-                ,[created_at]
-                ,[updated_at]
-                ,[request_type]
-                ,[reply]
-                ,[semester]
-            FROM [dbo].[MaintenanceRequests]
+            SELECT [Requests].[request_id]
+                ,[Rooms].[room_number]
+                ,[Users].[email]
+                ,[Requests].[description]
+                ,[Requests].[status]
+				 ,[request_type].[type_name] as request_type
+				 ,[Requests].[reply]
+                ,[Requests].[created_at]
+                ,[Requests].[updated_at]           
+            FROM [dbo].[Requests]
+			LEFT JOIN [dbo].[Users]
+			ON [Users].[user_id] = [Requests].[user_id]
+			LEFT JOIN [dbo].[request_type]
+			ON [request_type].[id] = [Requests].[request_type]
+			LEFT JOIN [dbo].[Rooms]
+			ON [Rooms].[room_id] = [Requests].[room_id]
             WHERE [request_id] = ${requestId}
         `;
   },
@@ -116,21 +121,14 @@ module.exports = {
   },
 
   // Cập nhật yêu cầu bảo trì
-  updateRequest: async (requestId, updates) => {
-    const { roomId, userId, description, status, requestType, reply, semester } = updates;
-
+  updateRequest: async (status, reply, requestId) => {
     return sql.query`
-            UPDATE [dbo].[MaintenanceRequests]
-            SET 
-                [room_id] = ${roomId},
-                [user_id] = ${userId},
-                [description] = ${description},
-                [status] = ${status},
-                [updated_at] = SYSDATETIME(),
-                [request_type] = ${requestType},
-                [reply] = ${reply},
-                [semester] = ${semester}
-            WHERE [request_id] = ${requestId}
+          UPDATE [dbo].[Requests]
+   SET 
+      [status] = ${status}
+      ,[reply] = ${reply}
+      ,[updated_at] = SYSDATETIME()
+ WHERE [request_id] = ${requestId}
         `;
   },
 
