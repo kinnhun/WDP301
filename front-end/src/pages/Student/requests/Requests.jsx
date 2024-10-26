@@ -5,6 +5,7 @@ import { FaStar } from "react-icons/fa";
 import axios from "../../../utils/axios";
 import { verifyAccessToken } from "../../../utils/jwt";
 import Spinner from "../../../components/Spinner/Spinner";
+import "./Requests.scss";
 
 const Requests = () => {
   const [requests, setRequests] = useState([]);
@@ -137,13 +138,12 @@ const Requests = () => {
       <Table striped bordered hover className="mt-3">
         <thead>
           <tr>
-            <th>Room ID</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Request Type</th>
-            <th>Reply</th>
-            <th>Created Date</th>
-            <th>Updated Date</th>
+            <th width="5%">Room ID</th>
+            <th width="20%">Request Type</th>
+            <th width="20%">Reply</th>
+            <th width="10%">Status</th>
+            <th width="15%">Created Date</th>
+            <th width="15%">Updated Date</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -151,10 +151,9 @@ const Requests = () => {
           {requests.map((request, index) => (
             <tr key={index}>
               <td>{request.room_id}</td>
-              <td>{request.description}</td>
-              <td>{request.status}</td>
               <td>{request.request_type}</td>
               <td>{request.reply}</td>
+              <td>{request.status}</td>
               <td>{toLocaleData(request.created_at)}</td>
               <td>{toLocaleData(request.updated_at)}</td>
               <td>
@@ -275,6 +274,7 @@ const Requests = () => {
                 rows={3}
                 value={newRequestContent}
                 onChange={(e) => setNewRequestContent(e.target.value)}
+                maxLength="200"
               />
             </Form.Group>
           </Form>

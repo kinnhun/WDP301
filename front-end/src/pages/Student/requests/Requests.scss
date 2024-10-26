@@ -1,0 +1,19 @@
+// Requests.scss
+
+// Table Styling
+.table {
+  width: 100%;
+
+  th,
+  td {
+    max-width: 200px;
+    vertical-align: middle;
+    word-wrap: break-word;
+    white-space: normal; // Allows text to wrap to the next line
+  }
+
+  th,
+  td {
+    overflow-wrap: break-word; // Breaks long words if needed
+  }
+}

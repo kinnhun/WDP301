@@ -91,6 +91,7 @@ function RequestDetail() {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Enter your message"
+            maxLength="200"
           />
         </div>
 
