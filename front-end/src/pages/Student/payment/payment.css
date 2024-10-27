@@ -1,0 +1,19 @@
+.payment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Căn giữa theo chiều ngang */
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    height: 100vh; /* Chiếm toàn bộ chiều cao của viewport */
+  }
+  
+  .qr-container {
+    text-align: center; /* Căn giữa văn bản */
+  }
+  
+  .qr-code {
+    max-width: 500px; /* Đặt kích thước tối đa cho QR Code */
+    max-height: 500px; /* Đặt chiều cao tối đa cho QR Code */
+    width: 80%; /* Để QR Code có thể thu nhỏ linh hoạt */
+    height: auto; /* Giữ tỷ lệ cho QR Code */
+  }
+  
