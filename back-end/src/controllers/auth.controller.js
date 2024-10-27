@@ -28,7 +28,8 @@ const login = async (req, res) => {
 const loginWithGoogle = async (req, res) => {
   try {
     const { email } = req.body;
-    if (!email) {
+      if (!email) {
+
       const error = new Error("Email are required");
       error.status = 401;
       throw error;
@@ -51,13 +52,13 @@ const loginWithGoogle = async (req, res) => {
 
 const verify = async (req, res) => {
   try {
-    const { email, otp } = req.body;
-    if (!email || !otp) {
-      const error = new Error("Email and OTP are required");
+    const { id, email, otp } = req.body;
+    if (!id || !email || !otp) {
+      const error = new Error("Missing required fields");
       error.status = 400;
       throw error;
     }
-    const token = await authService.verifyUser(email, otp);
+    const token = await authService.verifyUser(id, email, otp);
     return successResponse({
       res,
       message: "Verified successfully",
@@ -75,13 +76,13 @@ const verify = async (req, res) => {
 
 const sendOTP = async (req, res) => {
   try {
-    const { email } = req.body;
-    if (!email) {
-      const error = new Error("Email is required");
+    const { id, email } = req.body;
+    if (!email || !id) {
+      const error = new Error("Missing required fields");
       error.status = 400;
       throw error;
     }
-    await authService.sendOTP(email);
+    await authService.sendOTP(id, email);
     return successResponse({
       res,
       message: "Send OTP successfully",

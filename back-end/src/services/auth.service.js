@@ -32,15 +32,15 @@ const login = async (email, password) => {
       error.status = 401;
       throw error;
     }
-    if (user.recordset[0].status === 0) {
+    if (user.recordset[0].status === false) {
       const userId = user.recordset[0].user_id;
       const verifiedUser = await User.checkAccountVerified(userId);
       const otp = generateOTP();
       if (verifiedUser.recordset.length === 0) {
-        await User.createUserOtp(user.recordset[0].id, otp);
+        await User.createUserOtp(userId, otp);
         await sendVerifyEmail(email, otp);
       } else {
-        await User.updateUserOTP(email, otp);
+        await User.updateUserOTP(userId, otp);
         await sendVerifyEmail(email, otp);
       }
     }
@@ -53,6 +53,7 @@ const login = async (email, password) => {
       status: user.recordset[0].status,
       role: user.recordset[0].role_id,
     });
+
     return accessToken;
   } catch (error) {
     throw error;
@@ -86,9 +87,9 @@ const loginWithGoogle = async (email) => {
   }
 };
 
-const sendOTP = async (email) => {
+const sendOTP = async (id, email) => {
   try {
-    const verifiedUser = await User.checkAccountVerified(email);
+    const verifiedUser = await User.checkAccountVerified(id);
     const otp = generateOTP();
     if (verifiedUser.recordset.length === 0) {
       const error = new Error("User not found");
@@ -96,15 +97,15 @@ const sendOTP = async (email) => {
       throw error;
     }
     await sendVerifyEmail(email, otp);
-    await User.updateUserOTP(email, otp);
+    await User.updateUserOTP(id, otp);
   } catch (error) {
     throw error;
   }
 };
 
-const verifyUser = async (email, otp) => {
+const verifyUser = async (id, email, otp) => {
   try {
-    const user = await User.checkAccountVerified(email);
+    const user = await User.checkAccountVerified(id);
     const currentTimeUTC = new Date();
     const timezoneOffset = 7;
     const currentTimeGMT7 = new Date(currentTimeUTC.getTime() + timezoneOffset * 60 * 60 * 1000);

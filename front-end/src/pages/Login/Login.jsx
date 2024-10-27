@@ -1,11 +1,11 @@
+import { useGoogleLogin } from "@react-oauth/google";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../../components/Spinner/Spinner";
 import axios from "../../utils/axios";
 import { verifyAccessToken } from "../../utils/jwt";
-import { useState } from "react";
-import Spinner from "../../components/Spinner/Spinner";
-import { useGoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -42,18 +42,19 @@ const Login = () => {
 
         setIsLoading(false);
         reset();
-        if (user.role === "Student") {
-          navigate("/student");
-        } else if (user.role === "Manager") {
-          navigate("/manager");
-        } else if (user.role === "Admin") {
-          navigate("/admin");
+        if (user.role === 1) {
+          navigate("/student/home");
+        } else if (user.role === 2) {
+          navigate("/manager/home");
+        } else if (user.role === 4) {
+          navigate("/admin/home");
         } else {
-          navigate("/staff");
+          navigate("/staff/home");
         }
       }
     } catch (e) {
       setIsLoading(false);
+      console.log(e);
       if (e.status === 404 || e.status === 401) {
         toast.error("Sai email hoặc mật khẩu");
       } else {
@@ -91,26 +92,26 @@ const Login = () => {
 
         setIsLoading(false);
 
-        if (user.role === "Student") {
-          navigate("/student");
-        } else if (user.role === "Manager") {
+        if (user.role === 4) {
+          navigate("/student/home");
+        } else if (user.role === 2) {
           navigate("/manager");
-        } else if (user.role === "Admin") {
-          navigate("/admin");
+        } else if (user.role === 1) {
+          navigate("/admin/dashboard");
         } else {
           navigate("/staff");
         }
       } catch (error) {
         setIsLoading(false);
-        toast.error("Đã có lỗi xảy ra trong quá trình đăng nhập với Google");
         console.error("Error during Google login:", error);
+        toast.error("Tài khoản Google chưa được liên kết với hệ thống");
       }
     },
     onError: () => {
       toast.error("Đăng nhập bằng Google thất bại");
     },
     scope:
-      "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/user.gender.read", // Các scope cần thiết
+      "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
   });
 
   if (isLoading) {
@@ -218,15 +219,6 @@ const Login = () => {
                   </ul>
                 </div>
               </form>
-
-              <footer className="footer footer-alt">
-                <p className="text-muted">
-                  Do not have an account?
-                  <a href="pages-register-2.html" className="text-muted ms-1">
-                    <b>Sign Up</b>
-                  </a>
-                </p>
-              </footer>
             </div>
           </div>
         </div>
