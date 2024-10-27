@@ -1,12 +1,15 @@
 import "./RequestTable.scss";
 import { useSelector, useDispatch } from "react-redux";
-import { getRequests } from "../../../stores/slices/requestSlice";
+import { getRequests, getRequestById } from "../../../stores/slices/requestSlice";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MyPagination from "../../../components/Pagination/Pagination";
 
 function RequestTable() {
   const requests = useSelector((state) => state.request.sortedList);
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   //Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,7 +54,12 @@ function RequestTable() {
         </thead>
         <tbody>
           {currentRequests.map((msg, index) => (
-            <tr key={index}>
+            <tr
+              key={index}
+              onClick={() => {
+                navigate(`/manager/requests/${msg.request_id}`);
+              }}
+            >
               <td>{msg.room_number}</td>
               <td>{msg.email}</td>
               <td>{msg.request_type}</td>

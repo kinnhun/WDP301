@@ -55,7 +55,20 @@ module.exports = {
         error.status = 404;
         throw error;
       }
-      return request.recordsets[0];
+      return request.recordset[0];
+    } catch (error) {
+      throw error;
+    }
+  },
+  updateRequest: async (status, reply, id) => {
+    try {
+      const request = await Request.updateRequest(status, reply, id);
+      if (request.rowsAffected[0] === 0) {
+        const error = new Error("Update request failed");
+        error.status = 500;
+        throw error;
+      }
+      return "Update request successfully";
     } catch (error) {
       throw error;
     }

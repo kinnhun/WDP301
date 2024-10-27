@@ -44,38 +44,37 @@ const Bookings = () => {
             </Link>
            
             <Table striped bordered hover responsive className="table-sm">
-    <thead className="">
-        <tr>
-            <th>Dom</th>
-            <th>floor</th>
-            <th>Room Number</th>
-            <th>Bed Number</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Total Amount</th>
-            <th>Payment Status</th>
-            <th>Booking Status</th>
-            <th>Created At</th>
-        </tr>
-    </thead>
-    <tbody>
-        {bookingsData.map((booking, index) => (
-            <tr key={index}>
-                <td>{booking.dorm}</td>
-                <td>{booking.category_name}</td>
-                <td>{booking.room_number}</td>
-                <td>{booking.bed_number}</td>
-                <td>{new Date(booking.start_date).toLocaleDateString()}</td>
-                <td>{new Date(booking.end_date).toLocaleDateString()}</td>
-                <td>{booking.total_amount}</td>
-                <td>{booking.payment_status}</td>
-                <td>{booking.booking_status}</td>
-                <td>{new Date(booking.created_at).toLocaleString()}</td>
-            </tr>
-        ))}
-    </tbody>
-</Table>
-
+                <thead>
+                    <tr>
+                        <th>Dom</th>
+                        <th>Floor</th>
+                        <th>Room Number</th>
+                        <th>Bed Number</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Total Amount</th>
+                        <th>Payment Status</th> {/* Trạng thái thanh toán */}
+                        <th>Booking Status</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {bookingsData.map((booking, index) => (
+                        <tr key={index}>
+                            <td>{booking.dorm}</td>
+                            <td>{booking.category_name}</td>
+                            <td>{booking.room_number}</td>
+                            <td>{booking.bed_number}</td>
+                            <td>{new Date(booking.start_date).toLocaleDateString()}</td>
+                            <td>{new Date(booking.end_date).toLocaleDateString()}</td>
+                            <td>{booking.total_amount}</td>
+                            <td>{booking.payment_status === 'paid' ? 'Payment Successful' : 'Pending Payment'}</td> {/* Trả về trạng thái thanh toán */}
+                            <td>{booking.booking_status}</td>
+                            <td>{new Date(booking.created_at).toLocaleString()}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
         </div>
     );
 };

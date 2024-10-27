@@ -92,7 +92,6 @@ const getRequestTypes = async (req, res) => {
   }
 };
 
-// Lấy yêu cầu bảo trì theo ID
 const getRequestById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -100,14 +99,14 @@ const getRequestById = async (req, res) => {
 
     return successResponse({
       res,
-      message: "Lấy yêu cầu bảo trì thành công",
+      message: "Lấy đơn yêu cầu thành công",
       data: request,
     });
   } catch (error) {
     return errorResponse({
       res,
       status: 500,
-      message: "Lấy yêu cầu bảo trì thất bại",
+      message: "Lấy đơn yêu cầu thất bại",
       errors: error.message,
     });
   }
@@ -117,18 +116,18 @@ const getRequestById = async (req, res) => {
 const updateRequest = async (req, res) => {
   try {
     const { id } = req.params;
-    const updates = req.body;
-    await MaintenanceRequest.updateRequest(id, updates);
+    const { status, reply } = req.body;
+    const message = await RequestService.updateRequest(status, reply, id);
 
     return successResponse({
       res,
-      message: "Cập nhật yêu cầu bảo trì thành công",
+      message: message,
     });
   } catch (error) {
     return errorResponse({
       res,
       status: 500,
-      message: "Cập nhật yêu cầu bảo trì thất bại",
+      message: "Update request failed",
       errors: error.message,
     });
   }

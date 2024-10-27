@@ -219,15 +219,6 @@ const Login = () => {
                   </ul>
                 </div>
               </form>
-
-              <footer className="footer footer-alt">
-                <p className="text-muted">
-                  Do not have an account?
-                  <a href="pages-register-2.html" className="text-muted ms-1">
-                    <b>Sign Up</b>
-                  </a>
-                </p>
-              </footer>
             </div>
           </div>
         </div>

@@ -19,6 +19,8 @@ import Home from "../pages/Student/home/Home";
 import NewsDetail from "../pages/Student/news/newDetails";
 import Requests from "../pages/student/requests/Requests";
 import ResidentHistories from "../pages/Student/residentHistories/ResidentHistories";
+import RequestDetail from "../pages/Manager/RequestManagement/RequestDetail";
+
 
 const publicRouter = () => {
   return (
@@ -31,8 +33,10 @@ const publicRouter = () => {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/manager/manage-user" element={<UserList />} />
         <Route path="/manager/requests" element={<RequestManagement />} />
+        <Route path="/manager/requests/:id" element={<RequestDetail />} />
         <Route path="/request" element={<Requests />} />
         <Route path="/student/home" element={<Home />} />
+       
         <Route path="/student/requests" element={<Requests />} />
         <Route path="/student/news" element={<News></News>} />
         <Route path="/student/news/view/:id" element={<NewsDetail></NewsDetail>} />
@@ -45,14 +49,11 @@ const publicRouter = () => {
         <Route path="/student/EWUsage" element={<EWUsage />} />
         <Route path="/student/paymentHistory" element={<PaymentHistory />} />
         <Route path="/profile/:id" element={<Profile />} />
-
       </Route>
       <Route element={<LayoutAdmin />}>
-      <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
-      <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
+        <Route path="/admin/dashboard" element={<Dashboard />} />
       </Route>
-
-
     </Routes>
   );
 };
