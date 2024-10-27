@@ -1,3 +1,4 @@
+const { createUser } = require("../models/user");
 const UserService = require("../services/user.service");
 const { successResponse, errorResponse } = require("../utils/response");
 
@@ -47,6 +48,24 @@ module.exports = {
       });
     } catch (error) {
       return errorResponse({ res, message: "Import users failed", error: error.message });
+    }
+  },
+  createUser: async (req, res) => {
+    try {
+      const user = req.body;
+      if (!user) {
+        const error = new Error("Missing required fields: user");
+        error.status = 400;
+        throw error;
+      }
+      const newUser = await UserService.createUser(user);
+      return successResponse({
+        res,
+        message: "Create user successfully",
+        data: newUser,
+      });
+    } catch (error) {
+      return errorResponse({ res, message: "Create user failed", error: error.message });
     }
   },
 };

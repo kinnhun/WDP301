@@ -115,4 +115,58 @@ UPDATE [dbo].[Users]
         VALUES ${values};
     `);
   },
+  createUser: (user) => {
+    return sql.query`
+    INSERT INTO [dbo].[Users]
+           ([username]
+           ,[password]
+           ,[gender]
+           ,[email]
+           ,[status]
+           ,[role_id]
+           ,[created_at]
+           ,[updated_at])
+     VALUES
+           (${user.username}
+           ,${user.password}
+           ,${user.gender}
+           ,${user.email}
+           ,${user.status}
+           ,${user.role}
+           ,SYSDATETIME()
+           ,SYSDATETIME())
+    `;
+  },
+  getNewestUser: () => {
+    return sql.query`
+   /****** Script for SelectTopNRows command from SSMS  ******/
+SELECT TOP 1 [Users].[user_id]
+      ,[Users].[username]
+      ,[Users].[gender]
+      ,[Users].[email]
+      ,[Users].[status]
+	  ,[Roles].[role_name] as role
+      ,[Rooms].[room_number] as room
+	  ,[Rooms].[floor_number] as floor
+	  ,[Beds].[bed_number] as bed
+	  ,[Rooms].[dorm],
+	  [RoomCategories].[category_name] as roomType
+	  ,[Bookings].[semester]
+      ,[Users].[created_at]
+	  ,[Bookings].[start_date]
+	  ,[Bookings].[end_date]
+  FROM [dbo].[Users]
+  LEFT JOIN [Bookings]
+  ON [Users].[user_id] = [Bookings].[user_id]
+  LEFT JOIN [Rooms]
+  ON [Bookings].[room_id] = [Rooms].[room_id]
+  LEFT JOIN [Beds]
+  ON [Bookings].[bed_id] = [Beds].[bed_id]
+  LEFT JOIN [Roles]
+  ON [Users].[role_id] = [Roles].[role_id]
+  LEFT JOIN [RoomCategories]
+  ON [Rooms].[room_type_id] = [RoomCategories].[room_type_id]
+  ORDER BY [Users].[user_id] DESC
+    `;
+  },
 };

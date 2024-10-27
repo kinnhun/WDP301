@@ -52,6 +52,20 @@ export const userSlice = createSlice({
     builder.addCase(importUsers.rejected, (state) => {
       state.status = "failed";
     });
+
+    //createUser
+    builder.addCase(createUser.pending, (state) => {
+      state.status = "pending";
+    });
+    builder.addCase(createUser.fulfilled, (state, action) => {
+      if (!action.payload) return;
+      state.userList = [...state.userList, action.payload];
+      state.sortedUserList = [...state.userList, action.payload];
+      state.status = "idle";
+    });
+    builder.addCase(createUser.rejected, (state) => {
+      state.status = "failed";
+    });
   },
 });
 
@@ -64,6 +78,7 @@ export const getUsers = createAsyncThunk("getUsers", async (_, { rejectedWithVal
     return response.data.data;
   } catch (e) {
     console.error(e);
+    return rejectedWithValue("data");
   }
 });
 
@@ -75,11 +90,13 @@ export const updateUserRole = createAsyncThunk(
       if (!response.status === 200) {
         return rejectedWithValue("data");
       }
+      console.log(response);
       toast.success("Update user role successfully");
       return data;
     } catch (e) {
       toast.error("Update user role failed");
       console.error(e);
+      return rejectedWithValue("data");
     }
   }
 );
@@ -98,6 +115,23 @@ export const importUsers = createAsyncThunk(
     } catch (e) {
       toast.error("Import users failed");
       console.error(e);
+      return rejectedWithValue("data");
     }
   }
 );
+
+export const createUser = createAsyncThunk("createUser", async (user, { rejectedWithValue }) => {
+  try {
+    const response = await axios.post(`/user`, user);
+    if (!response.status === 200) {
+      return rejectedWithValue(response);
+    }
+    toast.success("Create user successfully");
+    return response.data.data;
+  } catch (e) {
+    console.log(e);
+    toast.error("Create user failed");
+    console.error(e);
+    return rejectedWithValue(e.response.data);
+  }
+});

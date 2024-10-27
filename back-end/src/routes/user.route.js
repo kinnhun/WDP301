@@ -5,5 +5,6 @@ const userRouter = express.Router();
 userRouter.get("/", UserController.getUsers);
 userRouter.patch("/:id/role", UserController.updateUserRole);
 userRouter.post("/import", UserController.importUsers);
+userRouter.post("/", UserController.createUser);
 
 module.exports = userRouter;

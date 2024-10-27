@@ -35,4 +35,19 @@ module.exports = {
       throw e;
     }
   },
+  createUser: async (user) => {
+    try {
+      const newUser = await User.createUser(user);
+      if (newUser.rowsAffected[0] === 0) {
+        const error = new Error("Create user failed");
+        error.status = 400;
+        throw error;
+      }
+
+      const newestUser = await User.getNewestUser();
+      return newestUser.recordset[0];
+    } catch (e) {
+      throw e;
+    }
+  },
 };
