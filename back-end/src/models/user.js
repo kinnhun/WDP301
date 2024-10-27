@@ -57,4 +57,34 @@ module.exports = {
     WHERE [Users].[user_id] = ${userId}
     `;
   },
+  getUsers: () => {
+    return sql.query`
+  SELECT [Users].[user_id]
+      ,[Users].[username]
+      ,[Users].[gender]
+      ,[Users].[email]
+      ,[Users].[status]
+	  ,[Roles].[role_name] as role
+      ,[Rooms].[room_number] as room
+	  ,[Rooms].[floor_number] as floor
+	  ,[Beds].[bed_number] as bed
+	  ,[Rooms].[dorm],
+	  [RoomCategories].[category_name] as roomType
+	  ,[Bookings].[semester]
+      ,[Users].[created_at]
+	  ,[Bookings].[start_date]
+	  ,[Bookings].[end_date]
+  FROM [dbo].[Users]
+  LEFT JOIN [Bookings]
+  ON [Users].[user_id] = [Bookings].[user_id]
+  LEFT JOIN [Rooms]
+  ON [Bookings].[room_id] = [Rooms].[room_id]
+  LEFT JOIN [Beds]
+  ON [Bookings].[bed_id] = [Beds].[bed_id]
+  LEFT JOIN [Roles]
+  ON [Users].[role_id] = [Roles].[role_id]
+  LEFT JOIN [RoomCategories]
+  ON [Rooms].[room_type_id] = [RoomCategories].[room_type_id]
+    `;
+  },
 };
