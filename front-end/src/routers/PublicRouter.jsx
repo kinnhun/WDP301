@@ -21,6 +21,7 @@ import Requests from "../pages/student/requests/Requests";
 import ResidentHistories from "../pages/Student/residentHistories/ResidentHistories";
 import RequestDetail from "../pages/Manager/RequestManagement/RequestDetail";
 
+
 const publicRouter = () => {
   return (
     <Routes>
@@ -35,6 +36,7 @@ const publicRouter = () => {
         <Route path="/manager/requests/:id" element={<RequestDetail />} />
         <Route path="/request" element={<Requests />} />
         <Route path="/student/home" element={<Home />} />
+       
         <Route path="/student/requests" element={<Requests />} />
         <Route path="/student/news" element={<News></News>} />
         <Route path="/student/news/view/:id" element={<NewsDetail></NewsDetail>} />
