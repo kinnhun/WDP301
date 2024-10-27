@@ -350,7 +350,7 @@ const Book = () => {
                         Close
                     </Button>
                     <Button  >
-                        <Payment></Payment>
+                    <Payment bookingDetails={bookingDetails} />
                     </Button>
                 </Modal.Footer>
             </Modal>
