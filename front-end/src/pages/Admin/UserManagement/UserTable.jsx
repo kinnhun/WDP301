@@ -1,18 +1,20 @@
 // UserTable.js
 import "./UserTable.scss";
 import { useSelector, useDispatch } from "react-redux";
-import { getUsers } from "../../../stores/slices/userSlice";
+import { getUsers, updateUserRole } from "../../../stores/slices/userSlice";
 import { useEffect, useState } from "react";
 import UserDetail from "./UserDetail";
+import EditRole from "./EditRole";
 
 const UserTable = () => {
   const userList = useSelector((state) => state.user.userList);
   const dispatch = useDispatch();
   const [selectedUser, setSelectedUser] = useState(null);
+  const [editUser, setEditUser] = useState(null);
 
   useEffect(() => {
     dispatch(getUsers());
-  }, [dispatch]);
+  }, []);
 
   const handleViewUser = (user) => {
     setSelectedUser(user);
@@ -20,6 +22,19 @@ const UserTable = () => {
 
   const handleCloseModal = () => {
     setSelectedUser(null);
+  };
+
+  const handleEditUser = (user) => {
+    setEditUser(user);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditUser(null);
+  };
+
+  const handleSaveUserRole = (updatedUser) => {
+    dispatch(updateUserRole(updatedUser));
+    setEditUser(null);
   };
 
   return (
@@ -52,7 +67,9 @@ const UserTable = () => {
                   <button className="btn btn-primary" onClick={() => handleViewUser(user)}>
                     View
                   </button>
-                  <button className="btn btn-warning">Edit</button>
+                  <button className="btn btn-warning" onClick={() => handleEditUser(user)}>
+                    Edit
+                  </button>
                   <button className="btn btn-danger">Delete</button>
                 </td>
               </tr>
@@ -61,6 +78,13 @@ const UserTable = () => {
       </table>
 
       {selectedUser && <UserDetail user={selectedUser} onClose={handleCloseModal} />}
+      {editUser && (
+        <EditRole
+          user={editUser}
+          onClose={handleCloseEditModal}
+          handleSaveUserRole={handleSaveUserRole}
+        />
+      )}
     </div>
   );
 };

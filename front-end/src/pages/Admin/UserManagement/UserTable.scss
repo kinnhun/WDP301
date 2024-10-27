@@ -1,6 +1,5 @@
 table {
   width: 100%;
-  height: 600px;
   border-collapse: collapse;
   thead {
     th {
@@ -11,6 +10,7 @@ table {
   }
   tbody {
     tr {
+      max-height: 50px;
       &:nth-child(even) {
         background-color: #f9f9f9;
       }

@@ -87,4 +87,32 @@ module.exports = {
   ON [Rooms].[room_type_id] = [RoomCategories].[room_type_id]
     `;
   },
+  updateUserRole: (userId, role) => {
+    return sql.query`
+UPDATE [dbo].[Users]
+   SET
+      [role_id] = (SELECT role_id FROM Roles WHERE role_name = ${role})
+ WHERE [Users].[user_id] = ${userId}
+    `;
+  },
+  importUsers: (users) => {
+    const values = users
+      .map(
+        (user) => `
+        ('${user.username}',
+         '${user.password}',
+         ${user.gender},
+         '${user.email}',
+         ${user.status},
+         ${user.role_id},
+         SYSDATETIME(),
+         SYSDATETIME())`
+      )
+      .join(",");
+    return sql.query(`
+        INSERT INTO [dbo].[Users]
+        ([username], [password], [gender], [email], [status], [role_id], [created_at], [updated_at])
+        VALUES ${values};
+    `);
+  },
 };

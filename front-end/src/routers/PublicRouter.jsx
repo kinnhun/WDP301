@@ -31,10 +31,10 @@ const publicRouter = () => {
 
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/manager/manage-user" element={<UserList />} />
+        <Route path="/manager/manage-users" element={<UserList />} />
         <Route path="/manager/requests" element={<RequestManagement />} />
         <Route path="/manager/requests/:id" element={<RequestDetail />} />
-        <Route path="/admin/users" element={<UserManagement />} />
+        <Route path="/admin/manage-users" element={<UserManagement />} />
         <Route path="/request" element={<Requests />} />
         <Route path="/student/home" element={<Home />} />
         <Route path="/student/requests" element={<Requests />} />
