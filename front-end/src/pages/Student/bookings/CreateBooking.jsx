@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
 import { Alert, Button, Col, Container, Form, Modal, Row, Table } from 'react-bootstrap';
 import { verifyAccessToken } from "../../../utils/jwt";
+import Payment from '../payment/payment';
 
 const Book = () => {
     const [roomType, setRoomType] = useState('');
@@ -349,7 +350,7 @@ const Book = () => {
                         Close
                     </Button>
                     <Button  >
-                        Payment
+                        <Payment></Payment>
                     </Button>
                 </Modal.Footer>
             </Modal>

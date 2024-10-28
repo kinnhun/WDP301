@@ -22,6 +22,7 @@ import ResidentHistories from "../pages/Student/residentHistories/ResidentHistor
 import RequestDetail from "../pages/Manager/RequestManagement/RequestDetail";
 import UserManagement from "../pages/Admin/UserManagement/UserManagement";
 
+
 const publicRouter = () => {
   return (
     <Routes>
@@ -37,6 +38,7 @@ const publicRouter = () => {
         <Route path="/admin/manage-users" element={<UserManagement />} />
         <Route path="/request" element={<Requests />} />
         <Route path="/student/home" element={<Home />} />
+       
         <Route path="/student/requests" element={<Requests />} />
         <Route path="/student/news" element={<News></News>} />
         <Route path="/student/news/view/:id" element={<NewsDetail></NewsDetail>} />
