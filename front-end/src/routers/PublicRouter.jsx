@@ -10,6 +10,7 @@ import PaymentHistory from "../pages/Student/paymentHistory/PaymentHistory";
 import LayoutAdmin from "../layouts/LayoutAdmin";
 import Dashboard from "../pages/Admin/Dashboard";
 import OTPPage from "../pages/Login/Verify";
+import RequestDetail from "../pages/Manager/RequestManagement/RequestDetail";
 import RequestManagement from "../pages/Manager/RequestManagement/RequestManagement";
 import Profile from "../pages/profile/profile";
 import Bookings from "../pages/Student/bookings/Bookings";
