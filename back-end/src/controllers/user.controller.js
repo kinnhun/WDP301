@@ -68,4 +68,21 @@ module.exports = {
       return errorResponse({ res, message: "Create user failed", error: error.message });
     }
   },
+  deleteUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        const error = new Error("Missing required fields: id");
+        error.status = 400;
+        throw error;
+      }
+      const msg = await UserService.deleteUser(id);
+      return successResponse({
+        res,
+        message: msg,
+      });
+    } catch (error) {
+      return errorResponse({ res, message: "Delete user failed", error: error.message });
+    }
+  },
 };

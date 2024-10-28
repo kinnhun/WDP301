@@ -169,4 +169,12 @@ SELECT TOP 1 [Users].[user_id]
   ORDER BY [Users].[user_id] DESC
     `;
   },
+  deleteUser: (userId) => {
+    return sql.query`
+    DELETE FROM [dbo].[OTP_Temp]
+      WHERE [OTP_Temp].[user_id] = ${userId}
+DELETE FROM [dbo].[Users]
+      WHERE [Users].[user_id] = ${userId}
+    `;
+  },
 };

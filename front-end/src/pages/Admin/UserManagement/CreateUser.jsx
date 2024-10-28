@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "../../../stores/slices/userSlice";
@@ -14,7 +14,6 @@ const CreateUser = ({ show, onClose }) => {
 
   const status = useSelector((state) => state.user.status);
   const dispatch = useDispatch();
-  console.log(status);
 
   const onSubmit = (data) => {
     dispatch(createUser(data));

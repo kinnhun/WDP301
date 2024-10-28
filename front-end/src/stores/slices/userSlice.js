@@ -66,6 +66,20 @@ export const userSlice = createSlice({
     builder.addCase(createUser.rejected, (state) => {
       state.status = "failed";
     });
+
+    //deleteUser
+    builder.addCase(deleteUser.pending, (state) => {
+      state.status = "pending";
+    });
+    builder.addCase(deleteUser.fulfilled, (state, action) => {
+      if (!action.payload) return;
+      state.userList = state.userList.filter((user) => user.user_id !== action.payload);
+      state.sortedUserList = state.sortedUserList.filter((user) => user.user_id !== action.payload);
+      state.status = "idle";
+    });
+    builder.addCase(deleteUser.rejected, (state) => {
+      state.status = "failed";
+    });
   },
 });
 
@@ -131,6 +145,22 @@ export const createUser = createAsyncThunk("createUser", async (user, { rejected
   } catch (e) {
     console.log(e);
     toast.error("Create user failed");
+    console.error(e);
+    return rejectedWithValue(e.response.data);
+  }
+});
+
+export const deleteUser = createAsyncThunk("deleteUser", async (id, { rejectedWithValue }) => {
+  try {
+    const response = await axios.delete(`/user/${id}`);
+    if (!response.status === 200) {
+      return rejectedWithValue(response);
+    }
+    toast.success("Delete user successfully");
+    return id;
+  } catch (e) {
+    console.log(e);
+    toast.error("Delete user failed");
     console.error(e);
     return rejectedWithValue(e.response.data);
   }

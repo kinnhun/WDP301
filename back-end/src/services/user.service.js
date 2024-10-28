@@ -50,4 +50,18 @@ module.exports = {
       throw e;
     }
   },
+  deleteUser: async (userId) => {
+    try {
+      const user = await User.deleteUser(userId);
+      console.log(user);
+      if (user.rowsAffected[1] === 0) {
+        const error = new Error("User not found");
+        error.status = 404;
+        throw error;
+      }
+      return "Delete user successfully";
+    } catch (e) {
+      throw e;
+    }
+  },
 };
