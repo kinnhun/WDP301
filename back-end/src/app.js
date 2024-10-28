@@ -6,9 +6,10 @@ const authRouter = require("./routes/auth.route");
 const requestRouter = require("./routes/request.route");
 const profileRouter = require("./routes/profile");
 const Newrouter = require("./routes/new");
-const bookingRouter =require("./routes/Booking");
+const bookingRouter = require("./routes/Booking");
 const roomRouter = require("./routes/room");
 const routerBed = require("./routes/bed");
+const userRouter = require("./routes/user.route");
 
 app.use(cors());
 app.use(morgan("dev"));
@@ -21,11 +22,11 @@ app.use("/news", Newrouter);
 app.use("/auth", authRouter);
 app.use("/requests", requestRouter);
 app.use("/profile", profileRouter);
-app.use("/news",Newrouter);
 app.use("/auth", authRouter);
 app.use("/profile", profileRouter);
 app.use("/api/booking", bookingRouter);
 app.use("/api/room", roomRouter);
-app.use("/api/bed", routerBed)
+app.use("/api/bed", routerBed);
+app.use("/user", userRouter);
 
 module.exports = app;
