@@ -15,7 +15,6 @@ function RequestTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemPerPage = 10;
   const totalPages = Math.ceil(requests.length / itemPerPage);
-  console.log(totalPages);
   const indexOfLastUser = currentPage * itemPerPage;
   const indexOfFirstUser = indexOfLastUser - itemPerPage;
   const currentRequests = requests.slice(indexOfFirstUser, indexOfLastUser);

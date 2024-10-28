@@ -20,6 +20,8 @@ import Home from "../pages/Student/home/Home";
 import NewsDetail from "../pages/Student/news/newDetails";
 import Requests from "../pages/student/requests/Requests";
 import ResidentHistories from "../pages/Student/residentHistories/ResidentHistories";
+import RequestDetail from "../pages/Manager/RequestManagement/RequestDetail";
+import UserManagement from "../pages/Admin/UserManagement/UserManagement";
 
 
 const publicRouter = () => {
@@ -31,9 +33,10 @@ const publicRouter = () => {
 
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/manager/manage-user" element={<UserList />} />
+        <Route path="/manager/manage-users" element={<UserList />} />
         <Route path="/manager/requests" element={<RequestManagement />} />
         <Route path="/manager/requests/:id" element={<RequestDetail />} />
+        <Route path="/admin/manage-users" element={<UserManagement />} />
         <Route path="/request" element={<Requests />} />
         <Route path="/student/home" element={<Home />} />
        
