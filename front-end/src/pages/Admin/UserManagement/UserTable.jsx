@@ -6,12 +6,25 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import UserDetail from "./UserDetail";
 import EditRole from "./EditRole";
+import MyPagination from "../../../components/Pagination/Pagination";
 
 const UserTable = () => {
   const userList = useSelector((state) => state.user.userList);
   const dispatch = useDispatch();
   const [selectedUser, setSelectedUser] = useState(null);
   const [editUser, setEditUser] = useState(null);
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 10;
+  const totalPages = Math.ceil(userList.length / itemPerPage);
+  const indexOfLastUser = currentPage * itemPerPage;
+  const indexOfFirstUser = indexOfLastUser - itemPerPage;
+  const currentUsers = userList.slice(indexOfFirstUser, indexOfLastUser);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   useEffect(() => {
     dispatch(getUsers());
@@ -95,8 +108,8 @@ const UserTable = () => {
           </tr>
         </thead>
         <tbody>
-          {userList.length !== 0 &&
-            userList.map((user) => (
+          {currentUsers.length !== 0 &&
+            currentUsers.map((user) => (
               <tr key={user.user_id}>
                 <td>{user.username}</td>
                 <td>{user.email}</td>
@@ -129,6 +142,11 @@ const UserTable = () => {
           handleSaveUserRole={handleSaveUserRole}
         />
       )}
+      <MyPagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };
