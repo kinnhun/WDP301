@@ -1,12 +1,15 @@
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Payment.css';
 
 const Payment = ({ bookingDetails }) => {
   const [qrUrl, setQrUrl] = useState('');
   const [transactionId, setTransactionId] = useState('');
   const [transactionStatus, setTransactionStatus] = useState('');
+  const [countdown, setCountdown] = useState(5);
+  const navigate = useNavigate();
 
   const createVietQR = async () => {
     try {
@@ -69,6 +72,22 @@ const Payment = ({ bookingDetails }) => {
     }
   };
 
+  useEffect(() => {
+    if (transactionStatus === 'success') {
+      const countdownInterval = setInterval(() => {
+        setCountdown((prevCountdown) => {
+          if (prevCountdown === 1) {
+            clearInterval(countdownInterval);
+            navigate('/student/bookings');
+          }
+          return prevCountdown - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(countdownInterval);
+    }
+  }, [transactionStatus, navigate]);
+
   return (
     <div className="payment-container">
       {qrUrl && (
@@ -84,16 +103,14 @@ const Payment = ({ bookingDetails }) => {
           {transactionStatus === 'pending' ? (
             <div>
               <p>Waiting for payment...</p>
-              <p>Room Type: 6 Bed</p>
-              <p>Dorm: B</p>
-              <p>Floor: 3</p>
-              <p>Room ID: {bookingDetails.room_id}</p>
-              <p>Bed ID: {bookingDetails.bed_id}</p>
-              <p>User ID: {bookingDetails.user_id}</p>
-              <p>Total Amount: {bookingDetails.total_amount} VND</p>
+            </div>
+          ) : transactionStatus === 'success' ? (
+            <div>
+              <p>Payment successful!</p>
+              <p>Redirecting in {countdown} seconds...</p>
             </div>
           ) : (
-            <p>Payment successful!</p>
+            <p>Payment status: {transactionStatus}</p>
           )}
         </div>
       )}

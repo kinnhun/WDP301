@@ -9,6 +9,7 @@ const Newrouter = require("./routes/new");
 const bookingRouter =require("./routes/Booking");
 const roomRouter = require("./routes/room");
 const routerBed = require("./routes/bed");
+const routerPayment = require("./routes/payment");
 
 app.use(cors());
 app.use(morgan("dev"));
@@ -27,5 +28,6 @@ app.use("/profile", profileRouter);
 app.use("/api/booking", bookingRouter);
 app.use("/api/room", roomRouter);
 app.use("/api/bed", routerBed)
+app.use("/api/payment", routerPayment)
 
 module.exports = app;

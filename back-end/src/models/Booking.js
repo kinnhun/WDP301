@@ -37,6 +37,7 @@ const Booking = {
                 [bed_id]
             FROM [dbo].[Bookings]
             WHERE [booking_id] = ${bookingId}
+            ORDER BY [booking_id] DESC;
         `;
     },
 
