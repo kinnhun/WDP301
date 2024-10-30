@@ -9,6 +9,7 @@ import PaymentHistory from "../pages/Student/paymentHistory/PaymentHistory";
 
 import LayoutAdmin from "../layouts/LayoutAdmin";
 import Dashboard from "../pages/Admin/Dashboard";
+import UserManagement from "../pages/Admin/UserManagement/UserManagement";
 import OTPPage from "../pages/Login/Verify";
 import RequestDetail from "../pages/Manager/RequestManagement/RequestDetail";
 import RequestManagement from "../pages/Manager/RequestManagement/RequestManagement";
@@ -20,8 +21,6 @@ import Home from "../pages/Student/home/Home";
 import NewsDetail from "../pages/Student/news/newDetails";
 import Requests from "../pages/student/requests/Requests";
 import ResidentHistories from "../pages/Student/residentHistories/ResidentHistories";
-import RequestDetail from "../pages/Manager/RequestManagement/RequestDetail";
-import UserManagement from "../pages/Admin/UserManagement/UserManagement";
 
 
 const publicRouter = () => {

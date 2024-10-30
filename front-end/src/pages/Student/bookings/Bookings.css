@@ -8,44 +8,114 @@
 }
 
 .table-sm thead tr {
-    background-color: #727CF5; /* Màu nền cho tiêu đề bảng */
-    color: #ffffff; /* Màu chữ cho tiêu đề */
+    background-color: #727CF5;
+    /* Màu nền cho tiêu đề bảng */
+    color: #ffffff;
+    /* Màu chữ cho tiêu đề */
 }
 
-.table-sm th, .table-sm td {
-    padding: 12px 15px; /* Khoảng cách cho ô */
-    text-align: left; /* Canh trái cho chữ */
-    border-bottom: 1px solid #dddddd; /* Đường viền dưới ô */
+.table-sm th,
+.table-sm td {
+    padding: 12px 15px;
+    /* Khoảng cách cho ô */
+    text-align: left;
+    /* Canh trái cho chữ */
+    border-bottom: 1px solid #dddddd;
+    /* Đường viền dưới ô */
 }
 
 .table-sm tbody tr:hover {
-    background-color: #f1f1f1; /* Màu nền khi hover */
+    background-color: #f1f1f1;
+    /* Màu nền khi hover */
 }
 
 .table-sm tbody tr:nth-of-type(even) {
-    background-color: #f9f9f9; /* Màu nền cho hàng chẵn */
+    background-color: #f9f9f9;
+    /* Màu nền cho hàng chẵn */
 }
 
 .table-sm tbody tr:nth-of-type(odd) {
-    background-color: #ffffff; /* Màu nền cho hàng lẻ */
+    background-color: #ffffff;
+    /* Màu nền cho hàng lẻ */
 }
 
 .table-sm th {
-    position: sticky; /* Để tiêu đề luôn ở trên cùng */
-    top: 0; /* Dính vào đầu khi cuộn */
+    position: sticky;
+    /* Để tiêu đề luôn ở trên cùng */
+    top: 0;
+    /* Dính vào đầu khi cuộn */
 }
 
 .table-sm td {
-    font-size: 14px; /* Kích thước chữ cho ô */
-    color: #333; /* Màu chữ cho ô */
+    font-size: 14px;
+    /* Kích thước chữ cho ô */
+    color: #333;
+    /* Màu chữ cho ô */
 }
 
 .table-sm th:first-child,
 .table-sm td:first-child {
-    border-left: 2px solid #727CF5; /* Đường viền trái cho ô đầu tiên */
+    border-left: 2px solid #727CF5;
+    /* Đường viền trái cho ô đầu tiên */
 }
 
 .table-sm th:last-child,
 .table-sm td:last-child {
-    border-right: 2px solid #727CF5; /* Đường viền phải cho ô cuối cùng */
+    border-right: 2px solid #727CF5;
+    /* Đường viền phải cho ô cuối cùng */
+}
+
+
+
+.custom-modal .modal-body-layout {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.bill-details {
+    flex: 2;
+    font-size: 1rem;
+    color: #333;
+}
+
+.qr-code {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-modal-lg .modal-dialog {
+    max-width: 900px;
+    /* Tăng chiều rộng Modal */
+}
+
+.modal-body-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.bill-details {
+    flex: 3;
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.6;
+}
+
+.qr-code {
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 250px;
 }
