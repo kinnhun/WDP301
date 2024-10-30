@@ -8,9 +8,43 @@ export const userSlice = createSlice({
     userList: [],
     sortedUserList: [],
     status: "idle",
+    roleFilter: "",
+    statusFilter: "",
+    emailFilter: "",
     page: 1,
   },
-  reducers: {},
+  reducers: {
+    setRoleFilter: (state, action) => {
+      state.roleFilter = action.payload;
+      userSlice.caseReducers.filterUsers(state);
+    },
+    setStatusFilter: (state, action) => {
+      const status = action.payload;
+      if (status === "") {
+        state.statusFilter = status;
+      } else if (status === "active") {
+        state.statusFilter = true;
+      } else if (status === "inactive") {
+        state.statusFilter = false;
+      }
+      userSlice.caseReducers.filterUsers(state);
+    },
+    setEmailFilter: (state, action) => {
+      state.emailFilter = action.payload;
+      userSlice.caseReducers.filterUsers(state);
+    },
+    filterUsers: (state) => {
+      const { roleFilter, statusFilter, emailFilter, userList } = state;
+      state.sortedUserList = userList.filter((user) => {
+        const matchesRole = roleFilter ? user.role === roleFilter : true;
+        const matchesStatus = statusFilter === "" || user.status === statusFilter;
+        const matchesEmailOrUsername = emailFilter
+          ? user.email.includes(emailFilter) || user.username.includes(emailFilter)
+          : true;
+        return matchesRole && matchesStatus && matchesEmailOrUsername;
+      });
+    },
+  },
   extraReducers: (builder) => {
     //userList
     builder.addCase(getUsers.pending, (state) => {
@@ -83,13 +117,15 @@ export const userSlice = createSlice({
   },
 });
 
+export const { setRoleFilter, setStatusFilter, setEmailFilter } = userSlice.actions;
+
 export const getUsers = createAsyncThunk("getUsers", async (_, { rejectedWithValue }) => {
   try {
     const response = await axios.get("/user");
     if (!response.status === 200) {
       return rejectedWithValue("data");
     }
-    return response.data.data;
+    return response.data.data.filter((user) => user.role !== "admin");
   } catch (e) {
     console.error(e);
     return rejectedWithValue("data");
