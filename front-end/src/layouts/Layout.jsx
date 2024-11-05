@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header from "../components/general/Header";
-import Sidebar from "../components/general/Sidebar";
+import Sidebar from "../components/general/Sidebar/Sidebar";
 import "./Layout.scss";
 
 const Layout = () => {
