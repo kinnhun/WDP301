@@ -96,41 +96,46 @@ const Book = () => {
         }
     };
 
-    
+
     const handleConfirmBooking = async () => {
         console.log('Selected Room:', selectedRoom);
         console.log('Available Rooms:', availableRooms);
-    
+
         const selectedRoomDetails = availableRooms.find(room => room.room_id === Number(selectedRoom));
         if (!selectedRoomDetails) {
             console.error('Selected room not found in available rooms');
             return;
         }
-    
+
         console.log('Selected Room Details:', selectedRoomDetails);
-    
+
         const totalAmount = selectedRoomDetails?.price || 0;
-    
+
         // Lấy userId từ token
         const token = JSON.parse(localStorage.getItem("token"));
         console.log('Token:', token);
-    
+
         const user = verifyAccessToken(token);
         console.log('Decoded User:', user);
         const userId = user ? user.id : null;
-    
+        const userName = user ? user.username : 'Unknown';  // Sử dụng username từ user nếu có
+
         if (!userId) {
             console.error('User ID is not available');
             return;
         }
-    
+
         const startDate = new Date();
         const endDate = new Date();
-    
+
         // Lấy roomType từ selectedRoomDetails
         const roomTypeName = roomCategory.find(category => category.room_type_id === selectedRoomDetails.room_type_id);
         console.log('Found Room Type:', roomTypeName);
-    
+
+        // Lấy bed_number từ selectedBed
+        const selectedBedDetails = beds.find(bed => bed.bed_id === Number(selectedBed));
+        const bedNumber = selectedBedDetails ? selectedBedDetails.bed_number : 'Unknown';
+
         const bookingInfo = {
             room_id: selectedRoom,
             user_id: userId,
@@ -143,20 +148,25 @@ const Book = () => {
             roomType: roomTypeName ? roomTypeName.category_name : 'Unknown',
             dorm,
             floor,
+
+            // Thông tin hiển thị thêm
+            room_name: selectedRoomDetails.room_number,  // Lấy room_number từ selectedRoomDetails
+            user_name: userName,                         // Lấy user_name từ token
+            bed_number: bedNumber,                       // Lấy bed_number từ selectedBedDetails
         };
-    
+
         console.log('Booking Info:', bookingInfo);
-    
-        // await axios.post('/api/bookings', bookingInfo); // Gửi bookingInfo nếu cần
-    
+
+        // Hiển thị booking info và mở modal
         setBookingDetails(bookingInfo);
         setShowBookingDetails(true);
     };
-    
-    
-    
-    
-    
+
+
+
+
+
+
     useEffect(() => {
         fetchRoomCategory();
         fetchFloors();
@@ -332,26 +342,28 @@ const Book = () => {
                 </Col>
             </Row>
 
-            <Modal show={showBookingDetails} onHide={() => setShowBookingDetails(false)}>
+
+
+            <Modal show={showBookingDetails} onHide={() => setShowBookingDetails(false)} className="custom-modal-lg">
                 <Modal.Header closeButton>
                     <Modal.Title>Booking Details</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <p><strong>Room Type:</strong> {bookingDetails.roomType}</p>
-                    <p><strong>Dorm:</strong> {bookingDetails.dorm}</p>
-                    <p><strong>Floor:</strong> {bookingDetails.floor}</p>
-                    <p><strong>Room ID:</strong> {bookingDetails.room_id}</p>
-                    <p><strong>Bed ID:</strong> {bookingDetails.bed_id}</p>
-                    <p><strong>User ID:</strong> {bookingDetails.user_id}</p>
-                    <p><strong>Total Amount:</strong> {bookingDetails.total_amount} VND</p>
+                <Modal.Body className="modal-body-layout">
+                    <div className="bill-details">
+                        <p><strong>Room Type:</strong> {bookingDetails.roomType}</p>
+                        <p><strong>Dorm:</strong> {bookingDetails.dorm}</p>
+                        <p><strong>Floor:</strong> {bookingDetails.floor}</p>
+                        <p><strong>Room Number:</strong> {bookingDetails.room_name}</p>
+                        <p><strong>Bed Number:</strong> {bookingDetails.bed_number}</p>
+                        <p><strong>User:</strong> {bookingDetails.user_name}</p>
+                        <p><strong>Total Amount:</strong> {bookingDetails.total_amount} VND</p>
+                    </div>
+                    <div className="qr-code">
+                        <Payment bookingDetails={bookingDetails} />
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowBookingDetails(false)}>
-                        Close
-                    </Button>
-                    <Button  >
-                        <Payment></Payment>
-                    </Button>
+                    <Button variant="secondary" onClick={() => setShowBookingDetails(false)}>Close</Button>
                 </Modal.Footer>
             </Modal>
         </Container>
