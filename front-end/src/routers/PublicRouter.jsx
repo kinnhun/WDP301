@@ -18,9 +18,9 @@ import Home from "../pages/Student/home/Home";
 import NewsDetail from "../pages/Student/news/newDetails";
 import Requests from "../pages/student/requests/Requests";
 import ResidentHistories from "../pages/Student/residentHistories/ResidentHistories";
-import UserManagement from "../pages/Admin/UserManagement/UserManagement";
 import Report from "../pages/Student/report/Report";
 import ReportManager from "../pages/Manager/ReportManagement/ReportManager";
+import ManagerHome from "../pages/Manager/Home/Home";
 
 const PublicRouter = () => {
   return (
@@ -30,14 +30,14 @@ const PublicRouter = () => {
       <Route path="/verify" element={<OTPPage />} />
 
       <Route element={<Layout />}>
+        {/* Manager */}
+        <Route path="/manager" element={<Navigate to={"/manager/home"} />} />
         <Route path="/manager/manage-users" element={<UserList />} />
         <Route path="/manager/requests" element={<RequestManagement />} />
         <Route path="/manager/requests/:id" element={<RequestDetail />} />
-        <Route path="/admin/manage-users" element={<UserManagement />} />
         <Route path="/manager/reports" element={<ReportManager />} />
-
-        
-        {/* Student Routes */}
+        <Route path="/manager/home" element={<ManagerHome />} />
+        {/* student */}
         <Route path="/student/home" element={<Home />} />
         <Route path="/student/requests" element={<Requests />} />
         <Route path="/student/news" element={<News />} />
@@ -49,9 +49,7 @@ const PublicRouter = () => {
         <Route path="/student/paymentHistory" element={<PaymentHistory />} />
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/student/reports" element={<Report />} />
-
-       
-
+        <Route path="/admin/manage-users" element={<UserManagement />} />
       </Route>
 
       <Route element={<LayoutAdmin />}>
