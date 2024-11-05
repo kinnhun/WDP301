@@ -6,6 +6,7 @@ import News from "../pages/Student/news/news";
 import PaymentHistory from "../pages/Student/paymentHistory/PaymentHistory";
 import LayoutAdmin from "../layouts/LayoutAdmin";
 import Dashboard from "../pages/Admin/Dashboard";
+import UserManagement from "../pages/Admin/UserManagement/UserManagement";
 import OTPPage from "../pages/Login/Verify";
 import RequestDetail from "../pages/Manager/RequestManagement/RequestDetail";
 import RequestManagement from "../pages/Manager/RequestManagement/RequestManagement";

@@ -34,9 +34,7 @@ const PaymentHistory = () => {
                             room: payment.room_number,
                             createdDate: new Date(payment.created_at).toLocaleString(), // Chuyển đổi định dạng ngày giờ
                             status: payment.payment_status,
-                            totalAmount: `$${(payment.total_amount / 100).toFixed(2)}`, // Chia cho 100 để hiển thị tiền tệ
                             totalAmountPaid: `$${(payment.total_amount / 100).toFixed(2)}`, // Dữ liệu cho số tiền đã thanh toán
-                            totalRemainingAmount: '$0', // Dữ liệu cho số tiền còn lại
                         }));
                         setPaymentHistoryData(formattedData); // Cập nhật dữ liệu vào state
                     } else {
@@ -68,9 +66,7 @@ const PaymentHistory = () => {
                         <th>Room</th>
                         <th>Created Date</th>
                         <th>Status</th>
-                        <th>Total Amount</th>
                         <th>Total Amount Paid</th>
-                        <th>Total Remaining Amount</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,9 +77,7 @@ const PaymentHistory = () => {
                                 <td>{payment.room}</td>
                                 <td>{payment.createdDate}</td>
                                 <td>{payment.status}</td>
-                                <td>{payment.totalAmount}</td>
                                 <td>{payment.totalAmountPaid}</td>
-                                <td>{payment.totalRemainingAmount}</td>
                             </tr>
                         ))
                     ) : (
