@@ -10,6 +10,7 @@ const bookingRouter = require("./routes/Booking");
 const roomRouter = require("./routes/room");
 const routerBed = require("./routes/bed");
 const userRouter = require("./routes/user.route");
+const reportRouter = require("./routes/report.route");
 
 const routerPayment = require("./routes/payment");
 
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true })); //Nhận body từ urlencoded
 app.use("/news", Newrouter);
 app.use("/auth", authRouter);
 app.use("/requests", requestRouter);
+app.use('/reports', reportRouter);
 app.use("/profile", profileRouter);
 app.use("/auth", authRouter);
 app.use("/profile", profileRouter);
