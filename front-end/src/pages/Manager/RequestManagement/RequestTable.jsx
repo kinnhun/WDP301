@@ -1,6 +1,7 @@
 import "./RequestTable.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { getRequests, setFilter } from "../../../stores/slices/requestSlice";
+import { getUsers } from "../../../stores/slices/userSlice";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MyPagination from "../../../components/Pagination/Pagination";
@@ -9,18 +10,20 @@ import axios from "../../../utils/axios";
 import { Modal, Button, Form } from "react-bootstrap";
 
 function RequestTable() {
-  //redux
   const requests = useSelector((state) => state.request.sortedList);
   const filters = useSelector((state) => state.request.filters);
+  const users = useSelector((state) => state.user.userList);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  //
+
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newRequestTitle, setNewRequestTitle] = useState("");
   const [newRequestContent, setNewRequestContent] = useState("");
+  const [newRequestEmail, setNewRequestEmail] = useState("");
+  const [newRequestRoom, setNewRequestRoom] = useState(""); // State for selected room
   const [requestTypes, setRequestTypes] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemPerPage = 10;
   const totalPages = Math.ceil(requests.length / itemPerPage);
@@ -34,54 +37,24 @@ function RequestTable() {
 
   const toLocaleData = (isoDate) => {
     const date = new Date(isoDate);
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const day = String(date.getUTCDate()).padStart(2, "0");
-    const hours = String(date.getUTCHours()).padStart(2, "0");
-    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-    const seconds = String(date.getUTCSeconds()).padStart(2, "0");
-
-    return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+    return `${date.getUTCDate()}-${String(date.getUTCMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${date.getUTCFullYear()} ${String(date.getUTCHours()).padStart(2, "0")}:${String(
+      date.getUTCMinutes()
+    ).padStart(2, "0")}:${String(date.getUTCSeconds()).padStart(2, "0")}`;
   };
 
-  useEffect(() => {
-    dispatch(getRequests());
-  }, [dispatch]);
-
-  const handleFilterChange = (filterName, value) => {
-    dispatch(setFilter({ [filterName]: value }));
-  };
-
-  const handleCreateNewRequest = () => {
-    setShowCreateModal(true);
-  };
-
-  const handleClose = () => {
-    setNewRequestTitle("");
-    setNewRequestContent("");
-    setShowCreateModal(false); // Close Create modal
-  };
-
-  const handleSubmitNewRequest = async () => {
+  const getRooms = async () => {
     try {
-      if (newRequestTitle === "" || newRequestContent === "") {
-        toast.error("Please fill in all fields");
-        return;
-      }
-
-      const response = await axios.post("/requests", {
-        room_id: 3,
-        // user_id: userId,
-        request_type: newRequestTitle,
-        description: newRequestContent,
-      });
-      if (response.status === 201) {
-        toast.success("Create request successfully");
-        handleClose();
-        getRequests();
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/room`);
+      if (response.status === 200) {
+        setRooms(response.data.data);
+      } else {
+        console.error("Không thể lấy dữ liệu danh mục phòng:", response.data.message);
       }
     } catch (error) {
-      toast.error("Create request failed");
+      console.error("Error fetching room categories:", error);
     }
   };
 
@@ -97,20 +70,69 @@ function RequestTable() {
   };
 
   useEffect(() => {
-    getRequests();
+    dispatch(getRequests());
+    dispatch(getUsers());
     getRequestTypes();
-  }, []);
+    getRooms();
+    getRequestTypes();
+  }, [dispatch]);
+
+  const handleFilterChange = (filterName, value) => {
+    dispatch(setFilter({ [filterName]: value }));
+  };
+
+  const handleCreateNewRequest = () => {
+    setShowCreateModal(true);
+  };
+
+  const handleClose = () => {
+    setNewRequestTitle("");
+    setNewRequestContent("");
+    setNewRequestEmail("");
+    setNewRequestRoom(""); // Reset room field
+    setShowCreateModal(false);
+  };
+
+  const handleSubmitNewRequest = async () => {
+    try {
+      if (!newRequestTitle || !newRequestContent || !newRequestEmail || !newRequestRoom) {
+        toast.error("Please fill in all fields");
+        return;
+      }
+
+      const response = await axios.post("/requests", {
+        room_id: newRequestRoom,
+        user_id: newRequestEmail,
+        request_type: newRequestTitle,
+        description: newRequestContent,
+      });
+      if (response.status === 201) {
+        toast.success("Create request successfully");
+        handleClose();
+        dispatch(getRequests());
+      }
+    } catch (error) {
+      toast.error("Create request failed");
+    }
+  };
+
+  const staffUsers = users.filter((user) => user.role === "staff");
 
   return (
     <div className="request-table">
       <div className="filters">
-        <input
+        <select
           className="form-control"
-          type="text"
-          placeholder="Filter by Request Type"
           value={filters.requestType}
           onChange={(e) => handleFilterChange("requestType", e.target.value)}
-        />
+        >
+          <option value="">Filter by Request Type</option>
+          {requestTypes.map((type) => (
+            <option key={type.id} value={type.type_name}>
+              {type.type_name}
+            </option>
+          ))}
+        </select>
         <input
           className="form-control"
           type="text"
@@ -145,7 +167,7 @@ function RequestTable() {
             <tr
               key={index}
               onClick={() => {
-                navigate(`/manager/requests/${msg.request_id}`);
+                navigate(`/manager/request/${msg.request_id}`);
               }}
             >
               <td>{msg.room_number}</td>
@@ -157,20 +179,56 @@ function RequestTable() {
           ))}
         </tbody>
       </table>
+
       <Modal show={showCreateModal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Create New Request</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group controlId="formRequestTitle">
+            <Form.Group controlId="formRequestEmail" className="mt-3">
+              <Form.Label>Select Email</Form.Label>
+              <Form.Control
+                as="select"
+                value={newRequestEmail}
+                onChange={(e) => setNewRequestEmail(e.target.value)}
+              >
+                <option value="" hidden>
+                  Choose...
+                </option>
+                {staffUsers.map((user) => (
+                  <option key={user.id} value={user.user_id}>
+                    {user.email}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formRequestRoom">
+              <Form.Label>Select Room</Form.Label>
+              <Form.Control
+                as="select"
+                value={newRequestRoom}
+                onChange={(e) => setNewRequestRoom(e.target.value)}
+              >
+                <option value="" hidden>
+                  Choose...
+                </option>
+                {rooms.map((room) => (
+                  <option key={room.id} value={room.room_id}>
+                    {room.room_number}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="formRequestTitle" className="mt-3">
               <Form.Label>Select Title</Form.Label>
               <Form.Control
                 as="select"
                 value={newRequestTitle}
                 onChange={(e) => setNewRequestTitle(e.target.value)}
               >
-                <option value="" selected hidden>
+                <option value="" hidden>
                   Choose...
                 </option>
                 {requestTypes.map((type) => (

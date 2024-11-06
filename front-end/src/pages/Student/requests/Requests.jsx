@@ -126,7 +126,7 @@ const Requests = () => {
       <Table striped bordered hover className="mt-3">
         <thead>
           <tr>
-            <th width="5%">Room ID</th>
+            <th width="5%">Room Number</th>
             <th width="20%">Request Type</th>
             <th width="20%">Reply</th>
             <th width="10%">Status</th>
@@ -138,7 +138,7 @@ const Requests = () => {
         <tbody>
           {requests.map((request, index) => (
             <tr key={index}>
-              <td>{request.room_id}</td>
+              <td>{request.room_number}</td>
               <td>{request.request_type}</td>
               <td>{request.reply}</td>
               <td>{request.status}</td>
