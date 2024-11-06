@@ -21,4 +21,13 @@ bookingRouter.delete("/:id", bookingController.deleteBooking);
 bookingRouter.get("/user/:userId", bookingController.getBookingsByUserId);
 
 
+//lấy booking theo [booking_status]
+bookingRouter.get("/booking-status/:statusName", bookingController.getBookingStatus);
+
+//update booking status
+bookingRouter.put("/booking-status/:id/:statusName", bookingController.updateBookingStatus);
+
+// New route for bulk updating booking statuses
+bookingRouter.put("/bulk-status", bookingController.bulkUpdateBookingStatus);
+
 module.exports = bookingRouter;

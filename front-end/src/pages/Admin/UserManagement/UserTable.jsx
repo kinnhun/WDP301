@@ -3,15 +3,13 @@ import "./UserTable.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { getUsers, updateUserRole, deleteUser } from "../../../stores/slices/userSlice";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import UserDetail from "./UserDetail";
 import EditRole from "./EditRole";
 import MyPagination from "../../../components/Pagination/Pagination";
-import Spinner from "../../../components/Spinner/Spinner";
-import toast from "react-hot-toast";
 
 const UserTable = () => {
-  const userList = useSelector((state) => state.user.sortedUserList);
-  const status = useSelector((state) => state.user.status);
+  const userList = useSelector((state) => state.user.userList);
   const dispatch = useDispatch();
   const [selectedUser, setSelectedUser] = useState(null);
   const [editUser, setEditUser] = useState(null);
@@ -53,20 +51,46 @@ const UserTable = () => {
     setEditUser(null);
   };
 
+  const confirmDelete = () => {
+    return new Promise((resolve) => {
+      toast(
+        (t) => (
+          <span>
+            Bạn có chắc muốn xóa không?
+            <button
+              onClick={() => {
+                toast.dismiss(t.id); // Đóng thông báo sau khi xác nhận
+                resolve(true); // Trả về true khi người dùng nhấn "Xóa"
+              }}
+              style={{ marginLeft: "10px", color: "red" }}
+            >
+              Xóa
+            </button>
+            <button
+              onClick={() => {
+                toast.dismiss(t.id); // Đóng thông báo khi người dùng nhấn "Hủy"
+                resolve(false); // Trả về false khi người dùng nhấn "Hủy"
+              }}
+              style={{ marginLeft: "10px" }}
+            >
+              Hủy
+            </button>
+          </span>
+        ),
+        {
+          duration: 5000, // Thời gian hiển thị thông báo
+          position: "top-center", // Vị trí hiển thị
+        }
+      );
+    });
+  };
+
   const handleDeleteUser = async (userId) => {
-    const isConfirm = window.confirm("Are you sure you want to delete this user?");
+    const isConfirm = await confirmDelete();
     if (isConfirm) {
       dispatch(deleteUser(userId));
     }
   };
-
-  if (status === "pending") {
-    return <Spinner />;
-  }
-
-  if (status === "failed") {
-    return toast.error("Get users failed");
-  }
 
   return (
     <div>
@@ -101,11 +125,7 @@ const UserTable = () => {
                   <button className="btn btn-warning" onClick={() => handleEditUser(user)}>
                     Edit
                   </button>
-                  <button
-                    className="btn btn-danger"
-                    hidden={user.status ? true : false}
-                    onClick={() => handleDeleteUser(user.user_id)}
-                  >
+                  <button className="btn btn-danger" onClick={() => handleDeleteUser(user.user_id)}>
                     Delete
                   </button>
                 </td>

@@ -17,10 +17,38 @@ const Book = () => {
     const [beds, setBeds] = useState([]);
     const [noRoomsAvailable, setNoRoomsAvailable] = useState(false);
     const [selectedBed, setSelectedBed] = useState('');
+    const [semesters, setSemesters] = useState([]);
 
     // State to manage booking details
     const [showBookingDetails, setShowBookingDetails] = useState(false);
     const [bookingDetails, setBookingDetails] = useState({});
+
+
+    const [semesterStartDate, setSemesterStartDate] = useState('');
+    const [semesterEndDate, setSemesterEndDate] = useState('');
+
+
+    const fetchActiveSemesters = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/semester/active`);
+            if (response.data.success && response.data.data) {
+                if (Array.isArray(response.data.data)) {
+                    setSemesters(response.data.data);
+                } else {
+                    setSemesters([response.data.data]); // Wrap in an array if it's a single object
+                }
+                // Set start_date and end_date for the active semester
+                setSemesterStartDate(response.data.data.start_date);
+                setSemesterEndDate(response.data.data.end_date);
+                console.log('Fetched Semesters:', response.data.data);
+            } else {
+                console.error('Không thể lấy dữ liệu kỳ:', response.data.message);
+            }
+        } catch (error) {
+            console.error('Error fetching active semesters:', error);
+        }
+    };
+
 
     // Fetch functions
     const fetchRoomCategory = async () => {
@@ -125,12 +153,17 @@ const Book = () => {
             return;
         }
 
-        const startDate = new Date();
-        const endDate = new Date();
+        // Use start_date and end_date from the active semester
+        const startDate = semesterStartDate || new Date().toISOString();
+        const endDate = semesterEndDate || new Date().toISOString();
 
         // Lấy roomType từ selectedRoomDetails
         const roomTypeName = roomCategory.find(category => category.room_type_id === selectedRoomDetails.room_type_id);
         console.log('Found Room Type:', roomTypeName);
+
+
+        const semesterDetails = semesters.length > 0 ? semesters[0] : {};
+
 
         // Lấy bed_number từ selectedBed
         const selectedBedDetails = beds.find(bed => bed.bed_id === Number(selectedBed));
@@ -139,8 +172,8 @@ const Book = () => {
         const bookingInfo = {
             room_id: selectedRoom,
             user_id: userId,
-            start_date: startDate.toISOString(),
-            end_date: endDate.toISOString(),
+            start_date: startDate,
+            end_date: endDate,
             total_amount: totalAmount,
             payment_status: 'Pending',
             booking_status: 'Pending',
@@ -149,13 +182,16 @@ const Book = () => {
             dorm,
             floor,
 
+            semester_name: semesterDetails.semester_name, // Add semester name
+            semester_start_date: semesterDetails.start_date, // Add semester start date
+            semester_end_date: semesterDetails.end_date, // Add semester end date
+
             // Thông tin hiển thị thêm
             room_name: selectedRoomDetails.room_number,  // Lấy room_number từ selectedRoomDetails
             user_name: userName,                         // Lấy user_name từ token
             bed_number: bedNumber,                       // Lấy bed_number từ selectedBedDetails
         };
 
-        console.log('Booking Info:', bookingInfo);
 
         // Hiển thị booking info và mở modal
         setBookingDetails(bookingInfo);
@@ -171,6 +207,7 @@ const Book = () => {
         fetchRoomCategory();
         fetchFloors();
         fetchDorms();
+        fetchActiveSemesters();
     }, []);
 
     useEffect(() => {
@@ -201,9 +238,31 @@ const Book = () => {
         setSelectedBed('');      // Reset selected bed
     };
 
+
+    useEffect(() => {
+        console.log('Updated Semesters State:', semesters);
+    }, [semesters]);
+
     return (
         <Container className="mt-4">
             <h1 className="mb-4 text-center">New Booking</h1>
+
+            {semesters.length > 0 ? (
+                <div className="mb-4">
+                    <h2>Semesters</h2>
+                    <ul>
+                        {semesters.map(semester => (
+                            <li key={semester.semester_id}>
+                                {semester.semester_name} - {new Date(semester.start_date).toLocaleDateString()} to {new Date(semester.end_date).toLocaleDateString()}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ) : (
+                <Alert variant="info">No active semesters found.</Alert>
+            )}
+
+
 
             <Row className="mb-3">
                 <Col md={4}>
@@ -357,6 +416,9 @@ const Book = () => {
                         <p><strong>Bed Number:</strong> {bookingDetails.bed_number}</p>
                         <p><strong>User:</strong> {bookingDetails.user_name}</p>
                         <p><strong>Total Amount:</strong> {bookingDetails.total_amount} VND</p>
+                        <p><strong>Semester Start Date:</strong> {new Date(bookingDetails.semester_start_date).toLocaleDateString()}</p>
+                        <p><strong>Semester End Date:</strong> {new Date(bookingDetails.semester_end_date).toLocaleDateString()}</p>
+
                     </div>
                     <div className="qr-code">
                         <Payment bookingDetails={bookingDetails} />

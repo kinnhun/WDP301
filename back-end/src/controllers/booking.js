@@ -228,6 +228,120 @@ const getAllBookings = async (req, res) => {
     }
 };
 
+// Function to get bookings by status name
+const getBookingStatus = async (req, res) => {
+    try {
+        const { statusName } = req.params; // Get the status name from the URL parameters
+
+        // Validate the statusName parameter
+        if (!statusName) {
+            return errorResponse({
+                res,
+                status: 400,
+                message: 'Trạng thái không được cung cấp',
+            });
+        }
+
+        // Call model function to get bookings by status
+        const result = await Booking.getBookingsByStatus(statusName);
+        const bookings = result.recordset; // Extract the recordset from the SQL query result
+
+        if (bookings.length === 0) {
+            return errorResponse({
+                res,
+                status: 404,
+                message: 'Không tìm thấy booking nào với trạng thái này',
+            });
+        }
+
+        return successResponse({
+            res,
+            message: 'Lấy booking theo trạng thái thành công',
+            data: bookings,
+        });
+    } catch (error) {
+        return errorResponse({
+            res,
+            status: 500,
+            message: 'Lấy booking thất bại',
+            errors: error.message,
+        });
+    }
+};
+const updateBookingStatus = async (req, res) => {
+    try {
+        const { id, statusName } = req.params; // Get booking ID and new status from the request parameters
+
+        // Validate that statusName is provided
+        if (!statusName) {
+            return errorResponse({
+                res,
+                status: 400,
+                message: 'Trạng thái không được cung cấp',
+            });
+        }
+
+        // Call the model to update the booking status
+        await Booking.updateBookingStatus(id, statusName);
+
+        return successResponse({
+            res,
+            message: 'Cập nhật trạng thái booking thành công',
+        });
+    } catch (error) {
+        return errorResponse({
+            res,
+            status: 500,
+            message: 'Cập nhật trạng thái booking thất bại',
+            errors: error.message,
+        });
+    }
+};
+
+
+
+
+const bulkUpdateBookingStatus = async (req, res) => {
+    try {
+        const { bookingIds, newStatus } = req.body; // Extract booking IDs and new status from request body
+
+        // Validate input
+        if (!Array.isArray(bookingIds) || bookingIds.length === 0) {
+            return errorResponse({
+                res,
+                status: 400,
+                message: 'No booking IDs provided.',
+            });
+        }
+        if (!newStatus) {
+            return errorResponse({
+                res,
+                status: 400,
+                message: 'No status provided.',
+            });
+        }
+        console.log(newStatus)
+        console.log(bookingIds)
+
+        // Call model function to update statuses
+        const result = await Booking.updateMultipleStatuses(bookingIds, newStatus);
+
+        return successResponse({
+            res,
+            message: 'Booking statuses updated successfully.',
+            data: result,
+        });
+    } catch (error) {
+        console.error('Error updating booking statuses:', error.message);
+        return errorResponse({
+            res,
+            status: 500,
+            message: 'Failed to update booking statuses.',
+            errors: error.message,
+        });
+    }
+};
+
 module.exports = {
     getUserBookings,
     createBooking,
@@ -236,4 +350,7 @@ module.exports = {
     deleteBooking,
     getBookingsByUserId,
     getAllBookings,
+    getBookingStatus,
+    updateBookingStatus,
+    bulkUpdateBookingStatus,
 };
