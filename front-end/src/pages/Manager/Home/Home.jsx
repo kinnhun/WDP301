@@ -1,5 +1,10 @@
-const ManagerHome = () => {
-  return <div>ManagerHome</div>;
-};
 
-export default ManagerHome;
+const Home = () => {
+  return (
+    <div>
+      manager home 
+    </div>
+  )
+}
+
+export default Home

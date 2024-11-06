@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
+import "./Sidebar.scss";
+const SidebarAdmin = () => {
 
-const StudentSidebar = () => {
   return (
     <div>
       {/* <!-- ========== Left Sidebar Start ========== --> */}
@@ -17,6 +18,7 @@ const StudentSidebar = () => {
         </Link>
 
         <div className="h-100" id="leftside-menu-container" data-simplebar>
+          {/* <!--- Sidemenu --> */}
           <ul className="side-nav" style={{ backgroundColor: "#313A46" }}>
             <li className="side-nav-title side-nav-item">Navigation</li>
 
@@ -34,14 +36,8 @@ const StudentSidebar = () => {
               </a>
               <div className="collapse" id="sidebarDashboards">
                 <ul className="side-nav-second-level">
-                  <li>
-                    <a href="dashboard-analytics.html">Analytics</a>
-                  </li>
-                  <li>
-                    <a href="index.html">Ecommerce</a>
-                  </li>
-                  <li>
-                    <a href="dashboard-projects.html">Projects</a>
+                <li>
+                    <Link to={`/admin/dashboard`}>Dashboard</Link>
                   </li>
                   <li>
                     <a href="dashboard-wallet.html">
@@ -56,16 +52,16 @@ const StudentSidebar = () => {
             <li className="side-nav-title side-nav-item">Apps</li>
 
             <li className="side-nav-item">
-              <Link to={`/student/home`} className="side-nav-link">
+              <Link to={`/admin/manage-users`} className="side-nav-link">
                 <i className="uil-store"></i>
-                <span> Home </span>
+                <span> Manager User </span>
               </Link>
             </li>
 
             <li className="side-nav-item">
-              <Link to={`/student/news`} className="side-nav-link">
+              <Link to={`/admin/manager-booking`} className="side-nav-link">
                 <i className="uil-calender"></i>
-                <span> news </span>
+                <span> Manager Booking </span>
               </Link>
             </li>
 
@@ -100,12 +96,6 @@ const StudentSidebar = () => {
                 <span> Requests </span>
               </Link>
             </li>
-            <li className="side-nav-item">
-              <Link to={`/student/reports`} className="side-nav-link">
-                <i className="uil-rss"></i>
-                <span> Reports </span>
-              </Link>
-            </li>
           </ul>
 
           {/* <!-- Help Box --> */}
@@ -121,5 +111,4 @@ const StudentSidebar = () => {
     </div>
   );
 };
-
-export default StudentSidebar;
+export default SidebarAdmin
