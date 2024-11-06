@@ -1,0 +1,12 @@
+.request-table .filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.request-table .filters select,
+.request-table .filters input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: 200px;
+}

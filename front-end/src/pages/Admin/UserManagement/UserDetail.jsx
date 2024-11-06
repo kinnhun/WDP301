@@ -1,10 +1,34 @@
 // UserDetail.js
 import "./UserDetail.scss";
 import { formatDate } from "../../../utils/formatDate";
+import axios from "../../../utils/axios";
+import { useEffect, useState } from "react";
+import Spinner from "../../../components/Spinner/Spinner";
 
-const UserDetail = ({ user, onClose }) => {
-  if (!user) return null;
+const UserDetail = ({ userId, onClose }) => {
+  const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
 
+  const getUserDetail = async () => {
+    try {
+      const res = await axios.get(`/user/${userId}`);
+      if (res.status === 200) {
+        setLoading(false);
+        setUser(res.data.data);
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getUserDetail();
+  }, []);
+
+  if (loading) {
+    return <Spinner />;
+  }
   return (
     <div className="user-detail-modal">
       <div className="modal-content">
