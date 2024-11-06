@@ -4,8 +4,8 @@
 module.exports = {
     bankInfo: {
       bankId: '970422', 
-      bankAccount: '0862497002', 
-      accountName: 'TRAN TRUNG KIEN', 
+      bankAccount: '0973761021', 
+      accountName: 'TRAN DUY KHANH TUNG', 
       template: 'compact2'
     },
     casso: {
