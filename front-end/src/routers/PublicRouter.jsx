@@ -19,10 +19,16 @@ import Home from "../pages/Student/home/Home";
 import NewsDetail from "../pages/Student/news/newDetails";
 import Requests from "../pages/student/requests/Requests";
 import ResidentHistories from "../pages/Student/residentHistories/ResidentHistories";
+
+
+import AdminNew from "../pages/Student/news/AdminNew";
+
+
 import Report from "../pages/Student/report/Report";
 import ReportManager from "../pages/Manager/ReportManagement/ReportManager";
 import ManagerHome from "../pages/Manager/Home/Home";
 import StaffRequestDetail from "../pages/Staff/RequestManagement/StaffRequestDetail";
+
 
 const PublicRouter = () => {
   return (
@@ -41,6 +47,9 @@ const PublicRouter = () => {
         <Route path="/manager/home" element={<ManagerHome />} />
         {/* student */}
         <Route path="/student/home" element={<Home />} />
+
+        <Route path="/admin/new" element={<AdminNew />} />
+       
         <Route path="/student/requests" element={<Requests />} />
         <Route path="/student/news" element={<News />} />
         <Route path="/student/news/view/:id" element={<NewsDetail />} />

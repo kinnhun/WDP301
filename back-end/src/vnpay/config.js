@@ -1,6 +1,5 @@
 
 
-
 module.exports = {
     bankInfo: {
       bankId: '970422', 
