@@ -18,7 +18,8 @@ import Home from "../pages/Student/home/Home";
 import NewsDetail from "../pages/Student/news/newDetails";
 import Requests from "../pages/student/requests/Requests";
 import ResidentHistories from "../pages/Student/residentHistories/ResidentHistories";
-import UserManagement from "../pages/Admin/UserManagement/UserManagement";
+import ReportsByStaff from "../pages/Staff/ReportManagement/ReportStaff";
+
 import Report from "../pages/Student/report/Report";
 import ReportManager from "../pages/Manager/ReportManagement/ReportManager";
 
@@ -51,7 +52,9 @@ const PublicRouter = () => {
         <Route path="/student/reports" element={<Report />} />
 
        
-
+    
+        {/* Staff Routes */}
+        <Route path="/staff/reports" element={<ReportsByStaff />} />
       </Route>
 
       <Route element={<LayoutAdmin />}>

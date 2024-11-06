@@ -64,4 +64,12 @@ module.exports = {
       throw e;
     }
   },
+  getUsersByRole: async (roleName) => {
+    try {
+      const users = await User.getUsersByRole(roleName);
+      return users.recordset; // Trả về danh sách người dùng
+    } catch (e) {
+      throw e;
+    }
+  },
 };

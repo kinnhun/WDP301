@@ -13,7 +13,6 @@ const Report = () => {
   const [reportedRoomNumber, setReportedRoomNumber] = useState("");
   const [newReportDescription, setNewReportDescription] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [availableRooms, setAvailableRooms] = useState([]);
 
   const toLocaleData = (isoDate) => {
     const date = new Date(isoDate);
@@ -46,20 +45,20 @@ const Report = () => {
         toast.error("Please fill in all fields");
         return;
       }
-  
+
       const token = JSON.parse(localStorage.getItem("token"));
       const userId = verifyAccessToken(token).id;
-  
+
       // Tạo đối tượng báo cáo với tất cả các trường cần thiết
       const reportData = {
         room_number: reportedRoomNumber, // Sử dụng reportedRoomNumber
-        content: newReportDescription,    // Nội dung báo cáo
-        user_id: userId,                  // Thêm userId vào đây
+        content: newReportDescription, // Nội dung báo cáo
+        user_id: userId, // Thêm userId vào đây
       };
-  
+
       // Gửi yêu cầu POST đến API
       const response = await axios.post("/reports", reportData); // Chú ý rằng endpoint phải là "/reports"
-  
+
       if (response.status === 201) {
         toast.success("Report created successfully");
         handleClose();
@@ -76,7 +75,6 @@ const Report = () => {
       );
     }
   };
-  
 
   const getReports = async () => {
     try {
@@ -85,11 +83,12 @@ const Report = () => {
       const userId = verifyAccessToken(token).id;
       const response = await axios.get(`/reports/user/${userId}`);
       if (response.status === 200) {
-        console.log(response.data.data);
+        console.log("Fetched reports:", response.data.data);  // Kiểm tra dữ liệu trả về
         setReports(response.data.data);
       }
     } catch (error) {
       toast.error("Failed to load reports");
+      console.error("Error loading reports:", error);  // Log lỗi
     } finally {
       setIsLoading(false);
     }
@@ -123,7 +122,7 @@ const Report = () => {
       <Table striped bordered hover className="mt-3">
         <thead>
           <tr>
-            <th>User Room ID</th> {/* Thêm cột ID phòng của người dùng */}
+            <th>User Room ID</th>
             <th>Reported Room Number</th>
             <th>Report Content</th>
             <th>Status</th>
@@ -133,23 +132,32 @@ const Report = () => {
           </tr>
         </thead>
         <tbody>
-          {reports.map((report, index) => (
-            <tr key={index}>
-              <td>3</td>
-            
-              <td>{report.room_id}</td>
-            
-              <td>{report.content}</td>
-              <td>{report.report_status}</td>
-              <td>{report.reply || "No reply yet"}</td>
-              <td>{toLocaleData(report.created_at)}</td>
-              <td>
-                <Button variant="info" onClick={() => handleShowDetail(report)}>
-                  Details
-                </Button>
+          {reports.length === 0 ? (
+            <tr>
+              <td colSpan="7" className="text-center">
+                No reports available.
               </td>
             </tr>
-          ))}
+          ) : (
+            reports.map((report, index) => (
+              <tr key={index}>
+                <td>{report.room_id}</td>
+                <td>{report.room_number}</td>
+                <td>{report.content}</td>
+                <td>{report.report_status}</td>
+                <td>{report.reply || "Chưa có phản hồi"}</td>
+                <td>{new Date(report.created_at).toLocaleString()}</td>
+                <td>
+                  <Button
+                    variant="primary"
+                    onClick={() => handleShowDetail(report)} // Sửa phần này
+                  >
+                    Detail
+                  </Button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </Table>
 
@@ -162,9 +170,8 @@ const Report = () => {
           {selectedReport && (
             <>
               <p>
-                <strong>User Room ID:</strong> {selectedReport.user_room_id}
-              </p>{" "}
-              {/* Thêm thông tin `user_room_id` */}
+                <strong>User Room ID:</strong> {selectedReport.room_id}
+              </p>
               <p>
                 <strong>Reported Room Number:</strong>{" "}
                 {selectedReport.room_number}
@@ -185,7 +192,6 @@ const Report = () => {
             </>
           )}
         </Modal.Body>
-
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
