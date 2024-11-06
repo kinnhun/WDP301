@@ -20,6 +20,7 @@ import NewsDetail from "../pages/Student/news/newDetails";
 import Requests from "../pages/student/requests/Requests";
 import ResidentHistories from "../pages/Student/residentHistories/ResidentHistories";
 import RequestDetail from "../pages/Manager/RequestManagement/RequestDetail";
+import AdminNew from "../pages/Student/news/AdminNew";
 
 
 const publicRouter = () => {
@@ -36,6 +37,7 @@ const publicRouter = () => {
         <Route path="/manager/requests/:id" element={<RequestDetail />} />
         <Route path="/request" element={<Requests />} />
         <Route path="/student/home" element={<Home />} />
+        <Route path="/admin/new" element={<AdminNew />} />
        
         <Route path="/student/requests" element={<Requests />} />
         <Route path="/student/news" element={<News></News>} />
