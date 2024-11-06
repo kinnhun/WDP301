@@ -97,13 +97,11 @@ const UserTable = () => {
       <table>
         <thead>
           <tr>
-            <th width="15%">Username</th>
-            <th width="25%">Email</th>
-            <th width="9%">Gender</th>
-            <th width="9%">Role</th>
-            <th width="9%">Status</th>
-            <th width="9%">Bed</th>
-            <th width="9%">Room</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Role</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -116,10 +114,8 @@ const UserTable = () => {
                 <td>{user.gender === true ? "Male" : "Female"}</td>
                 <td>{user.role}</td>
                 <td>{user.status === true ? "Active" : "Inactive"}</td>
-                <td>{user.bed ? user.bed : ""}</td>
-                <td>{user.room ? user.room : ""}</td>
                 <td className="d-flex gap-1 align-items-center">
-                  <button className="btn btn-primary" onClick={() => handleViewUser(user)}>
+                  <button className="btn btn-primary" onClick={() => handleViewUser(user.user_id)}>
                     View
                   </button>
                   <button className="btn btn-warning" onClick={() => handleEditUser(user)}>
@@ -134,7 +130,7 @@ const UserTable = () => {
         </tbody>
       </table>
 
-      {selectedUser && <UserDetail user={selectedUser} onClose={handleCloseModal} />}
+      {selectedUser && <UserDetail userId={selectedUser} onClose={handleCloseModal} />}
       {editUser && (
         <EditRole
           user={editUser}
@@ -142,11 +138,13 @@ const UserTable = () => {
           handleSaveUserRole={handleSaveUserRole}
         />
       )}
-      <MyPagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
+      {totalPages > 1 && (
+        <MyPagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };

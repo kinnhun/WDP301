@@ -65,26 +65,10 @@ module.exports = {
       ,[Users].[email]
       ,[Users].[status]
 	  ,[Roles].[role_name] as role
-      ,[Rooms].[room_number] as room
-	  ,[Rooms].[floor_number] as floor
-	  ,[Beds].[bed_number] as bed
-	  ,[Rooms].[dorm],
-	  [RoomCategories].[category_name] as roomType
-	  ,[Bookings].[semester]
       ,[Users].[created_at]
-	  ,[Bookings].[start_date]
-	  ,[Bookings].[end_date]
   FROM [dbo].[Users]
-  LEFT JOIN [Bookings]
-  ON [Users].[user_id] = [Bookings].[user_id]
-  LEFT JOIN [Rooms]
-  ON [Bookings].[room_id] = [Rooms].[room_id]
-  LEFT JOIN [Beds]
-  ON [Bookings].[bed_id] = [Beds].[bed_id]
   LEFT JOIN [Roles]
   ON [Users].[role_id] = [Roles].[role_id]
-  LEFT JOIN [RoomCategories]
-  ON [Rooms].[room_type_id] = [RoomCategories].[room_type_id]
     `;
   },
   updateUserRole: (userId, role) => {
@@ -95,24 +79,18 @@ UPDATE [dbo].[Users]
  WHERE [Users].[user_id] = ${userId}
     `;
   },
-  importUsers: (users) => {
-    const values = users
-      .map(
-        (user) => `
-        ('${user.username}',
+  importUsers: (user) => {
+    return sql.query(`
+        INSERT INTO [dbo].[Users]
+        ([username], [password], [gender], [email], [status], [role_id], [created_at], [updated_at])
+        VALUES  ('${user.username}',
          '${user.password}',
          ${user.gender},
          '${user.email}',
          ${user.status},
          ${user.role_id},
          SYSDATETIME(),
-         SYSDATETIME())`
-      )
-      .join(",");
-    return sql.query(`
-        INSERT INTO [dbo].[Users]
-        ([username], [password], [gender], [email], [status], [role_id], [created_at], [updated_at])
-        VALUES ${values};
+         SYSDATETIME());
     `);
   },
   createUser: (user) => {
@@ -139,33 +117,16 @@ UPDATE [dbo].[Users]
   },
   getNewestUser: () => {
     return sql.query`
-   /****** Script for SelectTopNRows command from SSMS  ******/
-SELECT TOP 1 [Users].[user_id]
+  SELECT TOP 1 [Users].[user_id]
       ,[Users].[username]
       ,[Users].[gender]
       ,[Users].[email]
       ,[Users].[status]
 	  ,[Roles].[role_name] as role
-      ,[Rooms].[room_number] as room
-	  ,[Rooms].[floor_number] as floor
-	  ,[Beds].[bed_number] as bed
-	  ,[Rooms].[dorm],
-	  [RoomCategories].[category_name] as roomType
-	  ,[Bookings].[semester]
       ,[Users].[created_at]
-	  ,[Bookings].[start_date]
-	  ,[Bookings].[end_date]
   FROM [dbo].[Users]
-  LEFT JOIN [Bookings]
-  ON [Users].[user_id] = [Bookings].[user_id]
-  LEFT JOIN [Rooms]
-  ON [Bookings].[room_id] = [Rooms].[room_id]
-  LEFT JOIN [Beds]
-  ON [Bookings].[bed_id] = [Beds].[bed_id]
   LEFT JOIN [Roles]
   ON [Users].[role_id] = [Roles].[role_id]
-  LEFT JOIN [RoomCategories]
-  ON [Rooms].[room_type_id] = [RoomCategories].[room_type_id]
   ORDER BY [Users].[user_id] DESC
     `;
   },
@@ -176,5 +137,34 @@ SELECT TOP 1 [Users].[user_id]
 DELETE FROM [dbo].[Users]
       WHERE [Users].[user_id] = ${userId}
     `;
+  },
+
+  getUserFullInfoById: (userId) => {
+    return sql.query`
+ SELECT TOP 1 
+      [Users].[user_id],
+      [Users].[username],
+      [Users].[gender],
+      [Users].[email],
+      [Users].[status],
+      [Roles].[role_name] AS role,
+      [Rooms].[room_number] AS room,
+      [Rooms].[floor_number] AS floor,
+      [Beds].[bed_number] AS bed,
+      [Rooms].[dorm],
+      [RoomCategories].[category_name] AS roomType,
+      [Bookings].[semester],
+      [Users].[created_at],
+      [Bookings].[start_date],
+      [Bookings].[end_date]
+  FROM [dbo].[Users]
+  LEFT JOIN [Bookings] ON [Users].[user_id] = [Bookings].[user_id]
+  LEFT JOIN [Rooms] ON [Bookings].[room_id] = [Rooms].[room_id]
+  LEFT JOIN [Beds] ON [Bookings].[bed_id] = [Beds].[bed_id]
+  LEFT JOIN [Roles] ON [Users].[role_id] = [Roles].[role_id]
+  LEFT JOIN [RoomCategories] ON [Rooms].[room_type_id] = [RoomCategories].[room_type_id]
+  WHERE [Users].[user_id] = 5
+  ORDER BY [Bookings].[booking_id] DESC;
+      `;
   },
 };

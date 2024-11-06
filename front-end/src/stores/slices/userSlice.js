@@ -121,14 +121,13 @@ export const importUsers = createAsyncThunk(
     try {
       const response = await axios.post("/user/import", users);
       console.log(response);
-      if (!response.status === 200) {
-        return rejectedWithValue("data");
+      if (response.status === 200) {
+        toast.success("Import users successfully");
+        dispatch(getUsers());
       }
-      toast.success("Import users successfully");
-      dispatch(getUsers());
     } catch (e) {
       toast.error("Import users failed");
-      console.error(e);
+      console.error(e.response.data);
       return rejectedWithValue("data");
     }
   }
