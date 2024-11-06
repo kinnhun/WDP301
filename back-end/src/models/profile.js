@@ -20,7 +20,7 @@ const UserProfile = {
             throw err;
         }
     },
-
+   // img
     // Lấy thông tin người dùng theo ID
     getUserById: async (userId) => {
         try {
@@ -31,7 +31,7 @@ const UserProfile = {
                     [password],
                     [email],
                     [gender],
-                    [img],
+                
                     [role_id],
                     [created_at],
                     [updated_at]

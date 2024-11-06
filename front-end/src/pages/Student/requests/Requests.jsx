@@ -23,12 +23,9 @@ const Requests = () => {
     return formattedDate;
   };
 
-  // State for modal visibility and selected request
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [showRateModal, setShowRateModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
-  const [rating, setRating] = useState(0);
   const [newRequestTitle, setNewRequestTitle] = useState("");
   const [newRequestContent, setNewRequestContent] = useState("");
   const [requestTypes, setRequestTypes] = useState([]);
@@ -40,21 +37,12 @@ const Requests = () => {
     setShowDetailModal(true);
   };
 
-  const handleShowRate = () => {
-    setShowRateModal(true);
-  };
-
   const handleClose = () => {
     setNewRequestTitle("");
     setNewRequestContent("");
     setShowDetailModal(false);
-    setShowRateModal(false);
-    setShowCreateModal(false); // Close Create modal
-  };
 
-  // Handle star rating selection
-  const handleRatingClick = (rate) => {
-    setRating(rate);
+    setShowCreateModal(false); // Close Create modal
   };
 
   // Handle Create New Request
@@ -138,7 +126,7 @@ const Requests = () => {
       <Table striped bordered hover className="mt-3">
         <thead>
           <tr>
-            <th width="5%">Room ID</th>
+            <th width="5%">Room Number</th>
             <th width="20%">Request Type</th>
             <th width="20%">Reply</th>
             <th width="10%">Status</th>
@@ -150,7 +138,7 @@ const Requests = () => {
         <tbody>
           {requests.map((request, index) => (
             <tr key={index}>
-              <td>{request.room_id}</td>
+              <td>{request.room_number}</td>
               <td>{request.request_type}</td>
               <td>{request.reply}</td>
               <td>{request.status}</td>
@@ -159,9 +147,6 @@ const Requests = () => {
               <td>
                 <Button variant="info" className="me-2" onClick={() => handleShowDetail(request)}>
                   Details
-                </Button>
-                <Button variant="warning" onClick={handleShowRate}>
-                  Rate
                 </Button>
               </td>
             </tr>
@@ -214,36 +199,6 @@ const Requests = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Rate Modal */}
-      <Modal show={showRateModal} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Rate Request</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="d-flex justify-content-center">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <FaStar
-                key={star}
-                size={40}
-                className="me-2"
-                onClick={() => handleRatingClick(star)}
-                color={star <= rating ? "gold" : "grey"}
-                style={{ cursor: "pointer" }}
-              />
-            ))}
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={() => alert(`You rated ${rating} stars!`)}>
-            Submit Rating
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Create New Request Modal */}
       <Modal show={showCreateModal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Create New Request</Modal.Title>

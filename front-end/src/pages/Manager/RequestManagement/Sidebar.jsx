@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { sortByStatus } from "../../../stores/slices/requestSlice";
+import { setFilter } from "../../../stores/slices/requestSlice";
 
 function Sidebar() {
   const requests = useSelector((state) => state.request.requestList);
@@ -9,7 +9,7 @@ function Sidebar() {
 
   const handleClick = (status) => {
     setSelectedStatus(status);
-    dispatch(sortByStatus(status));
+    dispatch(setFilter({ status }));
   };
 
   return (
@@ -19,10 +19,10 @@ function Sidebar() {
           All <span>{requests.length}</span>
         </li>
         <li
-          onClick={() => handleClick("Open")}
-          className={selectedStatus === "Open" ? "active" : ""}
+          onClick={() => handleClick("Approved")}
+          className={selectedStatus === "Approved" ? "active" : ""}
         >
-          Open <span>{requests.filter((r) => r.status === "Open").length}</span>
+          Approved <span>{requests.filter((r) => r.status === "Approved").length}</span>
         </li>
         <li
           onClick={() => handleClick("Pending")}
@@ -31,10 +31,10 @@ function Sidebar() {
           Pending <span>{requests.filter((r) => r.status === "Pending").length}</span>
         </li>
         <li
-          onClick={() => handleClick("Closed")}
-          className={selectedStatus === "Closed" ? "active" : ""}
+          onClick={() => handleClick("Rejected")}
+          className={selectedStatus === "Rejected" ? "active" : ""}
         >
-          Closed <span>{requests.filter((r) => r.status === "Closed").length}</span>
+          Rejected <span>{requests.filter((r) => r.status === "Rejected").length}</span>
         </li>
       </ul>
     </div>

@@ -51,6 +51,7 @@ const createBooking = async (req, res) => {
         if (!booking_status) missingFields.push('booking_status');
         if (!bed_id) missingFields.push('bed_id');
 
+        console.log(missingFields)
         if (missingFields.length > 0) {
             return res.status(400).json({
                 success: false,

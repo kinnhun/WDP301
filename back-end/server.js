@@ -27,7 +27,7 @@ const generateTransactionId = () => {
 
 // Endpoint để tạo VietQR
 app.post('/create-vietqr', (req, res) => {
-  const { amount=5000, courseName } = req.body;
+  const { amount=10000, courseName } = req.body;
   const transactionId = generateTransactionId();
 
   const qrUrl = `https://img.vietqr.io/image/${config2.bankInfo.bankId}-${config2.bankInfo.bankAccount}-${config2.bankInfo.template}.png?amount=${amount}&addInfo=${encodeURIComponent(courseName + ' Ma giao dich ' + transactionId)}&accountName=${encodeURIComponent(config2.bankInfo.accountName)}`;
