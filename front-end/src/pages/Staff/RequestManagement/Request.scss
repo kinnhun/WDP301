@@ -1,0 +1,85 @@
+// App.scss
+.request-management {
+  display: flex;
+  height: 100%;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #f0f0f0;
+  padding: 10px;
+  ul {
+    list-style: none;
+    padding: 0;
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background-color: #fff;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      span {
+        background-color: #d0d0d0;
+        padding: 3px 8px;
+        border-radius: 12px;
+      }
+      &.active {
+        background-color: #e0e0e0;
+      }
+      &:hover {
+        background-color: #e0e0e0;
+      }
+    }
+  }
+}
+
+.request-table {
+  flex: 1;
+  background-color: #fff;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    thead {
+      th {
+        text-align: left;
+        padding: 10px;
+        background-color: #f5f5f5;
+      }
+    }
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background-color: #f9f9f9;
+        }
+        &:hover {
+          background-color: #efefef;
+        }
+      }
+      td {
+        padding: 10px;
+        border-bottom: 1px solid #e0e0e0;
+        height: 50px;
+      }
+    }
+  }
+
+  .status {
+    text-transform: capitalize;
+    padding: 5px 10px;
+    border-radius: 15px;
+    &.open {
+      background-color: #ffecb3;
+      color: #8a6d3b;
+    }
+    &.pending {
+      background-color: #b3e5fc;
+      color: #0277bd;
+    }
+    &.closed {
+      background-color: #c8e6c9;
+      color: #388e3c;
+    }
+  }
+}

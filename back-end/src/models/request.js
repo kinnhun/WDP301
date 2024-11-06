@@ -94,8 +94,10 @@ module.exports = {
   },
   getRequestByUserId: async (userId) => {
     return sql.query`
+ 
  SELECT [Requests].[request_id]
                 ,[Requests].[room_id]
+				,[Rooms].[room_number]
                 ,[Requests].[user_id]
                 ,[Requests].[description]
                 ,[Requests].[status]
@@ -106,6 +108,8 @@ module.exports = {
             FROM [dbo].[Requests]
 			LEFT JOIN [dbo].[request_type]
 			ON [Requests].[request_type] = [request_type].[id]
+			LEFT JOIN [Rooms]
+			ON [Rooms].[room_id] = [Requests].[room_id]
       WHERE [Requests].[user_id] = ${userId}
       ORDER BY [Requests].[request_id] DESC
     `;

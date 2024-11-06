@@ -10,6 +10,7 @@ import UserManagement from "../pages/Admin/UserManagement/UserManagement";
 import OTPPage from "../pages/Login/Verify";
 import RequestDetail from "../pages/Manager/RequestManagement/RequestDetail";
 import RequestManagement from "../pages/Manager/RequestManagement/RequestManagement";
+import StaffRequestManagement from "../pages/Staff/RequestManagement/StaffRequestManagement";
 import Profile from "../pages/profile/profile";
 import Bookings from "../pages/Student/bookings/Bookings";
 import Book from "../pages/Student/bookings/CreateBooking";
@@ -21,6 +22,7 @@ import ResidentHistories from "../pages/Student/residentHistories/ResidentHistor
 import Report from "../pages/Student/report/Report";
 import ReportManager from "../pages/Manager/ReportManagement/ReportManager";
 import ManagerHome from "../pages/Manager/Home/Home";
+import StaffRequestDetail from "../pages/Staff/RequestManagement/StaffRequestDetail";
 
 const PublicRouter = () => {
   return (
@@ -34,7 +36,7 @@ const PublicRouter = () => {
         <Route path="/manager" element={<Navigate to={"/manager/home"} />} />
         <Route path="/manager/manage-users" element={<UserList />} />
         <Route path="/manager/requests" element={<RequestManagement />} />
-        <Route path="/manager/requests/:id" element={<RequestDetail />} />
+        <Route path="/manager/request/:id" element={<RequestDetail />} />
         <Route path="/manager/reports" element={<ReportManager />} />
         <Route path="/manager/home" element={<ManagerHome />} />
         {/* student */}
@@ -50,6 +52,11 @@ const PublicRouter = () => {
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/student/reports" element={<Report />} />
         <Route path="/admin/manage-users" element={<UserManagement />} />
+        {/* staff */}
+        <Route path="/staff" element={<Navigate to={"/staff/home"} />} />
+        <Route path="/staff/home" element={<Home />} />
+        <Route path="/staff/requests" element={<StaffRequestManagement />} />
+        <Route path="/staff/request/:id" element={<StaffRequestDetail />} />
       </Route>
 
       <Route element={<LayoutAdmin />}>

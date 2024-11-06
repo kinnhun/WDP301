@@ -8,14 +8,28 @@ export const requestSlice = createSlice({
     sortedList: [],
     status: "idle",
     request: {},
+    filters: {
+      status: "all",
+      requestType: "",
+      room: "",
+      email: "",
+    },
   },
   reducers: {
-    sortByStatus: (state, action) => {
-      if (action.payload === "all") {
-        state.sortedList = state.requestList;
-      } else {
-        state.sortedList = state.requestList.filter((request) => request.status === action.payload);
-      }
+    setFilter: (state, action) => {
+      // Cập nhật giá trị bộ lọc
+      state.filters = { ...state.filters, ...action.payload };
+      // Áp dụng bộ lọc
+      state.sortedList = state.requestList.filter((request) => {
+        const { status, requestType, room, email } = state.filters;
+        const statusMatch = status === "all" || request.status === status;
+        const requestTypeMatch =
+          !requestType || request.request_type.toLowerCase().includes(requestType.toLowerCase());
+        const roomMatch = !room || request.room_number.includes(room);
+        const emailMatch = !email || request.email.includes(email);
+
+        return statusMatch && requestTypeMatch && roomMatch && emailMatch;
+      });
     },
     getRequestById: (state, action) => {
       state.request = state.requestList.find((request) => request.request_id === action.payload);
@@ -45,4 +59,6 @@ export const getRequests = createAsyncThunk("getRequest", async (_, { rejectedWi
   return requests;
 });
 
-export const { sortByStatus, getRequestById } = requestSlice.actions;
+export const { setFilter, getRequestById } = requestSlice.actions;
+
+export default requestSlice.reducer;

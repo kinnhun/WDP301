@@ -1,4 +1,5 @@
-const { createUser } = require("../models/user");
+const e = require("express");
+const { createUser, getUserFullInfoById } = require("../models/user");
 const UserService = require("../services/user.service");
 const { successResponse, errorResponse } = require("../utils/response");
 
@@ -47,6 +48,7 @@ module.exports = {
         message: msg,
       });
     } catch (error) {
+      console.log(error);
       return errorResponse({ res, message: "Import users failed", error: error.message });
     }
   },
@@ -83,6 +85,24 @@ module.exports = {
       });
     } catch (error) {
       return errorResponse({ res, message: "Delete user failed", error: error.message });
+    }
+  },
+  getUserFullInfoById: async (req, res) => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        const error = new Error("Missing required fields: id");
+        error.status = 400;
+        throw error;
+      }
+      const user = await UserService.getUserFullInfoById(id);
+      return successResponse({
+        res,
+        message: "Get user full info successfully",
+        data: user,
+      });
+    } catch (error) {
+      return errorResponse({ res, message: "Get user full info failed", error: error.message });
     }
   },
 };

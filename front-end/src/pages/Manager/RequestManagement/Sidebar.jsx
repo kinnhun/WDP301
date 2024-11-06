@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { sortByStatus } from "../../../stores/slices/requestSlice";
+import { setFilter } from "../../../stores/slices/requestSlice";
 
 function Sidebar() {
   const requests = useSelector((state) => state.request.requestList);
@@ -9,7 +9,7 @@ function Sidebar() {
 
   const handleClick = (status) => {
     setSelectedStatus(status);
-    dispatch(sortByStatus(status));
+    dispatch(setFilter({ status }));
   };
 
   return (
