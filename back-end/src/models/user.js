@@ -177,4 +177,17 @@ DELETE FROM [dbo].[Users]
       WHERE [Users].[user_id] = ${userId}
     `;
   },
+
+  getUsersByRole: (roleName) => {
+    return sql.query`
+    SELECT [Users].[user_id]
+        ,[Users].[username]
+        ,[Users].[gender]
+        ,[Users].[email]
+        ,[Users].[status]
+        ,[Roles].[role_name] as role
+    FROM [dbo].[Users]
+    JOIN [Roles] ON [Users].[role_id] = [Roles].[role_id]
+    WHERE [Roles].[role_name] = ${roleName}`;
+  },
 };

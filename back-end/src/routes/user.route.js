@@ -7,5 +7,6 @@ userRouter.patch("/:id/role", UserController.updateUserRole);
 userRouter.post("/import", UserController.importUsers);
 userRouter.post("/", UserController.createUser);
 userRouter.delete("/:id", UserController.deleteUser);
+userRouter.get("/role/staff", UserController.getUsersByRole);
 
 module.exports = userRouter;

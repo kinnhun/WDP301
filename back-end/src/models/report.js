@@ -8,7 +8,7 @@ module.exports = {
           [Reports].[report_id],
           [Reports].[user_id],
           [Reports].[room_id],
-          [Rooms].[room_number],       
+          [Reports].[room_number],       
           [Users].[email],
           [Reports].[content],
           [Reports].[reply],
@@ -16,8 +16,7 @@ module.exports = {
           [Reports].[created_at],
           [Reports].[updated_at]
       FROM [dbo].[Reports]
-      LEFT JOIN [dbo].[Users] ON [Users].[user_id] = [Reports].[user_id]
-      LEFT JOIN [dbo].[Rooms] ON [Rooms].[room_id] = [Reports].[room_id];
+      LEFT JOIN [dbo].[Users] ON [Users].[user_id] = [Reports].[user_id];
     `;
   },
 
@@ -28,7 +27,7 @@ module.exports = {
           [Reports].[report_id],
           [Reports].[user_id],
           [Reports].[room_id],
-          [Rooms].[room_number],       
+          [Reports].[room_number],       
           [Users].[email],
           [Reports].[content],
           [Reports].[reply],
@@ -37,72 +36,86 @@ module.exports = {
           [Reports].[updated_at]
       FROM [dbo].[Reports]
       LEFT JOIN [dbo].[Users] ON [Users].[user_id] = [Reports].[user_id]
-      LEFT JOIN [dbo].[Rooms] ON [Rooms].[room_id] = [Reports].[room_id]
       WHERE [Reports].[report_id] = ${reportId};
     `;
   },
 
   // Tạo báo cáo mới
-  createReport: async (roomId, userId, content, reportStatus = "Pending", reply = null) => {
+  createReport: async (
+    roomNumber,
+    userId,
+    content,
+    reportStatus,
+    reply,
+    assignedStaffId
+  ) => {
+    const roomResult = await sql.query`
+      SELECT [room_id]
+      FROM [dbo].[Bookings]
+      WHERE [user_id] = ${userId}
+      ORDER BY [start_date] DESC;
+    `;
+
+    if (roomResult.recordset.length === 0) {
+      throw new Error("Không tìm thấy phòng cho user này.");
+    }
+
+    const roomId = roomResult.recordset[0].room_id;
+
     return sql.query`
-      INSERT INTO [dbo].[Reports]
-      ([room_id], [user_id], [content], [report_status], [reply], [created_at], [updated_at])
-      VALUES
-      (${roomId}, ${userId}, ${content}, ${reportStatus}, ${reply}, SYSDATETIME(), SYSDATETIME());
+      INSERT INTO [dbo].[Reports] (room_id, room_number, user_id, content, report_status, reply, assignedStaffId)
+      VALUES (${roomId}, ${roomNumber}, ${userId}, ${content}, ${reportStatus}, ${reply}, ${assignedStaffId});
+      SELECT * FROM [dbo].[Reports] WHERE report_id = SCOPE_IDENTITY();
     `;
   },
 
-  // Lấy báo cáo mới nhất
-  getNewestReport: async () => {
-    return sql.query`
-      SELECT TOP 1 
-          [Reports].[report_id],
-          [Reports].[user_id],
-          [Reports].[room_id],
-          [Rooms].[room_number],       
-          [Reports].[content],
-          [Reports].[reply],
-          [Reports].[report_status],
-          [Reports].[created_at],
-          [Reports].[updated_at]
-      FROM [dbo].[Reports]
-      LEFT JOIN [dbo].[Rooms] ON [Rooms].[room_id] = [Reports].[room_id]
-      ORDER BY [Reports].[report_id] DESC;
-    `;
+  // Cập nhật báo cáo
+  updateReport: async (reportId, assignedStaffId) => {
+    try {
+      // Cập nhật chỉ trường assignedStaffId
+      const result = await sql.query`
+        UPDATE [dbo].[Reports]
+        SET [assignedStaffId] = ${assignedStaffId}
+        WHERE [report_id] = ${reportId};
+      `;
+      return result;
+    } catch (error) {
+      console.error("Error updating report:", error);
+      throw error;
+    }
   },
+  getReportsByStaffId: async (assignedStaffId) => {
+    try {
+        const result = await sql.query`
+            SELECT 
+                Reports.report_id,
+                Reports.user_id,
+                Reports.room_id,
+                Reports.room_number,       
+                Users.email,
+                Reports.content,
+                Reports.reply,
+                Reports.report_status,
+                Reports.created_at,
+                Reports.updated_at
+            FROM dbo.Reports
+            LEFT JOIN dbo.Users ON Users.user_id = Reports.user_id
+            WHERE Reports.assignedStaffId = ${assignedStaffId};
+        `;
 
-  // Lấy báo cáo theo user_id
-  getReportsByUserId: async (userId) => {
-    return sql.query`
-      SELECT 
-          [Reports].[report_id],
-          [Reports].[user_id],
-          [Reports].[room_id],
-          [Rooms].[room_number],       
-          [Reports].[content],
-          [Reports].[reply],
-          [Reports].[report_status],
-          [Reports].[created_at],
-          [Reports].[updated_at]
-      FROM [dbo].[Reports]
-      LEFT JOIN [dbo].[Rooms] ON [Rooms].[room_id] = [Reports].[room_id]
-      WHERE [Reports].[user_id] = ${userId}
-      ORDER BY [Reports].[report_id] DESC;
-    `;
-  },
+        // Kiểm tra nếu result.recordset không tồn tại hoặc là một mảng rỗng
+        if (!result.recordset || result.recordset.length === 0) {
+            console.log("No reports found for assignedStaffId:", assignedStaffId);
+            return []; // Trả về mảng rỗng nếu không có dữ liệu
+        }
 
-  // Cập nhật báo cáo (bao gồm cập nhật reply)
-  updateReport: async (reportStatus, reply, reportId) => {
-    return sql.query`
-      UPDATE [dbo].[Reports]
-      SET 
-          [report_status] = ${reportStatus},
-          [reply] = ${reply},
-          [updated_at] = SYSDATETIME()
-      WHERE [report_id] = ${reportId};
-    `;
-  },
-
+        return result.recordset;
+    } catch (error) {
+        console.error("Error fetching reports for staff:", error);
+        throw error;
+    }
+}
+,
   // Xóa báo cáo
   deleteReport: async (reportId) => {
     return sql.query`
@@ -110,4 +123,20 @@ module.exports = {
       WHERE [report_id] = ${reportId};
     `;
   },
+
+  updateReportReplyAndStatus: async (reportId, reply, status) => {
+    try {
+      const result = await sql.query`
+        UPDATE [dbo].[Reports]
+        SET [reply] = ${reply}, [report_status] = ${status}
+        WHERE [report_id] = ${reportId};
+      `;
+      return result;
+    } catch (error) {
+      console.error("Error updating report reply and status:", error);
+      throw error;
+    }
+  },
+  
+
 };

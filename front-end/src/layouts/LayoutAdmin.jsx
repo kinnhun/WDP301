@@ -1,17 +1,17 @@
-import HeaderAdmin from "../components/general/HeaderAdmin";
-import SidebarAdmin from "../components/general/Sidebar/SidebarAdmin";
+import HeaderAdmin from "../components/general/HeaderAdmin"
+import SidebarAdmin from "../components/general/SidebarAdmin"
 
 const LayoutAdmin = () => {
   return (
     <div>
-      <div className="container-scroller">
+       <div className="container-scroller">
         <HeaderAdmin></HeaderAdmin>
         <div className="container-fluid page-body-wrapper">
-          <SidebarAdmin></SidebarAdmin>
+<SidebarAdmin></SidebarAdmin>
         </div>
-      </div>
+       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LayoutAdmin;
+export default LayoutAdmin
