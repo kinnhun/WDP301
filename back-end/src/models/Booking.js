@@ -5,20 +5,29 @@ const Booking = {
     getAllBookings: async () => {
         return sql.query`
             SELECT TOP (1000) 
-                [booking_id],
-                [user_id],
-                [room_id],
-                [start_date],
-                [end_date],
-                [total_amount],
-                [payment_status],
-                [booking_status],
-                [created_at],
-                [updated_at],
-                [bed_id]
-            FROM [dbo].[Bookings]
+                b.[booking_id],
+                b.[user_id],
+                u.[email] AS user_email,
+                b.[room_id],
+                r.[room_number] AS RoomName,
+                r.[floor_number],
+                r.[dorm],
+                b.[start_date],
+                b.[end_date],
+                b.[total_amount],
+                b.[payment_status],
+                b.[booking_status],
+                b.[created_at],
+                b.[updated_at],
+                b.[bed_id],
+                bd.[bed_number]
+            FROM [dbo].[Bookings] b
+            JOIN [dbo].[Users] u ON b.[user_id] = u.[user_id]
+            JOIN [dbo].[Rooms] r ON b.[room_id] = r.[room_id]
+            JOIN [dbo].[Beds] bd ON b.[bed_id] = bd.[bed_id]
         `;
     },
+    
 
     // Lấy booking theo ID
     getBookingById: async (bookingId) => {
@@ -143,8 +152,59 @@ const Booking = {
             FROM [dbo].[Rooms]
             WHERE [floor_number] IS NOT NULL;
         `;
-    }
+    },
+    
+   // Lấy booking theo trạng thái
+   getBookingsByStatus: async (status) => {
+    return sql.query`
+        SELECT 
+            b.[booking_id],
+            b.[user_id],
+            u.[email] AS user_email,
+            b.[room_id],
+            r.[room_number] AS RoomName,
+            r.[floor_number],
+            r.[dorm],
+            b.[start_date],
+            b.[end_date],
+            b.[total_amount],
+            b.[payment_status],
+            b.[booking_status],
+            b.[created_at],
+            b.[updated_at],
+            b.[bed_id],
+            bd.[bed_number]
+        FROM [dbo].[Bookings] b
+        JOIN [dbo].[Users] u ON b.[user_id] = u.[user_id]
+        JOIN [dbo].[Rooms] r ON b.[room_id] = r.[room_id]
+        JOIN [dbo].[Beds] bd ON b.[bed_id] = bd.[bed_id]
+        WHERE b.[booking_status] = ${status};
+    `;
+},
+updateBookingStatus: async (bookingId, statusName) => {
+    return sql.query`
+        UPDATE [dbo].[Bookings]
+        SET [booking_status] = ${statusName},
+            [updated_at] = SYSDATETIME()
+        WHERE [booking_id] = ${bookingId}
+    `;
+},
+
+
+updateMultipleStatuses: async (bookingIds, newStatus) => {
+    const ids = bookingIds.map(id => parseInt(id)).join(','); // Convert to integers and join as a string
+    console.log(ids)
+    // Execute the SQL query
+    return sql.query`
+        UPDATE [dbo].[Bookings]
+        SET [booking_status] = ${newStatus}
+        WHERE [booking_id] IN (${ids});
+    `;
+},
     
 };
+
+
+
 
 module.exports = Booking;
