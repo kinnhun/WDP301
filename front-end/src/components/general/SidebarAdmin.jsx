@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import "./Sidebar.scss";
 const SidebarAdmin = () => {
-
   return (
     <div>
       {/* <!-- ========== Left Sidebar Start ========== --> */}
@@ -36,7 +35,7 @@ const SidebarAdmin = () => {
               </a>
               <div className="collapse" id="sidebarDashboards">
                 <ul className="side-nav-second-level">
-                <li>
+                  <li>
                     <Link to={`/admin/dashboard`}>Dashboard</Link>
                   </li>
                   <li>
@@ -54,31 +53,35 @@ const SidebarAdmin = () => {
             <li className="side-nav-item">
               <Link to={`/admin/manage-users`} className="side-nav-link">
                 <i className="uil-store"></i>
-                <span> Manager User </span>
+                <span> Manage User </span>
               </Link>
             </li>
 
             <li className="side-nav-item">
               <Link to={`/admin/manager-booking`} className="side-nav-link">
                 <i className="uil-calender"></i>
-                <span> Manager Booking </span>
+                <span> Manage Booking </span>
               </Link>
             </li>
             <li className="side-nav-item">
-              <Link to={`/manager/requests`} className="side-nav-link">
+              <Link to={`/admin/requests`} className="side-nav-link">
                 <i className="uil-calender"></i>
-                <span> Manager requests </span>
+                <span> Manage requests </span>
               </Link>
             </li>
 
             <li className="side-nav-item">
-              <Link to={`/manager/semester`} className="side-nav-link">
+              <Link to={`/admin/semester`} className="side-nav-link">
                 <i className="uil-calender"></i>
-                <span> Manager semester </span>
+                <span> Manage semester </span>
               </Link>
             </li>
-
-
+            <li className="side-nav-item">
+              <Link to={`/admin/invoices`} className="side-nav-link">
+                <i className="uil-calender"></i>
+                <span> Manage invoices </span>
+              </Link>
+            </li>
           </ul>
 
           {/* <!-- Help Box --> */}
@@ -94,4 +97,4 @@ const SidebarAdmin = () => {
     </div>
   );
 };
-export default SidebarAdmin
+export default SidebarAdmin;
