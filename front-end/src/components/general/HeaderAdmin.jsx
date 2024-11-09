@@ -153,7 +153,7 @@ const HeaderAdmin = () => {
                             <i className="mdi mdi-lock-outline me-1"></i>
                             <span>Lock Screen</span>
                         </a>
-                        <a href="javascript:void(0);" className="dropdown-item notify-item">
+                        <a href="login" className="dropdown-item notify-item">
                             <i className="mdi mdi-logout me-1"></i>
                             <span>Logout</span>
                         </a>
