@@ -63,6 +63,7 @@ const Payment = ({ bookingDetails }) => {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         bed_id: bookingDetails.bed_id,
+        semester_name : bookingDetails.semester_name,
       };
 
       await axios.post('http://localhost:8080/api/booking/create', payload);
@@ -88,6 +89,12 @@ const Payment = ({ bookingDetails }) => {
     }
   }, [transactionStatus, navigate]);
 
+  // Fake success button click handler
+  const handleFakePaymentSuccess = () => {
+    setTransactionStatus('success');
+    createBooking();
+  };
+
   return (
     <div className="payment-container">
       {qrUrl && (
@@ -103,6 +110,9 @@ const Payment = ({ bookingDetails }) => {
           {transactionStatus === 'pending' ? (
             <div>
               <p>Waiting for payment...</p>
+              <button onClick={handleFakePaymentSuccess} className="fake-payment-button">
+                Fake Payment Success
+              </button>
             </div>
           ) : transactionStatus === 'success' ? (
             <div>
@@ -131,6 +141,7 @@ Payment.propTypes = {
     created_at: PropTypes.string.isRequired,
     updated_at: PropTypes.string.isRequired,
     bed_id: PropTypes.string.isRequired,
+    semester_name: PropTypes.string.isRequired,
   }).isRequired,
 };
 

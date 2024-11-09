@@ -59,8 +59,8 @@ const ResidentHistories = () => {
   return (
     <div className="container mt-4">
       <h1>Resident Histories</h1>
-      <table className="table table-striped table-bordered">
-        <thead className="thead-dark">
+      <table className="table table-striped">
+        <thead className="thead">
           <tr>
             <th>Student ID</th>
             <th>Bed Information</th>
@@ -68,7 +68,6 @@ const ResidentHistories = () => {
             <th>Check-out Date</th>
             <th>Price</th>
             <th>Semester</th>
-            <th>Year</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -81,7 +80,6 @@ const ResidentHistories = () => {
               <td>{history.checkOutDate}</td>
               <td>{history.price}</td>
               <td>{history.semester}</td>
-              <td>{history.year}</td>
               <td>
                 <Button
                   variant="primary"

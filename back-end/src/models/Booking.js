@@ -50,33 +50,15 @@ const Booking = {
         `;
     },
 
-    // Tạo booking mới
-    createBooking: async (roomId, userId, startDate, endDate, totalAmount, paymentStatus, bookingStatus, bedId) => {
-        return sql.query`
-            INSERT INTO [dbo].[Bookings]
-                ([room_id],
-                [user_id],
-                [start_date],
-                [end_date],
-                [total_amount],
-                [payment_status],
-                [booking_status],
-                [created_at],
-                [updated_at],
-                [bed_id])
-            VALUES
-                (${roomId},
-                ${userId},
-                ${startDate},
-                ${endDate},
-                ${totalAmount},
-                ${paymentStatus},
-                ${bookingStatus},
-                SYSDATETIME(),
-                SYSDATETIME(),
-                ${bedId})
-        `;
-    },
+  // Hàm tạo booking trong model
+createBooking: async (roomId, userId, startDate, endDate, totalAmount, paymentStatus, bookingStatus, bedId, semesterName) => {
+    return sql.query`
+        INSERT INTO [dbo].[Bookings]
+            ([room_id], [user_id], [start_date], [end_date], [total_amount], [payment_status], [booking_status], [created_at], [updated_at], [bed_id], [semester])
+        VALUES
+            (${roomId}, ${userId}, ${startDate}, ${endDate}, ${totalAmount}, ${paymentStatus}, ${bookingStatus}, SYSDATETIME(), SYSDATETIME(), ${bedId}, ${semesterName})
+    `;
+},
     
 
     // Cập nhật thông tin booking
@@ -191,16 +173,31 @@ updateBookingStatus: async (bookingId, statusName) => {
 },
 
 
+
 updateMultipleStatuses: async (bookingIds, newStatus) => {
-    const ids = bookingIds.map(id => parseInt(id)).join(','); // Convert to integers and join as a string
-    console.log(ids)
-    // Execute the SQL query
-    return sql.query`
-        UPDATE [dbo].[Bookings]
-        SET [booking_status] = ${newStatus}
-        WHERE [booking_id] IN (${ids});
-    `;
+    try {
+        // Convert the booking IDs to integers and create a string of IDs for the IN clause
+        const ids = bookingIds.map(id => parseInt(id, 10)).join(', ');
+
+        // Prepare the SQL query with parameterized newStatus
+        const query = `
+            UPDATE [dbo].[Bookings]
+            SET [booking_status] = '${newStatus}' 
+            WHERE [booking_id] IN (${ids});
+        `;
+
+        // Execute the query
+        return sql.query(query);
+    } catch (error) {
+        console.error('Error updating statuses:', error);
+        throw error;
+    }
 },
+
+
+
+
+
     
 };
 
