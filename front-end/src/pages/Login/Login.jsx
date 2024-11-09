@@ -131,12 +131,12 @@ const Login = () => {
               <div className="auth-brand text-center text-lg-start">
                 <a href="index.html" className="logo-dark">
                   <span>
-                    <img src="assets/images/logo-dark.png" alt="Logo Dark" height="18" />
+                    <img src="assets/images/logo.png" alt="Logo Dark" height="58" />
                   </span>
                 </a>
                 <a href="index.html" className="logo-light">
                   <span>
-                    <img src="assets/images/logo.png" alt="Logo Light" height="18" />
+                    <img src="assets/images/logo.png" alt="Logo Light" height="58" />
                   </span>
                 </a>
               </div>
@@ -225,13 +225,13 @@ const Login = () => {
 
         <div className="auth-fluid-right text-center">
           <div className="auth-user-testimonial">
-            <h2 className="mb-3">I love the color!</h2>
+            <h2 className="mb-3">KTX ĐẠI HỌC FPT</h2>
             <p className="lead">
               <i className="mdi mdi-format-quote-open"></i>
-              It is an elegant template. I love it very much!{" "}
+              Không gian sống xanh{" "}
               <i className="mdi mdi-format-quote-close"></i>
             </p>
-            <p>- Hyper Admin User</p>
+          
           </div>
         </div>
       </div>

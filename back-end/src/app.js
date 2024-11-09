@@ -13,6 +13,7 @@ const userRouter = require("./routes/user.route");
 
 const routerPayment = require("./routes/payment");
 const semesterRouter = require("./routes/semester.route");
+const ResidentRouter = require("./routes/residentHistory");
 
 
 app.use(cors());
@@ -22,6 +23,7 @@ app.use(express.json()); // Nhận body từ json
 app.use(express.urlencoded({ extended: true })); //Nhận body từ urlencoded
 
 //router
+app.use("/resident",ResidentRouter)
 app.use("/news", Newrouter);
 app.use("/auth", authRouter);
 app.use("/requests", requestRouter);

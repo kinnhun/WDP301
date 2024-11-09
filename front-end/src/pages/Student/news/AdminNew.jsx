@@ -8,7 +8,7 @@ const AdminNew = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [postType, setPostType] = useState('Notification');
-  const [targetUserId, setTargetUserId] = useState('');
+  const [targetUserId, setTargetUserId] = useState('3');
   const [showModal, setShowModal] = useState(false);
   const [editingPostId, setEditingPostId] = useState(null);
 
@@ -123,7 +123,7 @@ const AdminNew = () => {
     setTitle('');
     setContent('');
     setPostType('Notification');
-    setTargetUserId('');
+    setTargetUserId('3');
   };
 
   const handleClose = () => {
@@ -175,12 +175,12 @@ const AdminNew = () => {
                 value={postType}
                 onChange={(e) => setPostType(e.target.value)}
               >
-                <option value="Notification">Notification</option>
+                
                 <option value="News">News</option>
               </Form.Select>
             </Form.Group>
 
-            <Form.Group controlId="targetUserId" className="mt-3">
+            {/* <Form.Group controlId="targetUserId" className="mt-3">
               <Form.Label>ID Người dùng mục tiêu</Form.Label>
               <Form.Control
                 type="text"
@@ -188,7 +188,7 @@ const AdminNew = () => {
                 value={targetUserId}
                 onChange={(e) => setTargetUserId(e.target.value)}
               />
-            </Form.Group>
+            </Form.Group> */}
 
             <Button variant="primary" type="submit" className="mt-4">
               {editingPostId ? 'Cập Nhật Bài Viết' : 'Tạo Bài Viết'}
