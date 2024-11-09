@@ -12,7 +12,7 @@ const Sidebar = () => {
 
         <Link to={`/student/home`} className="logo text-center logo-light">
           <span className="logo-lg">
-            <img src={`/assets/images/logo.png`} alt="Logo Light" height="16" />
+            <img src={`/assets/images/logo.png`} alt="Logo Light" height="48" />
           </span>
           <span className="logo-sm">
             <img src={`/assets/images/logo_sm.png`} alt="Logo Light Small" height="16" />
