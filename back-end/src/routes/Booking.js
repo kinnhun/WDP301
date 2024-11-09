@@ -30,4 +30,6 @@ bookingRouter.put("/booking-status/:id/:statusName", bookingController.updateBoo
 // New route for bulk updating booking statuses
 bookingRouter.put("/bulk-status/bulk", bookingController.bulkUpdateBookingStatus);
 
+
+
 module.exports = bookingRouter;
