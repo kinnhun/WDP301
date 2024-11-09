@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js';
+import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip } from 'chart.js';
 import { useEffect, useState } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
 
 const Dashboard = () => {
   const [rooms, setRooms] = useState([]);
@@ -25,10 +25,23 @@ const Dashboard = () => {
       },
     ],
   });
+  
+  const [revenueChartData, setRevenueChartData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: 'Doanh Thu (VND)',
+        data: [],
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        fill: true,
+      },
+    ],
+  });
 
-  // Lấy dữ liệu phòng khi component được mount
   useEffect(() => {
     fetchRooms();
+    fetchRevenueData(); // Thêm dòng này để lấy dữ liệu doanh thu
   }, []);
 
   const fetchRooms = async () => {
@@ -46,16 +59,29 @@ const Dashboard = () => {
       setBookedRooms(bookedCount);
       setMaintenanceRooms(maintenanceCount);
 
-      // Xử lý dữ liệu cho biểu đồ
+      // Xử lý dữ liệu cho biểu đồ trạng thái phòng
       processChartData(roomsData);
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu phòng:", error);
     }
   };
 
+  // Hàm mới để lấy dữ liệu doanh thu
+  const fetchRevenueData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/booking');
+      const bookingsData = response.data.data;
+
+      // Xử lý dữ liệu doanh thu
+      processRevenueChartData(bookingsData);
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu doanh thu:", error);
+    }
+  };
+
   const processChartData = (roomsData) => {
     const dataByPeriod = roomsData.reduce((acc, room) => {
-      const period = new Date(room.updated_at).toLocaleDateString(); // Nhóm theo ngày cập nhật
+      const period = new Date(room.updated_at).toLocaleDateString();
       if (!acc[period]) {
         acc[period] = { available: 0, booked: 0 };
       }
@@ -67,12 +93,11 @@ const Dashboard = () => {
       return acc;
     }, {});
 
-    // Dữ liệu cho biểu đồ
     const labels = Object.keys(dataByPeriod);
     const availableData = labels.map(period => dataByPeriod[period].available);
     const bookedData = labels.map(period => dataByPeriod[period].booked);
 
-    const newChartData = {
+    setChartData({
       labels,
       datasets: [
         {
@@ -86,11 +111,38 @@ const Dashboard = () => {
           backgroundColor: 'rgba(255, 99, 132, 0.5)',
         },
       ],
-    };
-
-    setChartData(newChartData);
+    });
   };
 
+  const processRevenueChartData = (bookingsData) => {
+    const revenueByPeriod = bookingsData.reduce((acc, booking) => {
+      const period = new Date(booking.updated_at).toLocaleDateString();
+      if (!acc[period]) {
+        acc[period] = 0;
+      }
+      if (booking.payment_status === 'Completed') {
+        acc[period] += booking.total_amount / 1000000; // Chia cho 1,000,000 để tính theo đơn vị triệu đồng
+      }
+      return acc;
+    }, {});
+  
+    const labels = Object.keys(revenueByPeriod);
+    const revenueData = labels.map(period => revenueByPeriod[period]);
+  
+    setRevenueChartData({
+      labels,
+      datasets: [
+        {
+          label: 'Doanh Thu (Triệu VND)',
+          data: revenueData,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          fill: true,
+        },
+      ],
+    });
+  };
+  
   return (
     <div>
       <div className="row">
@@ -149,7 +201,28 @@ const Dashboard = () => {
         </div>
       </div>
 
-    
+      {/* Biểu đồ doanh thu theo kỳ */}
+      <div className="card mt-4">
+        <div className="card-body">
+          <h4 className="header-title mb-3">Biểu Đồ Doanh Thu Theo Kỳ</h4>
+          {revenueChartData && revenueChartData.labels.length > 0 ? (
+            <Line data={revenueChartData} options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: 'Doanh Thu (VND) Theo Kỳ',
+                },
+              },
+            }} />
+          ) : (
+            <p>Đang tải dữ liệu biểu đồ doanh thu...</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
