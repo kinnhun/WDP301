@@ -28,9 +28,9 @@ import ReportManager from "../pages/Manager/ReportManagement/ReportManager";
 import StaffRequestDetail from "../pages/Staff/RequestManagement/StaffRequestDetail";
 import Report from "../pages/Student/report/Report";
 
-import BookingManager from "../pages/Manager/ManagerBooking/BookingManager";
-import InvoiceManagement from "../pages/Admin/InvoiceManagement/InvoiceManagement";
 import CreateInvoice from "../pages/Admin/InvoiceManagement/CreateInvoice";
+import InvoiceManagement from "../pages/Admin/InvoiceManagement/InvoiceManagement";
+import BookingManager from "../pages/Manager/ManagerBooking/BookingManager";
 
 const publicRouter = () => {
   return (
@@ -81,7 +81,7 @@ const publicRouter = () => {
         <Route path="/admin/requests" element={<RequestManagement />} />
         <Route path="/admin/request/:id" element={<RequestDetail />} />
         <Route path="/admin/reports" element={<ReportManager />} />
-        <Route path="/admin/home" element={<ManagerHome />} />
+        <Route path="/admin/home" element={<Dashboard />} />
         <Route path="/admin/semester" element={<ManagerSemester />} />
         <Route path="/admin/invoices" element={<InvoiceManagement />} />
         <Route path="/admin/invoices/create" element={<CreateInvoice />} />
