@@ -176,24 +176,44 @@ updateBookingStatus: async (bookingId, statusName) => {
 
 updateMultipleStatuses: async (bookingIds, newStatus) => {
     try {
-        // Convert the booking IDs to integers and create a string of IDs for the IN clause
-        const ids = bookingIds.map(id => parseInt(id, 10)).join(', ');
+        // Ensure the booking IDs are integers
+        const ids = bookingIds
+            .map(id => parseInt(id, 10))
+            .filter(id => !isNaN(id));
 
-        // Prepare the SQL query with parameterized newStatus
+        if (ids.length === 0) {
+            throw new Error("No valid booking IDs provided.");
+        }
+
+        console.log("Updating booking statuses for IDs:", ids);
+
+        // Create a new SQL request
+        const request = new sql.Request();
+
+        // Add the parameter for the new status
+        request.input('newStatus', sql.NVarChar, newStatus);
+
+        // Build the query string with placeholders for the booking IDs
         const query = `
             UPDATE [dbo].[Bookings]
-            SET [booking_status] = '${newStatus}' 
-            WHERE [booking_id] IN (${ids});
+            SET [booking_status] = @newStatus,
+                [updated_at] = SYSDATETIME()
+            WHERE [booking_id] IN (${ids.join(", ")});
         `;
 
-        // Execute the query
-        return sql.query(query);
+        // Execute the query with parameters
+        const result = await request.query(query);
+
+        return {
+            success: true,
+            message: 'Booking statuses updated successfully.',
+            affectedRows: result.rowsAffected,
+        };
     } catch (error) {
-        console.error('Error updating statuses:', error);
-        throw error;
+        console.error('Error in updateMultipleStatuses:', error.message);
+        throw new Error('Failed to update booking statuses');
     }
 },
-
 
 
 

@@ -299,7 +299,6 @@ const updateBookingStatus = async (req, res) => {
 
 
 
-
 const bulkUpdateBookingStatus = async (req, res) => {
     try {
         const { bookingIds, newStatus } = req.body; // Extract booking IDs and new status from request body
@@ -319,8 +318,9 @@ const bulkUpdateBookingStatus = async (req, res) => {
                 message: 'No status provided.',
             });
         }
-        console.log(newStatus)
-        console.log(bookingIds)
+
+        console.log("New Status:", newStatus);
+        console.log("Booking IDs:", bookingIds);
 
         // Call model function to update statuses
         const result = await Booking.updateMultipleStatuses(bookingIds, newStatus);
@@ -340,6 +340,7 @@ const bulkUpdateBookingStatus = async (req, res) => {
         });
     }
 };
+
 
 module.exports = {
     getUserBookings,
