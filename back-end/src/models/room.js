@@ -70,7 +70,7 @@ const Room = {
   // Xóa phòng
   deleteRoom: async (id) => {
     return sql.query`
-            DELETE FROM [wdp3].[dbo].[Rooms]
+            DELETE FROM [dbo].[Rooms]
             WHERE [room_id] = ${id}
         `;
   },
@@ -156,7 +156,7 @@ WHERE [floor_number] IS NOT NULL;
     return sql.query`
     SELECT  [room_type_id]
       ,[category_name]
-  FROM [wdp3].[dbo].[RoomCategories]
+  FROM [dbo].[RoomCategories]
 
     `;
   },

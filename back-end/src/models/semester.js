@@ -23,26 +23,30 @@ const Semester = {
         }
     },
 
-    // Lấy tất cả các kỳ học
-    getAllSemesters: async () => {
-        try {
-            const result = await sql.query`
-                SELECT 
-                    [semester_id],
-                    [semester_name],
-                    [start_date],
-                    [end_date],
-                    [status],
-                    [created_at],
-                    [updated_at]
-                FROM [dbo].[Semester]
-            `;
-            return result; // Trả về kết quả từ truy vấn
-        } catch (err) {
-            console.error("Lỗi khi lấy tất cả kỳ học:", err);
-            throw err;
-        }
-    },
+    // Lấy tất cả các kỳ học, xếp theo Status và mới nhất
+getAllSemesters: async () => {
+    try {
+        const result = await sql.query`
+            SELECT 
+                [semester_id],
+                [semester_name],
+                [start_date],
+                [end_date],
+                [status],
+                [created_at],
+                [updated_at]
+            FROM [dbo].[Semester]
+            ORDER BY 
+                CASE WHEN [status] = 'Active' THEN 1 ELSE 2 END, -- Xếp Active lên trước
+                [created_at] DESC;  -- Xếp theo created_at giảm dần (mới nhất lên đầu)
+        `;
+        return result; // Trả về kết quả từ truy vấn
+    } catch (err) {
+        console.error("Lỗi khi lấy tất cả kỳ học:", err);
+        throw err;
+    }
+},
+
 
     // Tạo kỳ học mới
     createSemester: async (semesterName, startDate, endDate, status) => {
