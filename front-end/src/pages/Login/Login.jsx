@@ -42,11 +42,11 @@ const Login = () => {
 
         setIsLoading(false);
         reset();
-        if (user.role === 1) {
+        if (user.role === 4) {
           navigate("/student/home");
         } else if (user.role === 2) {
           navigate("/manager/home");
-        } else if (user.role === 4) {
+        } else if (user.role === 1) {
           navigate("/admin/home");
         } else {
           navigate("/staff/home");
