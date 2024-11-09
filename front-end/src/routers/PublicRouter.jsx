@@ -5,6 +5,7 @@ import Dashboard from "../pages/Admin/Dashboard";
 import UserManagement from "../pages/Admin/UserManagement/UserManagement";
 import Login from "../pages/Login/Login";
 import OTPPage from "../pages/Login/Verify";
+import ManagerSemester from "../pages/Manager/ManagerSemester/ManagerSemester";
 import UserList from "../pages/Manager/ManageUser/UserList";
 import RequestDetail from "../pages/Manager/RequestManagement/RequestDetail";
 import RequestManagement from "../pages/Manager/RequestManagement/RequestManagement";
@@ -79,6 +80,7 @@ const publicRouter = () => {
         <Route path="/manager/request/:id" element={<RequestDetail />} />
         <Route path="/manager/reports" element={<ReportManager />} />
         <Route path="/manager/home" element={<ManagerHome />} />
+        <Route path="/manager/semester" element={<ManagerSemester />} />
       </Route>      
 
     </Routes>
