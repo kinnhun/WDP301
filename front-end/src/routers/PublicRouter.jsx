@@ -21,9 +21,7 @@ import PaymentHistory from "../pages/Student/paymentHistory/PaymentHistory";
 import Requests from "../pages/student/requests/Requests";
 import ResidentHistories from "../pages/Student/residentHistories/ResidentHistories";
 
-
 import AdminNew from "../pages/Student/news/AdminNew";
-
 
 import ManagerHome from "../pages/Manager/Home/Home";
 import ReportManager from "../pages/Manager/ReportManagement/ReportManager";
@@ -31,6 +29,8 @@ import StaffRequestDetail from "../pages/Staff/RequestManagement/StaffRequestDet
 import Report from "../pages/Student/report/Report";
 
 import BookingManager from "../pages/Manager/ManagerBooking/BookingManager";
+import InvoiceManagement from "../pages/Admin/InvoiceManagement/InvoiceManagement";
+import CreateInvoice from "../pages/Admin/InvoiceManagement/CreateInvoice";
 
 const publicRouter = () => {
   return (
@@ -51,8 +51,6 @@ const publicRouter = () => {
         {/* student */}
         <Route path="/student/home" element={<Home />} />
 
-      
-       
         <Route path="/student/requests" element={<Requests />} />
         <Route path="/student/news" element={<News></News>} />
         <Route path="/student/news/view/:id" element={<NewsDetail></NewsDetail>} />
@@ -73,22 +71,21 @@ const publicRouter = () => {
         <Route path="/staff/request/:id" element={<StaffRequestDetail />} />
       </Route>
 
-
-
       <Route element={<LayoutAdmin />}>
         <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/manage-users" element={<UserManagement />} />
-        
-        <Route path="/admin/manager-booking" element={<BookingManager />} />
-        <Route path="/manager/manage-users" element={<UserList />} />
-        <Route path="/manager/requests" element={<RequestManagement />} />
-        <Route path="/manager/request/:id" element={<RequestDetail />} />
-        <Route path="/manager/reports" element={<ReportManager />} />
-        <Route path="/manager/home" element={<ManagerHome />} />
-        <Route path="/manager/semester" element={<ManagerSemester />} />
-      </Route>      
 
+        <Route path="/admin/manager-booking" element={<BookingManager />} />
+        <Route path="/admin/manage-users" element={<UserList />} />
+        <Route path="/admin/requests" element={<RequestManagement />} />
+        <Route path="/admin/request/:id" element={<RequestDetail />} />
+        <Route path="/admin/reports" element={<ReportManager />} />
+        <Route path="/admin/home" element={<ManagerHome />} />
+        <Route path="/admin/semester" element={<ManagerSemester />} />
+        <Route path="/admin/invoices" element={<InvoiceManagement />} />
+        <Route path="/admin/invoices/create" element={<CreateInvoice />} />
+      </Route>
     </Routes>
   );
 };
