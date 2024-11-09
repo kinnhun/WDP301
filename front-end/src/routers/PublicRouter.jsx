@@ -46,6 +46,7 @@ const publicRouter = () => {
         <Route path="/manager/request/:id" element={<RequestDetail />} />
         <Route path="/manager/reports" element={<ReportManager />} />
         <Route path="/manager/home" element={<ManagerHome />} />
+
         {/* student */}
         <Route path="/student/home" element={<Home />} />
 
@@ -64,18 +65,26 @@ const publicRouter = () => {
         <Route path="/student/paymentHistory" element={<PaymentHistory />} />
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/student/reports" element={<Report />} />
-        <Route path="/admin/manage-users" element={<UserManagement />} />
         {/* staff */}
         <Route path="/staff" element={<Navigate to={"/staff/home"} />} />
         <Route path="/staff/home" element={<Home />} />
         <Route path="/staff/requests" element={<StaffRequestManagement />} />
         <Route path="/staff/request/:id" element={<StaffRequestDetail />} />
       </Route>
+
+
+
       <Route element={<LayoutAdmin />}>
         <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/manage-users" element={<UserManagement />} />
+        
         <Route path="/admin/manager-booking" element={<BookingManager />} />
+        <Route path="/manager/manage-users" element={<UserList />} />
+        <Route path="/manager/requests" element={<RequestManagement />} />
+        <Route path="/manager/request/:id" element={<RequestDetail />} />
+        <Route path="/manager/reports" element={<ReportManager />} />
+        <Route path="/manager/home" element={<ManagerHome />} />
       </Route>      
 
     </Routes>

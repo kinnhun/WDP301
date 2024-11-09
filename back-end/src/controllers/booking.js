@@ -33,12 +33,11 @@ const getUserBookings = async (req, res) => {
     }
 };
 
-// Tạo booking mới
-// Tạo booking mới
+
+
 const createBooking = async (req, res) => {
     try {
-        // Lấy thông tin từ req.body
-        const { room_id, user_id, start_date, end_date, total_amount, payment_status, booking_status, bed_id } = req.body;
+        const { room_id, user_id, start_date, end_date, total_amount, payment_status, booking_status, bed_id, semester_name } = req.body;
 
         // Kiểm tra dữ liệu đầu vào
         const missingFields = [];
@@ -50,25 +49,25 @@ const createBooking = async (req, res) => {
         if (!payment_status) missingFields.push('payment_status');
         if (!booking_status) missingFields.push('booking_status');
         if (!bed_id) missingFields.push('bed_id');
+        if (!semester_name) missingFields.push('semester_name');
 
-        console.log(missingFields)
         if (missingFields.length > 0) {
             return res.status(400).json({
                 success: false,
                 message: 'Thiếu thông tin cần thiết để tạo booking',
-                missingFields: missingFields, // Trả về các trường bị thiếu
+                missingFields: missingFields,
             });
         }
 
         // Gọi model để tạo booking mới
-        await Booking.createBooking(room_id, user_id, start_date, end_date, total_amount, payment_status, booking_status, bed_id);
+        await Booking.createBooking(room_id, user_id, start_date, end_date, total_amount, payment_status, booking_status, bed_id, semester_name);
 
         return res.status(201).json({
             success: true,
             message: 'Tạo booking thành công',
         });
     } catch (error) {
-        console.error('Error creating booking:', error.message); // Log lỗi
+        console.error('Error creating booking:', error.message);
         return res.status(500).json({
             success: false,
             message: 'Tạo booking thất bại',
@@ -300,7 +299,6 @@ const updateBookingStatus = async (req, res) => {
 
 
 
-
 const bulkUpdateBookingStatus = async (req, res) => {
     try {
         const { bookingIds, newStatus } = req.body; // Extract booking IDs and new status from request body
@@ -320,8 +318,9 @@ const bulkUpdateBookingStatus = async (req, res) => {
                 message: 'No status provided.',
             });
         }
-        console.log(newStatus)
-        console.log(bookingIds)
+
+        console.log("New Status:", newStatus);
+        console.log("Booking IDs:", bookingIds);
 
         // Call model function to update statuses
         const result = await Booking.updateMultipleStatuses(bookingIds, newStatus);
@@ -341,6 +340,7 @@ const bulkUpdateBookingStatus = async (req, res) => {
         });
     }
 };
+
 
 module.exports = {
     getUserBookings,

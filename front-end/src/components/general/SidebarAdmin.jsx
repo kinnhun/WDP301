@@ -65,44 +65,7 @@ const SidebarAdmin = () => {
               </Link>
             </li>
 
-            <li className="side-nav-item">
-              <Link to={`/admin/new`} className="side-nav-link">
-                <i className="uil-calender"></i>
-                <span> New Admin </span>
-              </Link>
-            </li>
 
-            <li className="side-nav-item">
-              <Link to={`/student/residentHistories`} className="side-nav-link">
-                <i className="uil-comments-alt"></i>
-                <span> ResidentHistories </span>
-              </Link>
-            </li>
-
-            <li className="side-nav-item">
-              <Link to={`/student/bookings`} className="side-nav-link">
-                <i className="uil-rss"></i>
-                <span> Bookings </span>
-              </Link>
-            </li>
-            <li className="side-nav-item">
-              <Link to={`/student/EWUsage`} className="side-nav-link">
-                <i className="uil-rss"></i>
-                <span> EWUsage </span>
-              </Link>
-            </li>
-            <li className="side-nav-item">
-              <Link to={`/student/paymentHistory`} className="side-nav-link">
-                <i className="uil-rss"></i>
-                <span> PaymentHistory </span>
-              </Link>
-            </li>
-            <li className="side-nav-item">
-              <Link to={`/student/requests`} className="side-nav-link">
-                <i className="uil-rss"></i>
-                <span> Requests </span>
-              </Link>
-            </li>
           </ul>
 
           {/* <!-- Help Box --> */}
