@@ -10,6 +10,27 @@
   cursor: pointer;
 }
 
+/* Layout.scss */
+
+.wrapper {
+  display: flex;
+  height: 100vh; /* Full viewport height */
+}
+
+.sidebar {
+  width: 240px; /* Sidebar width */
+  height: 100vh;
+  overflow-y: auto; /* Make sidebar scrollable if needed */
+  position: fixed;
+}
+
 .content-page {
-  height: 100vh !important;
+  margin-left: 240px; /* Offset by sidebar width */
+  width: calc(100% - 240px); /* Remaining width */
+  height: 100vh;
+  overflow-y: auto; /* Only main content is scrollable */
+}
+
+.content {
+  padding: 20px;
 }

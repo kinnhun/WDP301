@@ -1,13 +1,13 @@
 // UserTable.js
-import "./UserTable.scss";
-import { useSelector, useDispatch } from "react-redux";
-import { getUsers, updateUserRole, deleteUser } from "../../../stores/slices/userSlice";
 import { useEffect, useState } from "react";
-import UserDetail from "./UserDetail";
-import EditRole from "./EditRole";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import MyPagination from "../../../components/Pagination/Pagination";
 import Spinner from "../../../components/Spinner/Spinner";
-import toast from "react-hot-toast";
+import { deleteUser, getUsers, updateUserRole } from "../../../stores/slices/userSlice";
+import EditRole from "./EditRole";
+import UserDetail from "./UserDetail";
+import "./UserTable.scss";
 
 const UserTable = () => {
   const userList = useSelector((state) => state.user.sortedUserList);
