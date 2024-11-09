@@ -50,33 +50,15 @@ const Booking = {
         `;
     },
 
-    // Tạo booking mới
-    createBooking: async (roomId, userId, startDate, endDate, totalAmount, paymentStatus, bookingStatus, bedId) => {
-        return sql.query`
-            INSERT INTO [dbo].[Bookings]
-                ([room_id],
-                [user_id],
-                [start_date],
-                [end_date],
-                [total_amount],
-                [payment_status],
-                [booking_status],
-                [created_at],
-                [updated_at],
-                [bed_id])
-            VALUES
-                (${roomId},
-                ${userId},
-                ${startDate},
-                ${endDate},
-                ${totalAmount},
-                ${paymentStatus},
-                ${bookingStatus},
-                SYSDATETIME(),
-                SYSDATETIME(),
-                ${bedId})
-        `;
-    },
+  // Hàm tạo booking trong model
+createBooking: async (roomId, userId, startDate, endDate, totalAmount, paymentStatus, bookingStatus, bedId, semesterName) => {
+    return sql.query`
+        INSERT INTO [dbo].[Bookings]
+            ([room_id], [user_id], [start_date], [end_date], [total_amount], [payment_status], [booking_status], [created_at], [updated_at], [bed_id], [semester])
+        VALUES
+            (${roomId}, ${userId}, ${startDate}, ${endDate}, ${totalAmount}, ${paymentStatus}, ${bookingStatus}, SYSDATETIME(), SYSDATETIME(), ${bedId}, ${semesterName})
+    `;
+},
     
 
     // Cập nhật thông tin booking

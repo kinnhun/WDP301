@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Alert, Button, Col, Container, Form, Modal, Row, Table } from 'react-bootstrap';
+import { Alert, Button, Col, Container, Form, Modal, Pagination, Row, Table } from 'react-bootstrap';
 
 const BookingManager = () => {
     const [bookings, setBookings] = useState([]);
@@ -8,42 +8,39 @@ const BookingManager = () => {
     const [error, setError] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [selectedBooking, setSelectedBooking] = useState(null);
-    const [selectedStatus, setSelectedStatus] = useState('Pending'); // Default to 'Pending'
+    const [selectedStatus, setSelectedStatus] = useState('Pending');
     const [selectedBookings, setSelectedBookings] = useState([]); // State for selected bookings
+    const [selectAll, setSelectAll] = useState(false); // State for "Select All" checkbox
+    const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
+    const [totalPages, setTotalPages] = useState(1); // Total number of pages
     const statusOptions = ['Pending', 'Confirmed', 'Cancelled']; // Status options for the dropdown
 
-    // Fetch bookings based on the selected status
-    const fetchBookings = async (status) => {
+    // Fetch bookings based on the selected status and current page
+    const fetchBookings = async (status, page) => {
         setLoading(true);
         setError(''); // Clear the error state before making a new request
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/booking/booking-status/${status}`);
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/booking/booking-status/${status}?page=${page}`);
             if (response.data.success) {
                 setBookings(response.data.data);
+                setTotalPages(response.data.totalPages); // Set total pages from API response
             } else {
                 setError('Failed to fetch bookings.');
-                setBookings([]); // Clear bookings on failure to avoid showing stale data
+                setBookings([]);
             }
         } catch (err) {
             setError('Error fetching bookings: ' + err.message);
-            setBookings([]); // Clear bookings if an error occurs
+            setBookings([]);
         } finally {
             setLoading(false);
         }
     };
 
-    // Call fetchBookings when the component mounts and when the status changes
     useEffect(() => {
-        fetchBookings(selectedStatus);
-    }, [selectedStatus]);
+        fetchBookings(selectedStatus, currentPage);
+    }, [selectedStatus, currentPage]);
 
-    // Function to handle showing modal with booking details
-    const handleShowDetails = (booking) => {
-        setSelectedBooking(booking);
-        setShowModal(true);
-    };
-
-    // Handle checkbox selection
+    // Handle checkbox selection for individual bookings
     const handleCheckboxChange = (bookingId) => {
         setSelectedBookings((prevSelected) => {
             if (prevSelected.includes(bookingId)) {
@@ -54,13 +51,22 @@ const BookingManager = () => {
         });
     };
 
+    // Handle "Select All" checkbox
+    const handleSelectAllChange = () => {
+        if (selectAll) {
+            setSelectedBookings([]); // Deselect all
+        } else {
+            setSelectedBookings(bookings.map(booking => booking.booking_id)); // Select all
+        }
+        setSelectAll(!selectAll);
+    };
+
     // Handle status change for individual booking
     const handleStatusChange = async (bookingId, newStatus) => {
         try {
             const response = await axios.put(`${import.meta.env.VITE_BASE_URL}/api/booking/booking-status/${bookingId}/${newStatus}`);
             if (response.data.success) {
-                // Refresh the booking list to fetch the updated data
-                await fetchBookings(selectedStatus);
+                await fetchBookings(selectedStatus, currentPage);
                 console.log('Booking status updated successfully');
             } else {
                 console.error('Failed to update booking status');
@@ -72,23 +78,34 @@ const BookingManager = () => {
 
     // Bulk update booking status for selected bookings
     const handleBulkStatusChange = async () => {
-        const newStatus = 'Confirmed'; // Set to Confirmed
+        const newStatus = 'Confirmed';
         try {
             const response = await axios.put(`${import.meta.env.VITE_BASE_URL}/api/booking/bulk-status/bulk`, {
                 bookingIds: selectedBookings,
                 newStatus: newStatus,
             });
             if (response.data.success) {
-                // Refresh the booking list to fetch the updated data
-                await fetchBookings(selectedStatus);
+                await fetchBookings(selectedStatus, currentPage);
                 console.log('Booking statuses updated successfully');
                 setSelectedBookings([]); // Clear selected bookings after update
+                setSelectAll(false); // Deselect "Select All"
             } else {
                 console.error('Failed to update booking statuses');
             }
         } catch (error) {
             console.error('Error updating booking statuses:', error.message);
         }
+    };
+
+    // Handle page change in pagination
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    // Show the modal with booking details
+    const handleShowModal = (booking) => {
+        setSelectedBooking(booking);
+        setShowModal(true);
     };
 
     return (
@@ -101,7 +118,7 @@ const BookingManager = () => {
                     value={selectedStatus}
                     onChange={(e) => {
                         setSelectedStatus(e.target.value);
-                        setError(''); // Clear error when changing status
+                        setError('');
                     }}
                 >
                     {statusOptions.map((status) => (
@@ -110,67 +127,91 @@ const BookingManager = () => {
                 </Form.Control>
             </Form.Group>
             <Button variant="primary" onClick={handleBulkStatusChange} disabled={selectedBookings.length === 0}>
-                Change Status for Selected
+                Confirm for Selected
             </Button>
+
             {loading ? (
                 <p>Loading...</p>
             ) : error ? (
                 <Alert variant="danger">{error}</Alert>
             ) : bookings.length > 0 ? (
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th>Select</th> {/* Checkbox Column */}
-                            <th>Booking ID</th>
-                            <th>User ID</th>
-                            <th>Room ID</th>
-                            <th>Bed ID</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Total Amount (VND)</th>
-                            <th>Payment Status</th>
-                            <th>Booking Status</th>
-                            <th>Created At</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {bookings.map((booking) => (
-                            <tr key={booking.booking_id}>
-                                <td>
-                                    <Form.Check
+                <>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>
+                                    Select     <Form.Check
                                         type="checkbox"
-                                        checked={selectedBookings.includes(booking.booking_id)}
-                                        onChange={() => handleCheckboxChange(booking.booking_id)}
+                                        checked={selectAll}
+                                        onChange={handleSelectAllChange}
                                     />
-                                </td>
-                                <td>{booking.booking_id}</td>
-                                <td>{booking.user_id}</td>
-                                <td>{booking.room_id}</td>
-                                <td>{booking.bed_id}</td>
-                                <td>{new Date(booking.start_date).toLocaleDateString()}</td>
-                                <td>{new Date(booking.end_date).toLocaleDateString()}</td>
-                                <td>{booking.total_amount.toLocaleString()}</td>
-                                <td>{booking.payment_status}</td>
-                                <td>
-                                    <Form.Control
-                                        as="select"
-                                        value={booking.booking_status}
-                                        onChange={(e) => handleStatusChange(booking.booking_id, e.target.value)}
-                                    >
-                                        {statusOptions.map((status) => (
-                                            <option key={status} value={status}>{status}</option>
-                                        ))}
-                                    </Form.Control>
-                                </td>
-                                <td>{new Date(booking.created_at).toLocaleDateString()}</td>
-                                <td>
-                                    <Button variant="info" onClick={() => handleShowDetails(booking)}>View Details</Button>
-                                </td>
+                                </th> {/* "Select All" Checkbox */}
+                                <th>Booking ID</th>
+                                <th>User ID</th>
+                                <th>Room ID</th>
+                                <th>Bed ID</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Total Amount (VND)</th>
+                                <th>Payment Status</th>
+                                <th>Booking Status</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            {bookings.map((booking) => (
+                                <tr key={booking.booking_id}>
+                                    <td>
+                                        <Form.Check
+                                            type="checkbox"
+                                            checked={selectedBookings.includes(booking.booking_id)}
+                                            onChange={() => handleCheckboxChange(booking.booking_id)}
+                                        />
+                                    </td>
+                                    <td>{booking.booking_id}</td>
+                                    <td>{booking.user_id}</td>
+                                    <td>{booking.room_id}</td>
+                                    <td>{booking.bed_id}</td>
+                                    <td>{new Date(booking.start_date).toLocaleDateString()}</td>
+                                    <td>{new Date(booking.end_date).toLocaleDateString()}</td>
+                                    <td>{booking.total_amount.toLocaleString()}</td>
+                                    <td>{booking.payment_status}</td>
+                                    <td>
+                                        <Form.Control
+                                            as="select"
+                                            value={booking.booking_status}
+                                            onChange={(e) => handleStatusChange(booking.booking_id, e.target.value)}
+                                        >
+                                            {statusOptions.map((status) => (
+                                                <option key={status} value={status}>{status}</option>
+                                            ))}
+                                        </Form.Control>
+                                    </td>
+                                    <td>{new Date(booking.created_at).toLocaleDateString()}</td>
+                                    <td>
+                                        <Button variant="info" onClick={() => handleShowModal(booking)}>
+                                            View Details
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+
+                    {/* Pagination */}
+                    <Pagination>
+                        {[...Array(totalPages)].map((_, index) => (
+                            <Pagination.Item
+                                key={index + 1}
+                                active={index + 1 === currentPage}
+                                onClick={() => handlePageChange(index + 1)}
+                            >
+                                {index + 1}
+                            </Pagination.Item>
                         ))}
-                    </tbody>
-                </Table>
+                    </Pagination>
+                </>
             ) : (
                 <Alert variant="info">No bookings found.</Alert>
             )}
@@ -194,16 +235,16 @@ const BookingManager = () => {
                             <Col md={6}>
                                 <p><strong>Start Date:</strong> {new Date(selectedBooking.start_date).toLocaleDateString()}</p>
                                 <p><strong>End Date:</strong> {new Date(selectedBooking.end_date).toLocaleDateString()}</p>
-                                <p><strong>Total Amount (VND):</strong> {selectedBooking.total_amount.toLocaleString()}</p>
-                                <p><strong>Payment Status:</strong> {selectedBooking.payment_status}</p>
+                                <p><strong>Total Amount:</strong> {selectedBooking.total_amount.toLocaleString()}</p>
                                 <p><strong>Booking Status:</strong> {selectedBooking.booking_status}</p>
-                                <p><strong>Created At:</strong> {new Date(selectedBooking.created_at).toLocaleDateString()}</p>
-                                <p><strong>Updated At:</strong> {new Date(selectedBooking.updated_at).toLocaleDateString()}</p>
+                                <p><strong>Payment Status:</strong> {selectedBooking.payment_status}</p>
                             </Col>
                         </Row>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
+                        <Button variant="secondary" onClick={() => setShowModal(false)}>
+                            Close
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             )}
