@@ -30,7 +30,7 @@ const Dashboard = () => {
     labels: [],
     datasets: [
       {
-        label: 'Doanh Thu (VND)',
+        label: 'Doanh Thu (Triệu VND)',
         data: [],
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -39,9 +39,23 @@ const Dashboard = () => {
     ],
   });
 
+  const [bookingCountChartData, setBookingCountChartData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: 'Lượt Booking',
+        data: [],
+        borderColor: 'rgba(34, 202, 236, 1)',
+        backgroundColor: 'rgba(34, 202, 236, 0.2)',
+        fill: true,
+      },
+    ],
+  });
+
   useEffect(() => {
     fetchRooms();
     fetchRevenueData(); // Thêm dòng này để lấy dữ liệu doanh thu
+    fetchBookingCountData(); // Thêm dòng này để lấy dữ liệu lượt booking
   }, []);
 
   const fetchRooms = async () => {
@@ -66,7 +80,6 @@ const Dashboard = () => {
     }
   };
 
-  // Hàm mới để lấy dữ liệu doanh thu
   const fetchRevenueData = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/booking');
@@ -76,6 +89,18 @@ const Dashboard = () => {
       processRevenueChartData(bookingsData);
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu doanh thu:", error);
+    }
+  };
+
+  const fetchBookingCountData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/booking');
+      const bookingsData = response.data.data;
+
+      // Xử lý dữ liệu lượt booking
+      processBookingCountChartData(bookingsData);
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu lượt booking:", error);
     }
   };
 
@@ -121,14 +146,14 @@ const Dashboard = () => {
         acc[period] = 0;
       }
       if (booking.payment_status === 'Completed') {
-        acc[period] += booking.total_amount / 1000000; // Chia cho 1,000,000 để tính theo đơn vị triệu đồng
+        acc[period] += booking.total_amount / 1000000; // Đơn vị triệu đồng
       }
       return acc;
     }, {});
-  
+
     const labels = Object.keys(revenueByPeriod);
     const revenueData = labels.map(period => revenueByPeriod[period]);
-  
+
     setRevenueChartData({
       labels,
       datasets: [
@@ -142,7 +167,34 @@ const Dashboard = () => {
       ],
     });
   };
-  
+
+  const processBookingCountChartData = (bookingsData) => {
+    const bookingCountByPeriod = bookingsData.reduce((acc, booking) => {
+      const period = new Date(booking.updated_at).toLocaleDateString();
+      if (!acc[period]) {
+        acc[period] = 0;
+      }
+      acc[period] += 1;
+      return acc;
+    }, {});
+
+    const labels = Object.keys(bookingCountByPeriod);
+    const bookingCountData = labels.map(period => bookingCountByPeriod[period]);
+
+    setBookingCountChartData({
+      labels,
+      datasets: [
+        {
+          label: 'Lượt Booking',
+          data: bookingCountData,
+          borderColor: 'rgba(34, 202, 236, 1)',
+          backgroundColor: 'rgba(34, 202, 236, 0.2)',
+          fill: true,
+        },
+      ],
+    });
+  };
+
   return (
     <div>
       <div className="row">
@@ -214,12 +266,35 @@ const Dashboard = () => {
                 },
                 title: {
                   display: true,
-                  text: 'Doanh Thu (VND) Theo Kỳ',
+                  text: 'Doanh Thu (Triệu VND) Theo Kỳ',
                 },
               },
             }} />
           ) : (
             <p>Đang tải dữ liệu biểu đồ doanh thu...</p>
+          )}
+        </div>
+      </div>
+
+      {/* Biểu đồ lượt booking theo kỳ */}
+      <div className="card mt-4">
+        <div className="card-body">
+          <h4 className="header-title mb-3">Biểu Đồ Lượt Booking Theo Kỳ</h4>
+          {bookingCountChartData && bookingCountChartData.labels.length > 0 ? (
+            <Line data={bookingCountChartData} options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: 'Lượt Booking Theo Kỳ',
+                },
+              },
+            }} />
+          ) : (
+            <p>Đang tải dữ liệu biểu đồ lượt booking...</p>
           )}
         </div>
       </div>
