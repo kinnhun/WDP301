@@ -12,13 +12,19 @@ const Menu = () => {
   const handleImport = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
+
     reader.onload = (event) => {
       const data = new Uint8Array(event.target.result);
       const workbook = XLSX.read(data, { type: "array" });
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
-      dispatch(importUsers(jsonData));
+
+      dispatch(importUsers(jsonData)).then(() => {
+        e.target.value = null;
+        console.log("Import thành công!");
+      });
     };
+
     reader.readAsArrayBuffer(file);
   };
 
