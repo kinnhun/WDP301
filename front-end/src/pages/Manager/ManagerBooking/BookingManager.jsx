@@ -8,8 +8,9 @@ const BookingManager = () => {
     const [error, setError] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [selectedBooking, setSelectedBooking] = useState(null);
-    const [selectedStatus, setSelectedStatus] = useState('Pending'); // Default to 'Pending'
+    const [selectedStatus, setSelectedStatus] = useState('Pending');
     const [selectedBookings, setSelectedBookings] = useState([]); // State for selected bookings
+    const [selectAll, setSelectAll] = useState(false); // State for "Select All" checkbox
     const statusOptions = ['Pending', 'Confirmed', 'Cancelled']; // Status options for the dropdown
 
     // Fetch bookings based on the selected status
@@ -22,28 +23,21 @@ const BookingManager = () => {
                 setBookings(response.data.data);
             } else {
                 setError('Failed to fetch bookings.');
-                setBookings([]); // Clear bookings on failure to avoid showing stale data
+                setBookings([]);
             }
         } catch (err) {
             setError('Error fetching bookings: ' + err.message);
-            setBookings([]); // Clear bookings if an error occurs
+            setBookings([]);
         } finally {
             setLoading(false);
         }
     };
 
-    // Call fetchBookings when the component mounts and when the status changes
     useEffect(() => {
         fetchBookings(selectedStatus);
     }, [selectedStatus]);
 
-    // Function to handle showing modal with booking details
-    const handleShowDetails = (booking) => {
-        setSelectedBooking(booking);
-        setShowModal(true);
-    };
-
-    // Handle checkbox selection
+    // Handle checkbox selection for individual bookings
     const handleCheckboxChange = (bookingId) => {
         setSelectedBookings((prevSelected) => {
             if (prevSelected.includes(bookingId)) {
@@ -54,12 +48,21 @@ const BookingManager = () => {
         });
     };
 
+    // Handle "Select All" checkbox
+    const handleSelectAllChange = () => {
+        if (selectAll) {
+            setSelectedBookings([]); // Deselect all
+        } else {
+            setSelectedBookings(bookings.map(booking => booking.booking_id)); // Select all
+        }
+        setSelectAll(!selectAll);
+    };
+
     // Handle status change for individual booking
     const handleStatusChange = async (bookingId, newStatus) => {
         try {
             const response = await axios.put(`${import.meta.env.VITE_BASE_URL}/api/booking/booking-status/${bookingId}/${newStatus}`);
             if (response.data.success) {
-                // Refresh the booking list to fetch the updated data
                 await fetchBookings(selectedStatus);
                 console.log('Booking status updated successfully');
             } else {
@@ -72,17 +75,17 @@ const BookingManager = () => {
 
     // Bulk update booking status for selected bookings
     const handleBulkStatusChange = async () => {
-        const newStatus = 'Confirmed'; // Set to Confirmed
+        const newStatus = 'Confirmed';
         try {
             const response = await axios.put(`${import.meta.env.VITE_BASE_URL}/api/booking/bulk-status/bulk`, {
                 bookingIds: selectedBookings,
                 newStatus: newStatus,
             });
             if (response.data.success) {
-                // Refresh the booking list to fetch the updated data
                 await fetchBookings(selectedStatus);
                 console.log('Booking statuses updated successfully');
                 setSelectedBookings([]); // Clear selected bookings after update
+                setSelectAll(false); // Deselect "Select All"
             } else {
                 console.error('Failed to update booking statuses');
             }
@@ -101,7 +104,7 @@ const BookingManager = () => {
                     value={selectedStatus}
                     onChange={(e) => {
                         setSelectedStatus(e.target.value);
-                        setError(''); // Clear error when changing status
+                        setError('');
                     }}
                 >
                     {statusOptions.map((status) => (
@@ -110,8 +113,10 @@ const BookingManager = () => {
                 </Form.Control>
             </Form.Group>
             <Button variant="primary" onClick={handleBulkStatusChange} disabled={selectedBookings.length === 0}>
-                Change Status for Selected
+            Confirm for Selected
             </Button>
+
+        
             {loading ? (
                 <p>Loading...</p>
             ) : error ? (
@@ -120,7 +125,13 @@ const BookingManager = () => {
                 <Table striped bordered hover>
                     <thead>
                         <tr>
-                            <th>Select</th> {/* Checkbox Column */}
+                            <th>
+                               Select     <Form.Check
+                                    type="checkbox"
+                                    checked={selectAll}
+                                    onChange={handleSelectAllChange}
+                                />
+                            </th> {/* "Select All" Checkbox */}
                             <th>Booking ID</th>
                             <th>User ID</th>
                             <th>Room ID</th>
@@ -165,7 +176,9 @@ const BookingManager = () => {
                                 </td>
                                 <td>{new Date(booking.created_at).toLocaleDateString()}</td>
                                 <td>
-                                    <Button variant="info" onClick={() => handleShowDetails(booking)}>View Details</Button>
+                                    <Button variant="info" onClick={() => setSelectedBooking(booking) && setShowModal(true)}>
+                                        View Details
+                                    </Button>
                                 </td>
                             </tr>
                         ))}
