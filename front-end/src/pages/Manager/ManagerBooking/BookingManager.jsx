@@ -74,7 +74,7 @@ const BookingManager = () => {
     const handleBulkStatusChange = async () => {
         const newStatus = 'Confirmed'; // Set to Confirmed
         try {
-            const response = await axios.put(`${import.meta.env.VITE_BASE_URL}/api/booking/bulk-status`, {
+            const response = await axios.put(`${import.meta.env.VITE_BASE_URL}/api/booking/bulk-status/bulk`, {
                 bookingIds: selectedBookings,
                 newStatus: newStatus,
             });
