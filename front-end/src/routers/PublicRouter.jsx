@@ -41,11 +41,17 @@ const publicRouter = () => {
 
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/login" />} />
-       
+        <Route path="/manager/manage-users" element={<UserList />} />
+        <Route path="/admin/new" element={<AdminNew />} />
+        <Route path="/manager/requests" element={<RequestManagement />} />
+        <Route path="/manager/request/:id" element={<RequestDetail />} />
+        <Route path="/manager/reports" element={<ReportManager />} />
+        <Route path="/manager/home" element={<ManagerHome />} />
+
         {/* student */}
         <Route path="/student/home" element={<Home />} />
 
-        <Route path="/admin/new" element={<AdminNew />} />
+      
        
         <Route path="/student/requests" element={<Requests />} />
         <Route path="/student/news" element={<News></News>} />
