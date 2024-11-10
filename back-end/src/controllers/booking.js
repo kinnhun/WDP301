@@ -62,6 +62,10 @@ const createBooking = async (req, res) => {
         // Gọi model để tạo booking mới
         await Booking.createBooking(room_id, user_id, start_date, end_date, total_amount, payment_status, booking_status, bed_id, semester_name);
 
+
+        await Booking.updateBedStatus(bed_id, 'Occupied');
+
+
         return res.status(201).json({
             success: true,
             message: 'Tạo booking thành công',

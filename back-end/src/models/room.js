@@ -167,6 +167,17 @@ WHERE [floor_number] IS NOT NULL;
               WHERE [dorm] IS NOT NULL;
               `;
   },
+
+  // Cập nhật trạng thái phòng
+  updateRoomStatus: async (roomId, availability_status) => {
+    return sql.query`
+      UPDATE [dbo].[Rooms]
+      SET availability_status = ${availability_status}
+      WHERE room_id = ${roomId}
+    `;
+  },
+
+
 };
 
 module.exports = Room;

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Payment.css';
@@ -128,21 +127,6 @@ const Payment = ({ bookingDetails }) => {
   );
 };
 
-// Định nghĩa prop types cho Payment
-Payment.propTypes = {
-  bookingDetails: PropTypes.shape({
-    room_id: PropTypes.string.isRequired,
-    user_id: PropTypes.string.isRequired,
-    start_date: PropTypes.string.isRequired,
-    end_date: PropTypes.string.isRequired,
-    total_amount: PropTypes.number.isRequired,
-    payment_status: PropTypes.string.isRequired,
-    booking_status: PropTypes.string.isRequired,
-    created_at: PropTypes.string.isRequired,
-    updated_at: PropTypes.string.isRequired,
-    bed_id: PropTypes.string.isRequired,
-    semester_name: PropTypes.string.isRequired,
-  }).isRequired,
-};
+
 
 export default Payment;

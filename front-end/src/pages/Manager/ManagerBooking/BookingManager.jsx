@@ -109,146 +109,151 @@ const BookingManager = () => {
     };
 
     return (
-        <Container className="mt-4">
-            <h1 className="mb-4">Booking Manager</h1>
-            <Form.Group controlId="statusSelect" className="mb-3">
-                <Form.Label>Select Booking Status</Form.Label>
-                <Form.Control
-                    as="select"
-                    value={selectedStatus}
-                    onChange={(e) => {
-                        setSelectedStatus(e.target.value);
-                        setError('');
-                    }}
-                >
-                    {statusOptions.map((status) => (
-                        <option key={status} value={status}>{status}</option>
-                    ))}
-                </Form.Control>
-            </Form.Group>
-            <Button variant="primary" onClick={handleBulkStatusChange} disabled={selectedBookings.length === 0}>
-                Confirm for Selected
-            </Button>
+        <div>
 
-            {loading ? (
-                <p>Loading...</p>
-            ) : error ? (
-                <Alert variant="danger">{error}</Alert>
-            ) : bookings.length > 0 ? (
-                <>
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>
-                                    Select     <Form.Check
-                                        type="checkbox"
-                                        checked={selectAll}
-                                        onChange={handleSelectAllChange}
-                                    />
-                                </th> {/* "Select All" Checkbox */}
-                                <th>Booking ID</th>
-                                <th>User ID</th>
-                                <th>Room ID</th>
-                                <th>Bed ID</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Total Amount (VND)</th>
-                                <th>Payment Status</th>
-                                <th>Booking Status</th>
-                                <th>Created At</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {bookings.map((booking) => (
-                                <tr key={booking.booking_id}>
-                                    <td>
+            <Container fluid  className="mt-4" >
+                <h1 className="mb-4">Booking Manager</h1>
+                <Form.Group controlId="statusSelect" className="mb-3">
+                    <Form.Label>Select Booking Status</Form.Label>
+                    <Form.Control
+                        as="select"
+                        value={selectedStatus}
+                        onChange={(e) => {
+                            setSelectedStatus(e.target.value);
+                            setError('');
+                        }}
+                    >
+                        {statusOptions.map((status) => (
+                            <option key={status} value={status}>{status}</option>
+                        ))}
+                    </Form.Control>
+                </Form.Group>
+                <Button variant="primary" onClick={handleBulkStatusChange} disabled={selectedBookings.length === 0}>
+                    Confirm for Selected
+                </Button>
+
+                {loading ? (
+                    <p>Loading...</p>
+                ) : error ? (
+                    <Alert variant="danger">{error}</Alert>
+                ) : bookings.length > 0 ? (
+                    <>
+                        <Table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Select
                                         <Form.Check
                                             type="checkbox"
-                                            checked={selectedBookings.includes(booking.booking_id)}
-                                            onChange={() => handleCheckboxChange(booking.booking_id)}
+                                            checked={selectAll}
+                                            onChange={handleSelectAllChange}
                                         />
-                                    </td>
-                                    <td>{booking.booking_id}</td>
-                                    <td>{booking.user_id}</td>
-                                    <td>{booking.room_id}</td>
-                                    <td>{booking.bed_id}</td>
-                                    <td>{new Date(booking.start_date).toLocaleDateString()}</td>
-                                    <td>{new Date(booking.end_date).toLocaleDateString()}</td>
-                                    <td>{booking.total_amount.toLocaleString()}</td>
-                                    <td>{booking.payment_status}</td>
-                                    <td>
-                                        <Form.Control
-                                            as="select"
-                                            value={booking.booking_status}
-                                            onChange={(e) => handleStatusChange(booking.booking_id, e.target.value)}
-                                        >
-                                            {statusOptions.map((status) => (
-                                                <option key={status} value={status}>{status}</option>
-                                            ))}
-                                        </Form.Control>
-                                    </td>
-                                    <td>{new Date(booking.created_at).toLocaleDateString()}</td>
-                                    <td>
-                                        <Button variant="info" onClick={() => handleShowModal(booking)}>
-                                            View Details
-                                        </Button>
-                                    </td>
+                                    </th> {/* "Select All" Checkbox */}
+                                    <th>Booking ID</th>
+                                    <th>User ID</th>
+                                    <th>Room ID</th>
+                                    <th>Bed ID</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Total Amount (VND)</th>
+                                    <th>Payment Status</th>
+                                    <th>Booking Status</th>
+                                    <th>Created At</th>
+                                    <th>Actions</th>
                                 </tr>
+                            </thead>
+                            <tbody>
+                                {bookings.map((booking) => (
+                                    <tr key={booking.booking_id}>
+                                        <td>
+                                            <Form.Check
+                                                type="checkbox"
+                                                checked={selectedBookings.includes(booking.booking_id)}
+                                                onChange={() => handleCheckboxChange(booking.booking_id)}
+                                            />
+                                        </td>
+                                        <td>{booking.booking_id}</td>
+                                        <td>{booking.user_id}</td>
+                                        <td>{booking.room_id}</td>
+                                        <td>{booking.bed_id}</td>
+                                        <td>{new Date(booking.start_date).toLocaleDateString()}</td>
+                                        <td>{new Date(booking.end_date).toLocaleDateString()}</td>
+                                        <td>{booking.total_amount.toLocaleString()}</td>
+                                        <td>{booking.payment_status}</td>
+                                        <td>
+                                            <Form.Control
+                                                as="select"
+                                                value={booking.booking_status}
+                                                onChange={(e) => handleStatusChange(booking.booking_id, e.target.value)}
+                                            >
+                                                {statusOptions.map((status) => (
+                                                    <option key={status} value={status}>{status}</option>
+                                                ))}
+                                            </Form.Control>
+                                        </td>
+                                        <td>{new Date(booking.created_at).toLocaleDateString()}</td>
+                                        <td>
+                                            <Button variant="info" onClick={() => handleShowModal(booking)}>
+                                                View Details
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+
+                        {/* Pagination */}
+                        <Pagination>
+                            {[...Array(totalPages)].map((_, index) => (
+                                <Pagination.Item
+                                    key={index + 1}
+                                    active={index + 1 === currentPage}
+                                    onClick={() => handlePageChange(index + 1)}
+                                >
+                                    {index + 1}
+                                </Pagination.Item>
                             ))}
-                        </tbody>
-                    </Table>
+                        </Pagination>
+                    </>
+                ) : (
+                    <Alert variant="info">No bookings found.</Alert>
+                )}
 
-                    {/* Pagination */}
-                    <Pagination>
-                        {[...Array(totalPages)].map((_, index) => (
-                            <Pagination.Item
-                                key={index + 1}
-                                active={index + 1 === currentPage}
-                                onClick={() => handlePageChange(index + 1)}
-                            >
-                                {index + 1}
-                            </Pagination.Item>
-                        ))}
-                    </Pagination>
-                </>
-            ) : (
-                <Alert variant="info">No bookings found.</Alert>
-            )}
+                {/* Modal for booking details */}
+                {selectedBooking && (
+                    <Modal show={showModal} onHide={() => setShowModal(false)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Booking Details</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Row>
+                                <Col md={6}>
+                                    <p><strong>Booking ID:</strong> {selectedBooking.booking_id}</p>
+                                    <p><strong>User Email:</strong> {selectedBooking.user_email}</p>
+                                    <p><strong>Bed Number:</strong> {selectedBooking.bed_number}</p>
+                                    <p><strong>Room Name:</strong> {selectedBooking.RoomName}</p>
+                                    <p><strong>Floor Number:</strong> {selectedBooking.floor_number}</p>
+                                    <p><strong>Dorm:</strong> {selectedBooking.dorm}</p>
+                                </Col>
+                                <Col md={6}>
+                                    <p><strong>Start Date:</strong> {new Date(selectedBooking.start_date).toLocaleDateString()}</p>
+                                    <p><strong>End Date:</strong> {new Date(selectedBooking.end_date).toLocaleDateString()}</p>
+                                    <p><strong>Total Amount:</strong> {selectedBooking.total_amount.toLocaleString()}</p>
+                                    <p><strong>Booking Status:</strong> {selectedBooking.booking_status}</p>
+                                    <p><strong>Payment Status:</strong> {selectedBooking.payment_status}</p>
+                                </Col>
+                            </Row>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setShowModal(false)}>
+                                Close
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                )}
+            </Container>
+        </div>
 
-            {/* Modal for booking details */}
-            {selectedBooking && (
-                <Modal show={showModal} onHide={() => setShowModal(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Booking Details</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Row>
-                            <Col md={6}>
-                                <p><strong>Booking ID:</strong> {selectedBooking.booking_id}</p>
-                                <p><strong>User Email:</strong> {selectedBooking.user_email}</p>
-                                <p><strong>Bed Number:</strong> {selectedBooking.bed_number}</p>
-                                <p><strong>Room Name:</strong> {selectedBooking.RoomName}</p>
-                                <p><strong>Floor Number:</strong> {selectedBooking.floor_number}</p>
-                                <p><strong>Dorm:</strong> {selectedBooking.dorm}</p>
-                            </Col>
-                            <Col md={6}>
-                                <p><strong>Start Date:</strong> {new Date(selectedBooking.start_date).toLocaleDateString()}</p>
-                                <p><strong>End Date:</strong> {new Date(selectedBooking.end_date).toLocaleDateString()}</p>
-                                <p><strong>Total Amount:</strong> {selectedBooking.total_amount.toLocaleString()}</p>
-                                <p><strong>Booking Status:</strong> {selectedBooking.booking_status}</p>
-                                <p><strong>Payment Status:</strong> {selectedBooking.payment_status}</p>
-                            </Col>
-                        </Row>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowModal(false)}>
-                            Close
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-            )}
-        </Container>
     );
 };
 

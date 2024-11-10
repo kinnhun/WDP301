@@ -15,7 +15,8 @@ const
                     bk.end_date,
                     bk.total_amount AS price,
                     bk.total_amount,
-                    bk.semester
+                    bk.semester,
+                    bk.room_id
                 FROM 
                     [dbo].[Bookings] AS bk
                 JOIN 
@@ -67,4 +68,43 @@ const
 
 
 
-module.exports = {getResidentHistory,getUserBed};
+ 
+
+    // Hàm lấy danh sách bạn cùng phòng theo room_id và semester
+const getRoommatesByRoomAndSemester = async (roomId, semester) => {
+    try {
+      const result = await sql.query`
+        SELECT 
+          u.username,
+          b.bed_number,
+          bk.room_id,
+          bk.semester
+        FROM 
+          [dbo].[Bookings] AS bk
+        JOIN 
+          [dbo].[Users] AS u ON bk.user_id = u.user_id
+        JOIN 
+          [dbo].[Beds] AS b ON bk.bed_id = b.bed_id
+        WHERE 
+          bk.room_id = ${roomId}
+          AND bk.semester = ${semester}
+        ORDER BY 
+          bk.room_id, b.bed_number;
+      `;
+      return result.recordset; // Trả về danh sách kết quả
+    } catch (err) {
+      console.error("Lỗi khi lấy danh sách bạn cùng phòng theo phòng và kỳ:", err);
+      throw err;
+    }
+  };
+  
+    
+
+
+module.exports = {
+    
+    getResidentHistory,
+    getUserBed,
+    getRoommatesByRoomAndSemester
+
+};
