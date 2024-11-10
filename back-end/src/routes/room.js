@@ -40,4 +40,10 @@ roomRouter.get("/rooms/type/:roomTypeId/floor/:floorNumber/dorm/:dormName", room
 roomRouter.get("/dorms/all", roomController.getDorm);
 
 
+// Thay đổi trạng thái phòng [availability_status]
+roomRouter.put("/change-status", roomController.updateRoomStatus);
+
+
+
+
 module.exports = roomRouter;

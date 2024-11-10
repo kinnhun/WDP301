@@ -59,7 +59,13 @@ createBooking: async (roomId, userId, startDate, endDate, totalAmount, paymentSt
             (${roomId}, ${userId}, ${startDate}, ${endDate}, ${totalAmount}, ${paymentStatus}, ${bookingStatus}, SYSDATETIME(), SYSDATETIME(), ${bedId}, ${semesterName})
     `;
 },
-    
+updateBedStatus: async (bed_id, status) => {
+    return sql.query`
+        UPDATE [dbo].[Beds]
+        SET [availability_status] = ${status}
+        WHERE [bed_id] = ${bed_id}
+    `;
+},
 
     // Cập nhật thông tin booking
     updateBooking: async (bookingId, updates) => {
