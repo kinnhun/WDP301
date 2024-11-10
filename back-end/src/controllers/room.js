@@ -313,6 +313,55 @@ const getDorm = async (req, res) => {
   }
 };
 
+
+
+// Thay đổi trạng thái của phòng
+const updateRoomStatus = async (req, res) => {
+  const { id, availability_status } = req.query; // Lấy room ID và trạng thái từ query params
+
+  // Kiểm tra id và availability_status có được cung cấp hay không
+  if (!id || isNaN(id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Vui lòng cung cấp ID hợp lệ cho phòng.",
+    });
+  }
+
+  if (!availability_status) {
+    return res.status(400).json({
+      success: false,
+      message: "Vui lòng cung cấp trạng thái mới cho phòng.",
+    });
+  }
+
+  try {
+    // Gọi phương thức từ model để cập nhật trạng thái phòng
+    const result = await Room.updateRoomStatus(parseInt(id, 10), availability_status);
+
+    if (result.rowsAffected[0] === 0) {
+      // Nếu không có dòng nào bị ảnh hưởng, tức là không tìm thấy phòng với ID này
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy phòng với ID này.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Cập nhật trạng thái phòng thành công!",
+    });
+  } catch (error) {
+    console.error("Lỗi khi cập nhật trạng thái phòng:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Có lỗi xảy ra khi cập nhật trạng thái phòng.",
+      errors: error.message,
+    });
+  }
+};
+
+
+
 module.exports = {
   getAllRooms,
   getRoomById,
@@ -326,4 +375,5 @@ module.exports = {
   getAllAvailableRooms,
   getRoomsByDormRoomTypeFloor,
   getDorm,
+  updateRoomStatus
 };
