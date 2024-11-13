@@ -4,11 +4,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../../utils/axios";
 import "./CreateInvoice.scss";
 import toast from "react-hot-toast";
-import { formatDate } from "../../../utils/formatDate";
 
 const CreateInvoice = () => {
   const [types, setTypes] = useState([]);
-  const { register, handleSubmit, watch, setValue } = useForm();
+  const { register, handleSubmit, watch, setValue, reset } = useForm();
   const [electricity, setElectricity] = useState(1);
   const [water, setWater] = useState(1);
 
@@ -24,12 +23,18 @@ const CreateInvoice = () => {
       const response = await axios.post("/invoice", data);
       console.log(response);
       if (response.status === 200) {
+        reset();
         toast.success("Invoice created successfully");
-        navigate("/admin/invoices");
+        // navigate("/admin/invoices");
       }
     } catch (error) {
-      console.error(error);
-      toast.error("Error creating invoice");
+      console.log(error);
+      if (error.response.data.errors === "Not found user in this room") {
+        toast.error("Not found user in this room");
+      }
+      if (error.response.data.errors === "User not found") {
+        toast.error("User not found");
+      }
     }
   };
 

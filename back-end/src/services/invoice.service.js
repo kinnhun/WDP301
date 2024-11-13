@@ -1,6 +1,6 @@
 const Invoice = require("../models/invoice");
-const Semester = require("../models/semester");
 const Room = require("../models/room");
+const User = require("../models/user");
 
 module.exports = {
   getInvoices: async () => {
@@ -21,14 +21,39 @@ module.exports = {
   },
   createInvoice: async (invoice) => {
     try {
-      const newInvoice = await Invoice.createInvoice(invoice);
-      if (invoice.invoiceType === 1) {
-        const semester = Semester.getSemesterByStatus("Active");
-      }
-      if (newInvoice.rowsAffected[0] === 0) {
-        const error = new Error("Invoice created failed");
-        error.status = 400;
-        throw error;
+      if (invoice.room) {
+        const users = await Room.getUserIdByRoomNumber(invoice.room);
+        if (users.recordset.length === 0) {
+          const error = new Error("Not found user in this room");
+          error.status = 404;
+          throw error;
+        }
+        for (let i = 0; i < users.recordset.length; i++) {
+          await Invoice.createInvoice({
+            ...invoice,
+            room_id: users.recordset[i].room_id,
+            user_id: users.recordset[i].user_id,
+            amount: invoice.amount / users.recordset.length,
+          });
+        }
+      } else if (invoice.email) {
+        const user = await User.getUserByEmail(invoice.email);
+        if (user.recordset.length === 0) {
+          const error = new Error("User not found");
+          error.status = 404;
+          throw error;
+        }
+        let roomId = await Room.getRoomIdByEmail(invoice.email);
+        if (roomId.recordset.length === 0) {
+          const error = new Error("Room not found");
+          error.status = 404;
+          throw error;
+        }
+        await Invoice.createInvoice({
+          ...invoice,
+          user_id: user.recordset[0].user_id,
+          room_id: roomId.recordset[0].room_id,
+        });
       }
       return "Invoice created successfully";
     } catch (error) {

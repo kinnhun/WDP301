@@ -51,7 +51,7 @@ const InvoiceTable = () => {
             <tr key={invoice.id}>
               <td>{invoice.type}</td>
               <td>{invoice.amount}</td>
-              <td>{invoice.status === 0 ? "Unpaid" : "Paid"}</td>
+              <td>{invoice.status === false ? "Unpaid" : "Paid"}</td>
               <td>{invoice.created_at && formatDate(invoice.created_at)}</td>
               <td>{invoice.expired_date && formatDate(invoice.expired_date)}</td>
               <td>{invoice.payment_at && formatDate(invoice.payment_at)}</td>

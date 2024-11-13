@@ -51,11 +51,12 @@ module.exports = {
         message: msg,
       });
     } catch (error) {
+      console.log(error);
       return errorResponse({
         res,
         status: error.status || 500,
         message: "Create Invoice failed",
-        errors: error,
+        errors: error.message,
       });
     }
   },
