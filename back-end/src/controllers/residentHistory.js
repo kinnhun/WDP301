@@ -37,7 +37,33 @@ const getUserBed = async (req, res) => {
 
 
 
+// Hàm mới để lấy danh sách bạn cùng phòng trong cùng kỳ
+const getRoommatesByRoomAndSemester = async (req, res) => {
+  const { roomId, semester } = req.query;
 
-module.exports ={getResident,getUserBed} ;
+  if (!roomId || !semester) {
+    return res.status(400).json({ message: 'Vui lòng cung cấp roomId và semester.' });
+  }
+
+  try {
+    const roommates = await residentHistory.getRoommatesByRoomAndSemester(roomId, semester);
+
+    if (roommates.length === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy bạn cùng phòng cho phòng và kỳ này.' });
+    }
+
+    res.status(200).json({
+      message: 'Lấy danh sách bạn cùng phòng thành công!',
+      data: roommates
+    });
+  } catch (err) {
+    console.error('Lỗi khi lấy danh sách bạn cùng phòng:', err);
+    res.status(500).json({ message: 'Có lỗi xảy ra khi lấy danh sách bạn cùng phòng.' });
+  }
+};
+
+
+
+module.exports ={getResident,getUserBed, getRoommatesByRoomAndSemester} ;
 
 

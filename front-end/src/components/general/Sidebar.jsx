@@ -22,41 +22,7 @@ const Sidebar = () => {
         <div className="h-100" id="leftside-menu-container" data-simplebar>
           {/* <!--- Sidemenu --> */}
           <ul className="side-nav" style={{ backgroundColor: "#313A46" }}>
-            <li className="side-nav-title side-nav-item">Navigation</li>
-
-            <li className="side-nav-item">
-              <a
-                data-bs-toggle="collapse"
-                href="#sidebarDashboards"
-                aria-expanded="false"
-                aria-controls="sidebarDashboards"
-                className="side-nav-link"
-              >
-                <i className="uil-home-alt"></i>
-                <span className="badge bg-success float-end">4</span>
-                <span> Dashboards </span>
-              </a>
-              <div className="collapse" id="sidebarDashboards">
-                <ul className="side-nav-second-level">
-                  <li>
-                    <a href="dashboard-analytics.html">Analytics</a>
-                  </li>
-                  <li>
-                    <a href="index.html">Ecommerce</a>
-                  </li>
-                  <li>
-                    <a href="dashboard-projects.html">Projects</a>
-                  </li>
-                  <li>
-                    <a href="dashboard-wallet.html">
-                      E-Wallet{" "}
-                      <span className="badge rounded bg-danger font-10 float-end">New</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-
+           
             <li className="side-nav-title side-nav-item">Apps</li>
 
             <li className="side-nav-item">

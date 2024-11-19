@@ -167,36 +167,13 @@ WHERE [floor_number] IS NOT NULL;
               WHERE [dorm] IS NOT NULL;
               `;
   },
-  getUserIdByRoomNumber: async (roomNumber) => {
+
+  // Cập nhật trạng thái phòng
+  updateRoomStatus: async (roomId, availability_status) => {
     return sql.query`
-  SELECT B.user_id
-    ,B.room_id
-  FROM Bookings B
-  LEFT JOIN Rooms R ON B.room_id = R.room_id
-  LEFT JOIN Semester S ON B.semester = S.semester_name
-  WHERE R.room_number = ${roomNumber}
-  AND S.status = 'Active'
-    `;
-  },
-  getRoomIdByRoomNumber: async (roomNumber) => {
-    return sql.query`
-    SELECT room_id
-    FROM Rooms
-    WHERE room_number = ${roomNumber}
-    `;
-  },
-  getRoomIdByEmail: async (email) => {
-    return sql.query`
- 	SELECT R.room_id
-	FROM Rooms R
-	LEFT JOIN Bookings B
-	ON R.room_id = B.room_id
-	LEFT JOIN Users U
-	ON U.user_id = B.user_id
-	LEFT JOIN Semester S
-	ON S.semester_name = B.semester
-	WHERE U.email = ${email}
-	AND S.status = 'Active'
+      UPDATE [dbo].[Rooms]
+      SET availability_status = ${availability_status}
+      WHERE room_id = ${roomId}
     `;
   },
 };
