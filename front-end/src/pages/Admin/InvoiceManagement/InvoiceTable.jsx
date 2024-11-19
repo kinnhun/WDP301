@@ -18,6 +18,11 @@ const InvoiceTable = () => {
   const [types, setTypes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemPerPage = 10;
+  const indexOfLast = currentPage * itemPerPage;
+  const indexOfFirst = indexOfLast - itemPerPage;
+  const currentInvoices = displayedInvoices.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(displayedInvoices.length / itemPerPage);
+  console.log(currentInvoices.length);
 
   const fetchInvoiceTypes = async () => {
     try {
@@ -73,15 +78,12 @@ const InvoiceTable = () => {
 
     // Lọc theo Type
     if (filters.type) {
-      console.log(filtered);
-      console.log(filters.type);
       filtered = filtered.filter((invoice) => invoice.type === filters.type);
     }
 
     // Cập nhật hóa đơn hiển thị theo trang
-    const startIndex = (currentPage - 1) * itemPerPage;
-    const endIndex = startIndex + itemPerPage;
-    setDisplayedInvoices(filtered.slice(startIndex, endIndex));
+
+    setDisplayedInvoices(filtered);
   };
 
   const handlePageChange = (pageNumber) => {
@@ -180,8 +182,8 @@ const InvoiceTable = () => {
           </tr>
         </thead>
         <tbody>
-          {displayedInvoices.length > 0 ? (
-            displayedInvoices.map((invoice) => (
+          {currentInvoices.length > 0 ? (
+            currentInvoices.map((invoice) => (
               <tr key={invoice.id}>
                 <td>{invoice.type}</td>
                 <td>{invoice.amount}</td>
@@ -202,9 +204,9 @@ const InvoiceTable = () => {
       </table>
 
       {/* Pagination */}
-      {Math.ceil(allInvoices.length / itemPerPage) > 1 && (
+      {totalPages > 1 && (
         <MyPagination
-          totalPages={Math.ceil(allInvoices.length / itemPerPage)}
+          totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}
         />
