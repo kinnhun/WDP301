@@ -81,7 +81,7 @@ const InvoiceTable = () => {
     }
 
     // Cập nhật hóa đơn hiển thị theo trang
-
+    setCurrentPage(1); // Reset về trang đầu tiên
     setDisplayedInvoices(filtered);
   };
 
