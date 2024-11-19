@@ -51,7 +51,6 @@ module.exports = {
         message: msg,
       });
     } catch (error) {
-      console.log(error);
       return errorResponse({
         res,
         status: error.status || 500,

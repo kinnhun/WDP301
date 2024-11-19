@@ -28,7 +28,7 @@ module.exports = {
   },
   getInvoiceTypes: () => {
     return sql.query`
-        SELECT * FROM [dbo].[Invoice_Type] ORDER BY id DESC
+        SELECT * FROM [dbo].[Invoice_Type]
         `;
   },
   createInvoice: ({

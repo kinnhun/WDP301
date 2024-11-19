@@ -20,6 +20,7 @@ module.exports = {
     }
   },
   createInvoice: async (invoice) => {
+    console.log(invoice);
     try {
       if (invoice.room) {
         const users = await Room.getUserIdByRoomNumber(invoice.room);
@@ -34,6 +35,7 @@ module.exports = {
             room_id: users.recordset[i].room_id,
             user_id: users.recordset[i].user_id,
             amount: invoice.amount / users.recordset.length,
+            ew_date: invoice.ew_date ? invoice.ew_date : null,
           });
         }
       } else if (invoice.email) {
@@ -53,6 +55,7 @@ module.exports = {
           ...invoice,
           user_id: user.recordset[0].user_id,
           room_id: roomId.recordset[0].room_id,
+          ew_date: null,
         });
       }
       return "Invoice created successfully";

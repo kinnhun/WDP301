@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "../../../utils/axios";
-import toast from "react-hot-toast";
 import Spinner from "../../../components/Spinner/Spinner";
 import { formatDate } from "../../../utils/formatDate";
 
@@ -30,7 +29,6 @@ const InvoiceTable = () => {
     return <Spinner />;
   }
 
-  console.log(invoices);
   return (
     <table>
       <thead>
