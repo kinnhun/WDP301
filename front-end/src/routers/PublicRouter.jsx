@@ -31,6 +31,7 @@ import Report from "../pages/Student/report/Report";
 import CreateInvoice from "../pages/Admin/InvoiceManagement/CreateInvoice";
 import InvoiceManagement from "../pages/Admin/InvoiceManagement/InvoiceManagement";
 import BookingManager from "../pages/Manager/ManagerBooking/BookingManager";
+import Invoice from "../pages/Student/Invoice/Invoice";
 
 const publicRouter = () => {
   return (
@@ -64,6 +65,7 @@ const publicRouter = () => {
         <Route path="/student/paymentHistory" element={<PaymentHistory />} />
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/student/reports" element={<Report />} />
+        <Route path="/student/invoices" element={<Invoice />} />
         {/* staff */}
         <Route path="/staff" element={<Navigate to={"/staff/home"} />} />
         <Route path="/staff/home" element={<Home />} />
