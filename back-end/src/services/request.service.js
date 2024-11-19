@@ -10,9 +10,15 @@ module.exports = {
     }
   },
 
-  createRequest: async (roomId, userId, request_type, description) => {
+  createRequest: async (roomId, userId, request_type, description, status) => {
     try {
-      const request = await Request.createRequest(roomId, userId, request_type, description);
+      const request = await Request.createRequest(
+        roomId,
+        userId,
+        request_type,
+        description,
+        status
+      );
       if (request.rowsAffected[0] === 0) {
         const error = new Error("Create request failed");
         error.status = 500;

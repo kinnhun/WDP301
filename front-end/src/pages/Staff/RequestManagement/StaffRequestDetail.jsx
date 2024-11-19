@@ -98,8 +98,8 @@ function StaffRequestDetail() {
             <strong>Status:</strong>
           </label>
           <select value={status} onChange={(e) => setStatus(e.target.value)}>
-            <option value="Pending">Pending</option>
-            <option value="Done">Done</option>
+            <option value="Incompleted">Incompleted</option>
+            <option value="Completed">Completed</option>
           </select>
         </div>
 

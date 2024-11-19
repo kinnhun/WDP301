@@ -3,7 +3,7 @@ import RequestTable from "./RequestTable";
 
 function StaffRequestManagement() {
   return (
-    <div className="request-management">
+    <div className="request-management-staff">
       <RequestTable />
     </div>
   );

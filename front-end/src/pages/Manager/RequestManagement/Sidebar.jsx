@@ -13,7 +13,7 @@ function Sidebar() {
   };
 
   return (
-    <div className="sidebar">
+    <div className="sidebar-admin">
       <ul>
         <li onClick={() => handleClick("all")} className={selectedStatus === "all" ? "active" : ""}>
           All <span>{requests.length}</span>
@@ -35,6 +35,18 @@ function Sidebar() {
           className={selectedStatus === "Rejected" ? "active" : ""}
         >
           Rejected <span>{requests.filter((r) => r.status === "Rejected").length}</span>
+        </li>
+        <li
+          onClick={() => handleClick("Done")}
+          className={selectedStatus === "Incompleted" ? "active" : ""}
+        >
+          Incompleted <span>{requests.filter((r) => r.status === "Incompleted").length}</span>
+        </li>
+        <li
+          onClick={() => handleClick("Done")}
+          className={selectedStatus === "Completed" ? "active" : ""}
+        >
+          Completed <span>{requests.filter((r) => r.status === "Completed").length}</span>
         </li>
       </ul>
     </div>
