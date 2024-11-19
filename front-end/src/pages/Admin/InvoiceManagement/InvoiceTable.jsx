@@ -22,7 +22,6 @@ const InvoiceTable = () => {
   const indexOfFirst = indexOfLast - itemPerPage;
   const currentInvoices = displayedInvoices.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(displayedInvoices.length / itemPerPage);
-  console.log(currentInvoices.length);
 
   const fetchInvoiceTypes = async () => {
     try {

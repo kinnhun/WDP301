@@ -63,4 +63,30 @@ module.exports = {
       throw error;
     }
   },
+  getInvoiceByEmail: async (email) => {
+    try {
+      const invoices = await Invoice.getInvoiceByEmail(email);
+      if (invoices.recordset.length === 0) {
+        const error = new Error("Invoice not found");
+        error.status = 404;
+        throw error;
+      }
+      return invoices.recordset;
+    } catch (error) {
+      throw error;
+    }
+  },
+  updateInvoiceStatus: async (id) => {
+    try {
+      const status = await Invoice.updateInvoiceStatus(id);
+      if (status.rowsAffected[0] === 0) {
+        const error = new Error("Invoice not found");
+        error.status = 404;
+        throw error;
+      }
+      return "Invoice updated successfully";
+    } catch (error) {
+      throw error;
+    }
+  },
 };
