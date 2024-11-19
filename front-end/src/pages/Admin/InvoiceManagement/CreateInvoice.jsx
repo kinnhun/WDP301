@@ -57,7 +57,6 @@ const CreateInvoice = () => {
       water,
       amount,
     };
-    console.log(newData);
     createInvoice(newData);
   };
 
