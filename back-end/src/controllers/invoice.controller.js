@@ -55,7 +55,52 @@ module.exports = {
         res,
         status: error.status || 500,
         message: "Create Invoice failed",
-        errors: error,
+        errors: error.message,
+      });
+    }
+  },
+  getInvoiceByEmail: async (req, res) => {
+    try {
+      const { email } = req.params;
+      if (!email) {
+        const error = new Error("Email is required");
+        error.status = 404;
+        throw error;
+      }
+      const invoices = await InvoiceService.getInvoiceByEmail(email);
+      return successResponse({
+        res,
+        message: "Get Invoices successfully",
+        data: invoices,
+      });
+    } catch (error) {
+      return errorResponse({
+        res,
+        status: error.status || 500,
+        message: "Get Invoice By Email Failed",
+        errors: error.message,
+      });
+    }
+  },
+  updateInvoiceStatus: async (req, res) => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        const error = new Error("Id is required");
+        error.status = 404;
+        throw error;
+      }
+      const msg = await InvoiceService.updateInvoiceStatus(id);
+      return successResponse({
+        res,
+        message: msg,
+      });
+    } catch (error) {
+      return errorResponse({
+        res,
+        status: error.status || 500,
+        message: "Update Invoice Status Failed",
+        errors: error.message,
       });
     }
   },

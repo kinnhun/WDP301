@@ -35,7 +35,7 @@ const Sidebar = () => {
             <li className="side-nav-item">
               <Link to={`/student/news`} className="side-nav-link">
                 <i className="uil-calender"></i>
-                <span> news </span>
+                <span> News </span>
               </Link>
             </li>
 
@@ -55,13 +55,19 @@ const Sidebar = () => {
             <li className="side-nav-item">
               <Link to={`/student/EWUsage`} className="side-nav-link">
                 <i className="uil-rss"></i>
-                <span> EWUsage </span>
+                <span> EWUsages </span>
               </Link>
             </li>
             <li className="side-nav-item">
               <Link to={`/student/paymentHistory`} className="side-nav-link">
                 <i className="uil-rss"></i>
-                <span> PaymentHistory </span>
+                <span> PaymentHistories </span>
+              </Link>
+            </li>
+            <li className="side-nav-item">
+              <Link to={`/student/invoices`} className="side-nav-link">
+                <i className="uil-rss"></i>
+                <span> Invoices </span>
               </Link>
             </li>
             <li className="side-nav-item">

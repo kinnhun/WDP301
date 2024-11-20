@@ -94,13 +94,13 @@ function RequestTable() {
 
   const statusCounts = {
     all: requests.length,
-    Pending: requests.filter((r) => r.status === "Pending").length,
-    Done: requests.filter((r) => r.status === "Done").length,
+    Pending: requests.filter((r) => r.status === "Incompleted").length,
+    Done: requests.filter((r) => r.status === "Completed").length,
   };
 
   return (
     <>
-      <div className="sidebar">
+      <div className="sidebar-staff">
         <ul>
           <li
             onClick={() => handleStatusClick("all")}
@@ -111,20 +111,20 @@ function RequestTable() {
 
           <li
             onClick={() => handleStatusClick("Pending")}
-            className={selectedStatus === "Pending" ? "active" : ""}
+            className={selectedStatus === "Incompleted" ? "active" : ""}
           >
-            Pending <span>{statusCounts.Pending}</span>
+            Incompleted <span>{statusCounts.Pending}</span>
           </li>
           <li
             onClick={() => handleStatusClick("Done")}
-            className={selectedStatus === "Done" ? "active" : ""}
+            className={selectedStatus === "Completed" ? "active" : ""}
           >
-            Done<span>{statusCounts.Done}</span>
+            Completed<span>{statusCounts.Done}</span>
           </li>
         </ul>
       </div>
 
-      <div className="request-table">
+      <div className="request-table staff-request">
         <div className="filters">
           <select className="form-control" value={selectedType} onChange={handleTypeChange}>
             <option value="">All Types</option>

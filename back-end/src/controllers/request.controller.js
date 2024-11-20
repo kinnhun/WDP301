@@ -23,7 +23,7 @@ const getAllRequests = async (req, res) => {
 // Tạo yêu cầu bảo trì mới
 const createRequest = async (req, res) => {
   try {
-    const { room_id, user_id, description, request_type } = req.body;
+    const { room_id, user_id, description, request_type, status } = req.body;
     if (!room_id || !user_id || !description || !request_type) {
       return errorResponse({
         res,
@@ -35,7 +35,8 @@ const createRequest = async (req, res) => {
       room_id,
       user_id,
       request_type,
-      description
+      description,
+      status
     );
 
     return successResponse({
