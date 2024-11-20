@@ -20,6 +20,7 @@ module.exports = {
 			ON [request_type].[id] = [Requests].[request_type]
 			LEFT JOIN [dbo].[Rooms]
 			ON [Rooms].[room_id] = [Requests].[room_id]
+      ORDER BY [Requests].[request_id] DESC
         `;
   },
 

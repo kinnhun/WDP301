@@ -163,7 +163,7 @@ DELETE FROM [dbo].[Users]
   LEFT JOIN [Beds] ON [Bookings].[bed_id] = [Beds].[bed_id]
   LEFT JOIN [Roles] ON [Users].[role_id] = [Roles].[role_id]
   LEFT JOIN [RoomCategories] ON [Rooms].[room_type_id] = [RoomCategories].[room_type_id]
-  WHERE [Users].[user_id] = 5
+  WHERE [Users].[user_id] = ${userId}
   ORDER BY [Bookings].[booking_id] DESC;
       `;
   },

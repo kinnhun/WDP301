@@ -105,6 +105,7 @@ function RequestTable() {
         user_id: newRequestEmail,
         request_type: newRequestTitle,
         description: newRequestContent,
+        status: "Incompleted",
       });
       if (response.status === 201) {
         toast.success("Create request successfully");

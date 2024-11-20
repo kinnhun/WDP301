@@ -177,8 +177,6 @@ WHERE [floor_number] IS NOT NULL;
       WHERE room_id = ${roomId}
     `;
   },
-
-
 };
 
 module.exports = Room;

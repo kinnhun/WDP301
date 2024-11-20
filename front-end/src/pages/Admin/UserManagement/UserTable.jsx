@@ -40,10 +40,6 @@ const UserTable = () => {
     setSelectedUser(null);
   };
 
-  const handleEditUser = (user) => {
-    setEditUser(user);
-  };
-
   const handleCloseEditModal = () => {
     setEditUser(null);
   };
@@ -93,9 +89,6 @@ const UserTable = () => {
                 <td className="d-flex gap-1 align-items-center">
                   <button className="btn btn-primary" onClick={() => handleViewUser(user.user_id)}>
                     View
-                  </button>
-                  <button className="btn btn-warning" onClick={() => handleEditUser(user)}>
-                    Edit
                   </button>
                   <button
                     className="btn btn-danger"

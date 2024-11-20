@@ -71,10 +71,7 @@ export const userSlice = createSlice({
     builder.addCase(deleteUser.pending, (state) => {
       state.status = "pending";
     });
-    builder.addCase(deleteUser.fulfilled, (state, action) => {
-      if (!action.payload) return;
-      state.userList = state.userList.filter((user) => user.user_id !== action.payload);
-      state.sortedUserList = state.sortedUserList.filter((user) => user.user_id !== action.payload);
+    builder.addCase(deleteUser.fulfilled, (state) => {
       state.status = "idle";
     });
     builder.addCase(deleteUser.rejected, (state) => {
@@ -133,21 +130,24 @@ export const importUsers = createAsyncThunk(
   }
 );
 
-export const createUser = createAsyncThunk("createUser", async (user, { rejectedWithValue }) => {
-  try {
-    const response = await axios.post(`/user`, user);
-    if (!response.status === 200) {
-      return rejectedWithValue(response);
+export const createUser = createAsyncThunk(
+  "createUser",
+  async (user, { dispatch, rejectedWithValue }) => {
+    try {
+      const response = await axios.post(`/user`, user);
+      if (!response.status === 200) {
+        return rejectedWithValue(response);
+      }
+      toast.success("Create user successfully");
+      dispatch(getUsers());
+    } catch (e) {
+      console.log(e);
+      toast.error("Create user failed");
+      console.error(e);
+      return rejectedWithValue(e.response.data);
     }
-    toast.success("Create user successfully");
-    return response.data.data;
-  } catch (e) {
-    console.log(e);
-    toast.error("Create user failed");
-    console.error(e);
-    return rejectedWithValue(e.response.data);
   }
-});
+);
 
 export const deleteUser = createAsyncThunk("deleteUser", async (id, { rejectedWithValue }) => {
   try {
