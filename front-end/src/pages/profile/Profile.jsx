@@ -125,9 +125,9 @@ const Profile = () => {
                                     <p className="text-muted mb-2 font-18">
                                         <strong>Gender:</strong>
                                         <span className="ms-2">
-                                            {userInfo?.gender === true
+                                            {userInfo?.gender === "male"
                                                 ? 'Male'
-                                                : userInfo?.gender === false
+                                                : userInfo?.gender === "famale"
                                                 ? 'Female'
                                                 : 'N/A'}
                                         </span>

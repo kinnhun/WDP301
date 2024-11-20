@@ -254,10 +254,10 @@ const getAllAvailableRooms = async (req, res, next) => {
 const getRoomsByDormRoomTypeFloor = async (req, res) => {
   try {
     // Lấy tham số từ params
-    const { roomTypeId, floorNumber, dormName } = req.params;
+    const { roomTypeId, floorNumber, dormName, gender } = req.params;
 
     // Kiểm tra xem các tham số có hợp lệ không
-    if (!roomTypeId || !floorNumber || !dormName) {
+    if (!roomTypeId || !floorNumber || !dormName || !gender) {
       return errorResponse({
         res,
         status: 400,
@@ -265,8 +265,17 @@ const getRoomsByDormRoomTypeFloor = async (req, res) => {
       });
     }
 
+    // Kiểm tra giá trị của gender
+    if (!["male", "female"].includes(gender.toLowerCase())) {
+      return errorResponse({
+        res,
+        status: 400,
+        message: "Giới tính không hợp lệ. Vui lòng chọn 'male' hoặc 'female'.",
+      });
+    }
+
     // Thực hiện truy vấn
-    const result = await Room.getRoomsByDormRoomTypeFloor(roomTypeId, floorNumber, dormName);
+    const result = await Room.getRoomsByDormRoomTypeFloor(roomTypeId, floorNumber, dormName, gender);
     const rooms = result.recordset;
 
     // Kiểm tra xem có phòng nào không
@@ -284,6 +293,7 @@ const getRoomsByDormRoomTypeFloor = async (req, res) => {
       data: rooms,
     });
   } catch (error) {
+    console.error("Lỗi khi lấy danh sách phòng:", error); // Log lỗi chi tiết
     return errorResponse({
       res,
       status: 500,

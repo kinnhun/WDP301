@@ -131,25 +131,26 @@ WHERE [floor_number] IS NOT NULL;
   },
 
   // Lấy danh sách phòng theo loại phòng, số tầng, và ký túc xá
-  getRoomsByDormRoomTypeFloor: async (roomTypeId, floorNumber, dormName) => {
+  getRoomsByDormRoomTypeFloor: async (roomTypeId, floorNumber, dormName,gender) => {
     return sql.query`
         SELECT 
-            [room_id],
-            [room_number],
-            [room_type_id],
-            [price],
-            [availability_status],
-            [created_at],
-            [updated_at],
-            [floor_number],
-            [dorm]
-        FROM 
-            [dbo].[Rooms]
-        WHERE 
-            [room_type_id] = ${roomTypeId} AND
-            [floor_number] = ${floorNumber} AND
-            [dorm] = ${dormName} AND
-            [availability_status] = 'available'
+        [room_id],
+        [room_number],
+        [room_type_id],
+        [price],
+        [availability_status],
+        [created_at],
+        [updated_at],
+        [floor_number],
+        [dorm]
+    FROM 
+        [dbo].[Rooms]
+    WHERE 
+        [room_type_id] = ${roomTypeId} AND
+        [floor_number] = ${floorNumber} AND
+        [dorm] = ${dormName} AND
+        [availability_status] = 'available' AND
+        [gender] = ${gender}
     `;
   },
   getRoomCategory: async () => {
