@@ -19,6 +19,7 @@ const Book = () => {
   const [selectedBed, setSelectedBed] = useState("");
   const [semesters, setSemesters] = useState([]);
 
+  const [gender, setGender] = useState('');
   // State to manage booking details
   const [showBookingDetails, setShowBookingDetails] = useState(false);
   const [bookingDetails, setBookingDetails] = useState({});
@@ -26,6 +27,41 @@ const Book = () => {
   const [semesterStartDate, setSemesterStartDate] = useState("");
   const [semesterEndDate, setSemesterEndDate] = useState("");
 
+   const [agreeToTerms, setAgreeToTerms] = useState(false); 
+   
+   const handleCheckboxChange = (event) =>
+     { setAgreeToTerms(event.target.checked); };
+  
+    useEffect(() => {
+      // Retrieve token from localStorage
+      const token = localStorage.getItem('token');
+  
+      if (token) {
+        try {
+          // Decode the token to extract the payload
+          const payload = token.split('.')[1];
+          const decodedPayload = JSON.parse(atob(payload));
+  
+          // Extract gender from the decoded payload (make sure the field exists)
+          if (decodedPayload && decodedPayload.gender) {
+            setGender(decodedPayload.gender);  // Set the gender
+          } else {
+            setGender('N/A'); // Set default value if gender is not available
+          }
+        } catch (error) {
+          console.error("Error decoding token:", error);
+          setGender('N/A'); // Set default value in case of error
+        }
+      } else {
+        setGender('N/A'); // Set default value if no token found
+      }
+    }, []);
+  
+ 
+  
+
+
+  
   const fetchActiveSemesters = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/semester/active`);
@@ -90,12 +126,12 @@ const Book = () => {
   };
 
   const fetchAvailableRooms = async () => {
-    if (!roomType || !dorm || !floor) return;
+    if (!roomType || !dorm || !floor || !gender) return;
     try {
       const response = await axios.get(
         `${
           import.meta.env.VITE_BASE_URL
-        }/api/room/rooms/type/${roomType}/floor/${floor}/dorm/${dorm}`
+        }/api/room/rooms/type/${roomType}/floor/${floor}/dorm/${dorm}/gender/${gender}`
       );
       if (response.data.success) {
         const rooms = response.data.data;
@@ -245,6 +281,20 @@ const Book = () => {
   return (
     <Container className="mt-4">
       <h1 className="mb-4 text-center">New Booking</h1>
+
+      <Alert variant="warning" >
+      <p> You are booking a <strong>{gender}</strong> room, please double check before booking. 
+        Contact your student service if your gender information is not correct. </p> 
+        <p> (Bạn đang đặt phòng cho giới tính <strong>{gender === "male"
+                                                ? 'Nam'
+                                                : gender === "famale"
+                                                ? 'Nữ'
+                                                : 'N/A'}</strong>, vui lòng kiểm tra kỹ trước khi đặt.
+         Nếu thông tin giới tính của bạn không đúng, 
+        liên hệ dịch vụ sinh viên để cập nhật lại thông tin giới tính.) </p> </Alert>
+
+        
+
 
       {semesters.length > 0 ? (
         <div className="mb-4">
@@ -396,13 +446,18 @@ const Book = () => {
                   ))}
                 </tbody>
               </Table>
-
+                  
               {/* Hiển thị nút Confirm Booking khi có giường được chọn */}
-              {selectedBed && (
-                <Button variant="primary" className="mt-3" onClick={handleConfirmBooking}>
-                  Confirm Booking
-                </Button>
-              )}
+
+
+              <Form> 
+                <Form.Group controlId="termsCheckbox"> 
+                  <Form.Check type="checkbox" label={ <> Agree to 
+                    <a href="https://ocd.fpt.edu.vn/Files/policy/KTX-HL.pdf" target="_blank" rel="noopener noreferrer" style={{ color: 'red' }}> Dormitory Regulations </a> .(Đồng ý với quy định ký túc xá). </> }
+                    checked={agreeToTerms} onChange={handleCheckboxChange} /> 
+                  </Form.Group> 
+                  <Button variant="primary" onClick={handleConfirmBooking} disabled={!agreeToTerms || !selectedBed} > Confirm Booking </Button>
+                   </Form>
             </div>
           ) : selectedRoom && beds.length === 0 ? (
             <Alert variant="info">No available beds for the selected room.</Alert>

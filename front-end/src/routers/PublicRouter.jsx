@@ -43,7 +43,6 @@ const publicRouter = () => {
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/manager/manage-users" element={<UserList />} />
-        <Route path="/admin/new" element={<AdminNew />} />
         <Route path="/manager/requests" element={<RequestManagement />} />
         <Route path="/manager/request/:id" element={<RequestDetail />} />
         <Route path="/manager/reports" element={<ReportManager />} />
@@ -77,6 +76,7 @@ const publicRouter = () => {
         <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/manage-users" element={<UserManagement />} />
+        <Route path="/admin/new" element={<AdminNew />} />
 
         <Route path="/admin/manager-booking" element={<BookingManager />} />
         <Route path="/admin/manage-users" element={<UserList />} />
