@@ -50,50 +50,52 @@ const SidebarAdmin = () => {
 
             <li className="side-nav-title side-nav-item">Apps</li>
 
+
             <li className="side-nav-item">
               <Link to={`/admin/manage-users`} className="side-nav-link">
-                <i className="uil-store"></i>
+                <i className="fas fa-users"></i> {/* Manage User icon */}
                 <span> Manage User </span>
               </Link>
             </li>
 
             <li className="side-nav-item">
               <Link to={`/admin/new`} className="side-nav-link">
-                <i className="uil-store"></i>
+                <i className="fas fa-newspaper"></i> {/* Manage News icon */}
                 <span> Manage News </span>
               </Link>
             </li>
 
             <li className="side-nav-item">
               <Link to={`/admin/manager-booking`} className="side-nav-link">
-                <i className="uil-calender"></i>
+                <i className="fas fa-calendar-alt"></i> {/* Manage Booking icon */}
                 <span> Manage Booking </span>
               </Link>
             </li>
 
             <li className="side-nav-item">
               <Link to={`/admin/requests`} className="side-nav-link">
-                <i className="uil-calender"></i>
+                <i className="fas fa-clipboard-list"></i> {/* Manage Requests icon */}
                 <span> Manage requests </span>
               </Link>
             </li>
+
             <li className="side-nav-item">
               <Link to={`/admin/reports`} className="side-nav-link">
-                <i className="uil-calender"></i>
+                <i className="fas fa-file-alt"></i> {/* Manage Reports icon */}
                 <span> Manage reports </span>
               </Link>
             </li>
 
-            
             <li className="side-nav-item">
               <Link to={`/admin/semester`} className="side-nav-link">
-                <i className="uil-calender"></i>
+                <i className="fas fa-calendar-check"></i> {/* Manage Semester icon */}
                 <span> Manage semester </span>
               </Link>
             </li>
+
             <li className="side-nav-item">
               <Link to={`/admin/invoices`} className="side-nav-link">
-                <i className="uil-calender"></i>
+                <i className="fas fa-file-invoice"></i> {/* Manage Invoices icon */}
                 <span> Manage invoices </span>
               </Link>
             </li>
@@ -113,27 +115,30 @@ const SidebarAdmin = () => {
                 <ul className="side-nav-second-level">
                   <li>
                     <Link to={`/admin/manager-room`} className="nav-link">
-                      <i className="uil uil-cog"></i> <span> Manager Room </span>
+                      <i className="fas fa-cogs"></i> <span> Manager Room </span>
                     </Link>
                   </li>
                   <li>
                     <Link to={`/admin/list-room`} className="nav-link">
-                      <i className="uil uil-list-ul"></i> <span>List All Room</span>
+                      <i className="fas fa-list-ul"></i> <span>List All Room</span>
                     </Link>
                   </li>
                   <li>
                     <Link to={`/admin/create-room`} className="nav-link">
-                      <i className="uil uil-plus-circle"></i> <span>Create A New Room</span>
+                      <i className="fas fa-plus-circle"></i> <span>Create A New Room</span>
                     </Link>
                   </li>
                   <li>
                     <Link to={`/admin/create-many-rooms`} className="nav-link">
-                      <i className="uil uil-plus-circle"></i> <span>Create Many New Room</span>
+                      <i className="fas fa-layer-group"></i> <span>Create Many New Room</span>
                     </Link>
                   </li>
                 </ul>
               </div>
             </li>
+
+
+
 
 
 

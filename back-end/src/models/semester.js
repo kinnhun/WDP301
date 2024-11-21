@@ -97,7 +97,28 @@ getAllSemesters: async () => {
             console.error("Lỗi khi xóa kỳ học:", err);
             throw err;
         }
+    },
+
+
+
+ // Cập nhật trạng thái kỳ học
+ updateSemesterStatus: async (semesterId, status) => {
+    try {
+        const result = await sql.query`
+            UPDATE [dbo].[Semester]
+            SET [status] = ${status}, [updated_at] = SYSDATETIME()
+            WHERE [semester_id] = ${semesterId}
+        `;
+        return result.rowsAffected; // Trả về số bản ghi đã thay đổi
+    } catch (err) {
+        console.error("Lỗi khi cập nhật trạng thái kỳ học:", err);
+        throw err;
     }
+},
+
+
+
+
 };
 
 module.exports = Semester;

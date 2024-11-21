@@ -122,9 +122,45 @@ const createSemester = async (req, res) => {
 };
   
 
+// Cập nhật trạng thái kỳ học
+const updateSemesterStatus = async (req, res) => {
+    const { id } = req.params;  // Lấy ID của kỳ học từ tham số URL
+    const { status } = req.body; // Lấy trạng thái mới từ body request
+
+    try {
+       
+        // Cập nhật trạng thái kỳ học
+        const updateResult = await Semester.updateSemesterStatus(id, status);  // Gọi phương thức model để cập nhật trạng thái
+
+        if (updateResult === 0) {
+            return errorResponse({
+                res,
+                status: 400,
+                message: "Không thay đổi trạng thái kỳ học",
+            });
+        }
+
+        return successResponse({
+            res,
+            message: "Trạng thái kỳ học đã được cập nhật thành công",
+            data: { id, status },
+        });
+    } catch (error) {
+        console.error("Error updating semester status:", error);
+        return errorResponse({
+            res,
+            status: 500,
+            message: "Lỗi khi cập nhật trạng thái kỳ học",
+            errors: error.message,
+        });
+    }
+};
+
+
 module.exports = {
     getSemesterActive,
     getAllSemesters,
     createSemester,
     deleteSemester,
+    updateSemesterStatus
 };

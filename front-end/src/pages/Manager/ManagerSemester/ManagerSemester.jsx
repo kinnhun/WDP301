@@ -1,5 +1,5 @@
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
 const ManagerSemester = () => {
@@ -7,22 +7,27 @@ const ManagerSemester = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Modal states
+  // Modal states for changing status
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [newStatus, setNewStatus] = useState('Coming');
+  const [selectedSemesterId, setSelectedSemesterId] = useState(null);
+
+  // Modal states for creating semester
   const [showModal, setShowModal] = useState(false);
   const [semesterName, setSemesterName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [status, setStatus] = useState('Coming'); // Default status is 'Coming'
+  const [status, setStatus] = useState('Coming');
 
   // Fetch all semester data from API
   const fetchSemesters = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/semester/all');
-      setSemesters(response.data.data); // Store semester data in state
-      setLoading(false); // Set loading state to false once data is fetched
+      setSemesters(response.data.data);
+      setLoading(false);
     } catch (err) {
       setError('An error occurred while fetching the semester data');
-      setLoading(false); // Set loading state to false in case of error
+      setLoading(false);
     }
   };
 
@@ -35,16 +40,17 @@ const ManagerSemester = () => {
     const latestEndDate = semesters.reduce((latest, semester) => {
       const currentEndDate = new Date(semester.end_date);
       return currentEndDate > latest ? currentEndDate : latest;
-    }, new Date(0)); // Start with a very old date
+    }, new Date(0));
 
     const newStartDate = new Date(latestEndDate);
-    newStartDate.setDate(latestEndDate.getDate() + 1); // Set start date to 1 day after the latest end date
+    newStartDate.setDate(latestEndDate.getDate() + 1);
 
-    // Set the start and end date state
-    setStartDate(newStartDate.toISOString().split('T')[0]); // Format as yyyy-mm-dd
+    setStartDate(newStartDate.toISOString().split('T')[0]);
+
     const newEndDate = new Date(newStartDate);
-    newEndDate.setMonth(newStartDate.getMonth() + 4); // Set end date 4 months later
-    setEndDate(newEndDate.toISOString().split('T')[0]); // Format as yyyy-mm-dd
+    newEndDate.setMonth(newStartDate.getMonth() + 4);
+
+    setEndDate(newEndDate.toISOString().split('T')[0]);
   };
 
   // Handle create semester
@@ -54,10 +60,9 @@ const ManagerSemester = () => {
         semester_name: semesterName,
         start_date: startDate,
         end_date: endDate,
-        status: status, // Send the default or updated status
+        status: status,
       });
       if (response.data.success) {
-        // Close modal and refetch semesters
         setShowModal(false);
         await fetchSemesters();
       }
@@ -67,25 +72,61 @@ const ManagerSemester = () => {
   };
 
   // Handle delete semester
- // Handle delete semester
-const handleDeleteSemester = async (semesterId) => {
-  const confirmDelete = window.confirm("Are you sure you want to delete this semester?");
-  if (!confirmDelete) return; // Nếu người dùng không xác nhận, thoát khỏi hàm
+  const handleDeleteSemester = async (semesterId) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this semester?');
+    if (!confirmDelete) return;
 
-  try {
-    const response = await axios.delete(`http://localhost:8080/api/semester/delete/${semesterId}`);
-    if (response.data.success) {
-      await fetchSemesters(); // Tải lại danh sách học kỳ sau khi xóa
+    try {
+      const response = await axios.delete(`http://localhost:8080/api/semester/delete/${semesterId}`);
+      if (response.data.success) {
+        await fetchSemesters();
+      }
+    } catch (err) {
+      console.error('Error deleting semester:', err);
     }
-  } catch (err) {
-    console.error('Error deleting semester:', err);
-  }
-  await fetchSemesters(); // Tải lại danh sách học kỳ sau khi xóa
+  };
 
-};
+  // Handle change status click
+  const handleChangeStatus = (semesterId, currentStatus) => {
+    setSelectedSemesterId(semesterId);
+    setNewStatus(currentStatus);
+    setShowStatusModal(true);
+  };
 
+  // Handle update status
+  const handleUpdateStatus = async () => {
+    try {
+      // If the new status is 'Active', update all other active semesters to 'Inactive'
+      if (newStatus === 'Active') {
+        // Find all the active semesters and update them to inactive
+        await Promise.all(
+          semesters.filter(semester => semester.status === 'Active' && semester.semester_id !== selectedSemesterId)
+            .map(async (semester) => {
+              await axios.put(
+                `http://localhost:8080/api/semester/update-status/${semester.semester_id}`,
+                { status: 'Inactive' }
+              );
+            })
+        );
+        console.log('All other active semesters have been updated to Inactive');
+      }
 
-  // Display loading message or error
+      // Then update the selected semester's status to the new status (Active or Inactive)
+      const updateResponse = await axios.put(
+        `http://localhost:8080/api/semester/update-status/${selectedSemesterId}`,
+        { status: newStatus }
+      );
+
+      if (updateResponse.data.success) {
+        fetchSemesters(); // Refresh the list of semesters
+        setShowStatusModal(false); // Close the modal after successful update
+      }
+
+    } catch (err) {
+      console.error('Error updating semester status:', err);
+    }
+  };
+
   if (loading) {
     return <div>Loading semester data...</div>;
   }
@@ -97,8 +138,9 @@ const handleDeleteSemester = async (semesterId) => {
   return (
     <div>
       <h2>Semester List</h2>
+
       <button className="btn btn-primary mb-3" onClick={() => {
-        calculateDates(); // Calculate start and end date when opening modal
+        calculateDates();
         setShowModal(true);
       }}>
         Create New Semester
@@ -124,6 +166,12 @@ const handleDeleteSemester = async (semesterId) => {
               <td>{new Date(semester.end_date).toLocaleDateString()}</td>
               <td>{semester.status}</td>
               <td>
+                <button
+                  className="btn btn-warning"
+                  onClick={() => handleChangeStatus(semester.semester_id, semester.status)}
+                >
+                  Change Status
+                </button>
                 {semester.status === 'Coming' && (
                   <button
                     className="btn btn-danger"
@@ -138,7 +186,7 @@ const handleDeleteSemester = async (semesterId) => {
         </tbody>
       </table>
 
-      {/* Bootstrap Modal for Creating a Semester */}
+      {/* Modal for creating semester */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Create New Semester</Modal.Title>
@@ -172,7 +220,7 @@ const handleDeleteSemester = async (semesterId) => {
               id="endDate"
               className="form-control"
               value={endDate}
-              onChange={(e) => setEndDate(e.target.value)} // User can change end date
+              onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
         </Modal.Body>
@@ -182,6 +230,35 @@ const handleDeleteSemester = async (semesterId) => {
           </Button>
           <Button variant="primary" onClick={handleCreateSemester}>
             Create Semester
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal for changing status */}
+      <Modal show={showStatusModal} onHide={() => setShowStatusModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Change Semester Status</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="mb-3">
+            <label className="form-label">Select Status</label>
+            <select
+              className="form-control"
+              value={newStatus}
+              onChange={(e) => setNewStatus(e.target.value)}
+            >
+              <option value="Coming">Coming</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowStatusModal(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleUpdateStatus}>
+            Save Changes
           </Button>
         </Modal.Footer>
       </Modal>

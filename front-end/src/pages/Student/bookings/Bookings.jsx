@@ -15,7 +15,7 @@ const Bookings = () => {
             try {
                 const token = JSON.parse(localStorage.getItem('token'));
                 const userId = verifyAccessToken(token).id;
-                
+
                 const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/booking/user/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -29,7 +29,7 @@ const Bookings = () => {
                     // Kiểm tra nếu có booking nào có `end_date` lớn hơn hoặc bằng ngày hiện tại
                     const now = new Date();
                     const hasActiveBooking = bookings.some(booking => new Date(booking.end_date) >= now);
-                    setIsBookingAllowed(!hasActiveBooking); 
+                    setIsBookingAllowed(!hasActiveBooking);
                 }
             } catch (error) {
                 console.error('Error fetching bookings:', error);
@@ -39,17 +39,23 @@ const Bookings = () => {
         fetchBookings();
     }, []);
 
+    const currentDate = new Date().toLocaleDateString(); // Lấy ngày tháng hiện tại
+
     return (
         <div className="container mt-4">
-            <h1>Bookings</h1>
-            {isBookingAllowed && (
+            <h1>
+                Bookings <small className="text-muted">({currentDate})</small>
+            </h1>
+
+            {/* Hiển thị nút "Add New Booking" nếu bất kỳ booking nào có End Date < ngày hiện tại */}
+            {bookingsData.some(booking => new Date(booking.end_date) < new Date()) && (
                 <Link to={`${baseUrl}/student/booking/create-booking`}>
                     <button className="btn btn-primary float-right">
                         Add New Booking
                     </button>
                 </Link>
             )}
-           
+
             <Table striped bordered hover responsive className="table-sm">
                 <thead>
                     <tr>

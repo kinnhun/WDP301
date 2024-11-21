@@ -14,4 +14,7 @@ semesterRouter.post("/create", semesterController.createSemester);
 // Xóa kỳ học theo ID
 semesterRouter.delete("/delete/:id", semesterController.deleteSemester);
 
+// Thay đổi trạng thái kỳ học (Active/Inactive)
+semesterRouter.put("/update-status/:id", semesterController.updateSemesterStatus);
+
 module.exports = semesterRouter;
