@@ -121,7 +121,12 @@ const SidebarAdmin = () => {
                   </li>
                   <li>
                     <Link to={`/admin/create-room`} className="nav-link">
-                      <i className="uil uil-plus-circle"></i> <span>Create New Room</span>
+                      <i className="uil uil-plus-circle"></i> <span>Create A New Room</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/admin/create-many-rooms`} className="nav-link">
+                      <i className="uil uil-plus-circle"></i> <span>Create Many New Room</span>
                     </Link>
                   </li>
                 </ul>
