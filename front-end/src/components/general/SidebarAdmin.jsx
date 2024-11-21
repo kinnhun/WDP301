@@ -58,6 +58,13 @@ const SidebarAdmin = () => {
             </li>
 
             <li className="side-nav-item">
+              <Link to={`/admin/new`} className="side-nav-link">
+                <i className="uil-store"></i>
+                <span> Manage News </span>
+              </Link>
+            </li>
+
+            <li className="side-nav-item">
               <Link to={`/admin/manager-booking`} className="side-nav-link">
                 <i className="uil-calender"></i>
                 <span> Manage Booking </span>

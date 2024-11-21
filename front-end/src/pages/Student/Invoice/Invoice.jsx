@@ -5,15 +5,23 @@ import { verifyAccessToken } from "../../../utils/jwt";
 import { formatDate } from "../../../utils/formatDate";
 import Spinner from "../../../components/Spinner/Spinner";
 import toast from "react-hot-toast";
+import { Modal, Button } from "react-bootstrap"; // Import Modal từ react-bootstrap
 
 const Invoice = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [types, setTypes] = useState([]);
-  const [allInvoices, setAllInvoices] = useState([]); // Lưu toàn bộ dữ liệu
-  const [filteredInvoices, setFilteredInvoices] = useState([]); // Dữ liệu sau khi lọc
+  const [allInvoices, setAllInvoices] = useState([]);
+  const [filteredInvoices, setFilteredInvoices] = useState([]);
   const [filters, setFilters] = useState({ status: "", type: "" });
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Số hóa đơn mỗi trang
+  const [itemsPerPage] = useState(10);
+
+  // Modal state
+  const [showModal, setShowModal] = useState(false);
+  const [qrUrl, setQrUrl] = useState("");
+  const [transactionId, setTransactionId] = useState("");
+  const [transactionStatus, setTransactionStatus] = useState("pending");
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
 
   const getInvoices = async () => {
     const token = JSON.parse(localStorage.getItem("token"));
@@ -23,8 +31,8 @@ const Invoice = () => {
         setIsLoading(true);
         const response = await axios.get(`/invoice/${user.email}`);
         if (response.status === 200) {
-          setAllInvoices(response.data.data); // Lưu toàn bộ dữ liệu
-          setFilteredInvoices(response.data.data); // Khởi tạo dữ liệu lọc
+          setAllInvoices(response.data.data);
+          setFilteredInvoices(response.data.data);
         }
       } catch (error) {
         console.error(error);
@@ -45,7 +53,7 @@ const Invoice = () => {
       return matchesStatus && matchesType;
     });
     setFilteredInvoices(filtered);
-    setCurrentPage(1); // Reset về trang đầu tiên
+    setCurrentPage(1);
   };
 
   const handleFilterChange = (field, value) => {
@@ -59,33 +67,48 @@ const Invoice = () => {
     setCurrentPage(page);
   };
 
-  const handlePayment = async (id) => {
+  const handleShowModal = async (id) => {
     try {
-      const response = await axios.patch(`/invoice/${id}`);
-      if (response.status === 200) {
-        toast.success("Payment successful");
-        getInvoices();
-      }
+      setSelectedInvoiceId(id);
+      const response = await axios.post(`http://localhost:8080/create-vietqr?rand=${Date.now()}`);
+      setQrUrl(response.data.qrUrl);
+      setTransactionId(response.data.transactionId);
+      setTransactionStatus("pending");
+      setShowModal(true);
     } catch (error) {
-      console.error(error);
-      toast.error("Payment failed");
+      console.error("Error creating VietQR:", error.message);
     }
   };
 
-  const getInvoiceTypes = async () => {
-    try {
-      const response = await axios.get("/invoice/types");
-      if (response.status === 200) {
-        setTypes(response.data.data);
+  const checkTransactionStatus = async () => {
+    if (transactionId) {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/check-transaction-status/${transactionId}?rand=${Date.now()}`
+        );
+        setTransactionStatus(response.data.status);
+
+        if (response.data.status === "success") {
+          toast.success("Payment successful");
+          setShowModal(false);
+          await axios.patch(`/invoice/${selectedInvoiceId}`);
+          getInvoices();
+        }
+      } catch (error) {
+        console.error("Error checking transaction status:", error.message);
       }
-    } catch (error) {
-      console.error(error);
     }
   };
 
   useEffect(() => {
+    if (transactionStatus === "pending") {
+      const interval = setInterval(checkTransactionStatus, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [transactionId, transactionStatus]);
+
+  useEffect(() => {
     getInvoices();
-    getInvoiceTypes();
   }, []);
 
   useEffect(() => {
@@ -156,7 +179,10 @@ const Invoice = () => {
                 <td>{invoice.payment_at && formatDate(invoice.payment_at)}</td>
                 <td>
                   {invoice.status === false && (
-                    <button className="btn btn-primary" onClick={() => handlePayment(invoice.id)}>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleShowModal(invoice.id)}
+                    >
                       Pay
                     </button>
                   )}
@@ -179,6 +205,54 @@ const Invoice = () => {
           onPageChange={handlePageChange}
         />
       )}
+
+      {/* Modal for QR Code */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+  <Modal.Header closeButton>
+    <Modal.Title>Scan to Pay</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {qrUrl ? (
+      <div>
+        <img src={qrUrl} alt="QR Code" style={{ width: "100%" }} />
+        <p>Status: {transactionStatus}</p>
+        {transactionStatus === "pending" && <p>Waiting for payment...</p>}
+        {transactionStatus === "success" && <p>Payment Successful!</p>}
+      </div>
+    ) : (
+      <p>Loading QR Code...</p>
+    )}
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowModal(false)}>
+      Close
+    </Button>
+    <Button
+      variant="success"
+      onClick={async () => {
+        // Chuyển trạng thái sang success
+        setTransactionStatus("success");
+
+        // Hiển thị trạng thái thanh toán trong 10 giây
+        setTimeout(() => {
+          setShowModal(false);
+          toast.success("Fake payment completed!");
+          try {
+            // Gọi API để cập nhật trạng thái hóa đơn
+            axios.patch(`/invoice/${selectedInvoiceId}`);
+            getInvoices();
+          } catch (error) {
+            console.error("Error updating invoice:", error);
+          }
+        }, 5000); // Đóng modal sau 10 giây
+      }}
+    >
+      Fake Payment
+    </Button>
+  </Modal.Footer>
+</Modal>
+
+
     </div>
   );
 };

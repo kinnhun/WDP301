@@ -58,7 +58,7 @@ const Payment = ({ bookingDetails }) => {
         end_date: bookingDetails.end_date,
         total_amount: bookingDetails.total_amount,
         payment_status: 'Completed',
-        booking_status: 'Pending',
+        booking_status: 'Confirmed',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         bed_id: bookingDetails.bed_id,
