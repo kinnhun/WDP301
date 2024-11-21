@@ -110,10 +110,19 @@ const SidebarAdmin = () => {
               <div className="collapse" id="sidebarManageRoom">
                 <ul className="side-nav-second-level">
                   <li>
-                    <Link to={`/admin/list-room`}>List All Room</Link> {/* Liên kết đến trang tạo phòng */}
+                    <Link to={`/admin/manager-room`} className="nav-link">
+                      <i className="uil uil-cog"></i> <span> Manager Room </span>
+                    </Link>
                   </li>
                   <li>
-                    <Link to={`/admin/manager-room`}>Manager Room</Link> {/* Liên kết đến trang quản lý phòng */}
+                    <Link to={`/admin/list-room`} className="nav-link">
+                      <i className="uil uil-list-ul"></i> <span>List All Room</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/admin/create-room`} className="nav-link">
+                      <i className="uil uil-plus-circle"></i> <span>Create New Room</span>
+                    </Link>
                   </li>
                 </ul>
               </div>

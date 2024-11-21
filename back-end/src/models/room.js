@@ -108,25 +108,7 @@ WHERE r.[availability_status] = ${status};
     return result.recordset[0]; // Trả về phòng đầu tiên nếu tìm thấy
   },
 
-  // Tạo phòng mới
-  createRoom: async (room_number, room_type_id, price, availability_status) => {
-    return sql.query`
-            INSERT INTO [dbo].[Rooms]
-                ([room_number],
-                [room_type_id],
-                [price],
-                [availability_status],
-                [created_at],
-                [updated_at])
-            VALUES
-                (${room_number},
-                ${room_type_id},
-                ${price},
-                ${availability_status},
-                SYSDATETIME(),
-                SYSDATETIME())
-        `;
-  },
+  
 
   // Cập nhật phòng
   updateRoom: async (id, { room_number, room_type_id, price, availability_status }) => {
@@ -288,8 +270,41 @@ WHERE [floor_number] IS NOT NULL;
     return sql.query(query); // Thực hiện truy vấn với điều kiện động
   },
   
+
+
+  createRoom: async ({ room_number, room_type_id, price, availability_status, floor_number, dorm, gender }) => {
+    try {
+      const result = await sql.query`
+        INSERT INTO [dbo].[Rooms] 
+          ([room_number], [room_type_id], [price], [availability_status], [floor_number], [dorm], [gender], [created_at], [updated_at])
+        VALUES
+          (${room_number}, ${room_type_id}, ${price}, ${availability_status}, ${floor_number}, ${dorm}, ${gender}, SYSDATETIME(), SYSDATETIME())
+        SELECT SCOPE_IDENTITY() AS room_id;
+      `;
+      
+      // Kiểm tra xem recordset có chứa dữ liệu không
+      if (result.recordset && result.recordset.length > 0) {
+        return {
+          success: true,
+          message: "Tạo phòng mới thành công",
+          room_id: result.recordset[0].room_id,  // Trả về room_id của phòng vừa được tạo
+        };
+      } else {
+        throw new Error("Không thể lấy room_id sau khi chèn");
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu có
+      console.error("Lỗi tạo phòng:", error);
+      throw new Error("Tạo phòng mới thất bại");
+    }
+  },
+  
+
+
+
   
 };
+
 
 
 

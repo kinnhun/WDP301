@@ -69,31 +69,37 @@ const getRoomById = async (req, res) => {
 // Tạo phòng mới
 const createRoom = async (req, res) => {
   try {
-    const { room_number, room_type_id, price, availability_status } = req.body;
+    const { room_number, room_type_id, price, availability_status, floor_number, dorm, gender } = req.body;
 
     // Kiểm tra dữ liệu đầu vào
-    if (!room_number || !room_type_id || !price || !availability_status) {
+    if (!room_number || !room_type_id || !price || !availability_status || !floor_number || !dorm || !gender) {
       return res.status(400).json({
         success: false,
         message: "Thiếu thông tin cần thiết để tạo phòng",
       });
     }
 
-    await Room.createRoom(room_number, room_type_id, price, availability_status);
-
-    return successResponse({
-      res,
-      message: "Tạo phòng mới thành công",
+    // Gọi hàm tạo phòng mới, truyền các tham số vào
+    const result = await Room.createRoom({
+      room_number,
+      room_type_id,
+      price,
+      availability_status,
+      floor_number,
+      dorm,
+      gender
     });
+
+    return res.status(200).json(result);  // Trả kết quả trả về từ createRoom
   } catch (error) {
-    return errorResponse({
-      res,
-      status: 500,
+    return res.status(500).json({
+      success: false,
       message: "Tạo phòng mới thất bại",
       errors: error.message,
     });
   }
 };
+
 
 // Cập nhật thông tin phòng
 const updateRoom = async (req, res) => {
