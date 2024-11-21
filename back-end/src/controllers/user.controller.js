@@ -34,6 +34,19 @@ module.exports = {
       return errorResponse({ res, message: "Update user role failed", error: error.message });
     }
   },
+  getUsersByRole: async (req, res) => {
+    try {
+      const roleName = "staff"; 
+      const users = await UserService.getUsersByRole(roleName);
+      return successResponse({
+        res,
+        message: "Get staff users successfully",
+        data: users,
+      });
+    } catch (error) {
+      return errorResponse({ res, message: "Get staff users failed", error: error.message });
+    }
+  },
   importUsers: async (req, res) => {
     try {
       const users = req.body;
