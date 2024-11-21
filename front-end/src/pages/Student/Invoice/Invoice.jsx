@@ -55,12 +55,12 @@ const Invoice = () => {
               // Tính số ngày chậm
               const daysLate = Math.floor((currentTimeGMT7 - expiredDate) / (1000 * 60 * 60 * 24));
               // Cộng thêm 20,000 mỗi ngày muộn
-              // const updatedAmount = invoice.amount + daysLate * 20000;
+              const updatedAmount = invoice.amount + daysLate * 20000;
 
               return {
                 ...invoice,
                 expired: true,
-                fine: daysLate * 20000,
+                amount: updatedAmount,
               };
             }
 
@@ -106,10 +106,12 @@ const Invoice = () => {
     setCurrentPage(page);
   };
 
-  const handleShowModal = async (id) => {
+  const handleShowModal = async (id, amount) => {
     try {
       setSelectedInvoiceId(id);
-      const response = await axios.post(`http://localhost:8080/create-vietqr?rand=${Date.now()}`);
+      const response = await axios.post(`http://localhost:8080/create-vietqr?rand=${Date.now()}`, {
+        amount,
+      });
       setQrUrl(response.data.qrUrl);
       setTransactionId(response.data.transactionId);
       setTransactionStatus("pending");
@@ -217,16 +219,17 @@ const Invoice = () => {
                 className={invoice.expired ? "bg-danger bg-gradient bg-opacity-25" : ""}
               >
                 <td>{invoice.type}</td>
-                <td>
-                  {invoice.amount} {invoice.expired && `+ ${invoice.fine} (fine)`}
-                </td>
+                <td>{invoice.amount}</td>
                 <td>{invoice.status === false ? "Unpaid" : "Paid"}</td>
                 <td>{invoice.created_at && formatDate(invoice.created_at)}</td>
                 <td>{invoice.expired_date && formatDate(invoice.expired_date)}</td>
                 <td>{invoice.payment_at && formatDate(invoice.payment_at)}</td>
                 <td>
                   {invoice.status === false && (
-                    <button className="btn btn-primary" onClick={() => handleShowModal(invoice.id)}>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleShowModal(invoice.id, invoice.amount)}
+                    >
                       Pay
                     </button>
                   )}
