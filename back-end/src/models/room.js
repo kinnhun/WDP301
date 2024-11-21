@@ -4,18 +4,93 @@ const Room = {
   // Lấy tất cả phòng
   getAllRooms: async () => {
     return sql.query`
-            SELECT 
-                [room_id],
-                [room_number],
-                [room_type_id],
-                [price],
-                [availability_status],
-                [created_at],
-                [updated_at]
-            FROM [dbo].[Rooms]
-        `;
+      SELECT 
+          r.[room_id],
+          r.[room_number],
+          r.[room_type_id],
+          r.[price],
+          r.[availability_status],
+          r.[created_at],
+          r.[updated_at],
+          r.[floor_number],
+          r.[dorm],
+          r.[gender],
+          rc.[category_name] AS room_category_name
+      FROM [dbo].[Rooms] r
+      LEFT JOIN [dbo].[RoomCategories] rc
+          ON r.[room_type_id] = rc.[room_type_id]
+          
+    `;
+  },
+  
+  getRoomsByDorm: async (dorm) => {
+    return sql.query`
+      SELECT 
+          r.[room_id],
+          r.[room_number],
+          r.[room_type_id],
+          r.[price],
+          r.[availability_status],
+          r.[created_at],
+          r.[updated_at],
+          r.[floor_number],
+          r.[dorm],
+          r.[gender],
+          rc.[category_name] AS room_category_name
+      FROM [dbo].[Rooms] r
+      LEFT JOIN [dbo].[RoomCategories] rc
+          ON r.[room_type_id] = rc.[room_type_id]
+      WHERE r.dorm = ${dorm}    
+    `;
+  },
+  getRoomsByDormAndFloor: async (dorm, floor) => {
+    return sql.query`
+      SELECT 
+          r.[room_id],
+          r.[room_number],
+          r.[room_type_id],
+          r.[price],
+          r.[availability_status],
+          r.[created_at],
+          r.[updated_at],
+          r.[floor_number],
+          r.[dorm],
+          r.[gender],
+          rc.[category_name] AS room_category_name
+      FROM [dbo].[Rooms] r
+      LEFT JOIN [dbo].[RoomCategories] rc
+          ON r.[room_type_id] = rc.[room_type_id]
+      WHERE r.dorm = ${dorm}    AND r.floor_number = ${floor}
+    `;
   },
 
+
+  getRoomByStatus: async (status) => {
+    console.log(status);
+    return sql.query`
+     SELECT 
+    r.[room_id],
+    r.[room_number],
+    r.[room_type_id],
+    r.[price],
+    r.[availability_status],
+    r.[created_at],
+    r.[updated_at],
+    r.[floor_number],
+    r.[dorm],
+    r.[gender],
+    rc.[category_name] AS room_category_name
+FROM [dbo].[Rooms] r
+LEFT JOIN [dbo].[RoomCategories] rc
+    ON r.[room_type_id] = rc.[room_type_id]
+WHERE r.[availability_status] = ${status};
+
+    `;
+  },
+
+
+
+  
   // Lấy phòng theo ID
   getRoomById: async (id) => {
     const result = await sql.query`
@@ -177,6 +252,45 @@ WHERE [floor_number] IS NOT NULL;
       WHERE room_id = ${roomId}
     `;
   },
+
+  
+  getRoomsWithFilters: async (filters) => {
+    let query = `
+      SELECT 
+        r.[room_id],
+        r.[room_number],
+        r.[room_type_id],
+        r.[price],
+        r.[availability_status],
+        r.[created_at],
+        r.[updated_at],
+        r.[floor_number],
+        r.[dorm],
+        r.[gender],
+        rc.[category_name] AS room_category_name
+      FROM [dbo].[Rooms] r
+      LEFT JOIN [dbo].[RoomCategories] rc
+        ON r.[room_type_id] = rc.[room_type_id]
+      WHERE 1 = 1  -- Điều kiện mặc định, dễ dàng thêm điều kiện sau này
+    `;
+  
+    // Kiểm tra từng filter và bổ sung điều kiện vào câu truy vấn
+    if (filters.dorm) {
+      query += ` AND r.dorm = '${filters.dorm}'`;  // Thêm dấu nháy đơn cho giá trị dorm
+    }
+    if (filters.floor) {
+      query += ` AND r.floor_number = ${filters.floor}`;  // Giả sử floor_number là số
+    }
+    if (filters.status) {
+      query += ` AND r.availability_status = '${filters.status}'`;  // Thêm dấu nháy đơn cho giá trị status
+    }
+  
+    return sql.query(query); // Thực hiện truy vấn với điều kiện động
+  },
+  
+  
 };
+
+
 
 module.exports = Room;

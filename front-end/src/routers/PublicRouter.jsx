@@ -33,6 +33,9 @@ import InvoiceManagement from "../pages/Admin/InvoiceManagement/InvoiceManagemen
 import BookingManager from "../pages/Manager/ManagerBooking/BookingManager";
 import Invoice from "../pages/Student/Invoice/Invoice";
 
+import ManagerRoom from "../pages/Admin/ManagerRoom/ManagerRoom";
+import ListAllRoom from "../pages/Admin/ManagerRoom/ListAllRoom";
+
 const publicRouter = () => {
   return (
     <Routes>
@@ -87,6 +90,9 @@ const publicRouter = () => {
         <Route path="/admin/semester" element={<ManagerSemester />} />
         <Route path="/admin/invoices" element={<InvoiceManagement />} />
         <Route path="/admin/invoices/create" element={<CreateInvoice />} />
+
+        <Route path="/admin/manager-room" element={<ManagerRoom />} />
+        <Route path="/admin/list-room" element={<ListAllRoom />} />
       </Route>
     </Routes>
   );

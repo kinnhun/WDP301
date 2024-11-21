@@ -4,8 +4,19 @@ const { successResponse, errorResponse } = require("../utils/response.js");
 // Lấy tất cả phòng
 const getAllRooms = async (req, res) => {
   try {
-    const result = await Room.getAllRooms();
-    const rooms = result.recordset; // Lấy danh sách phòng
+    const { dorm, floor, status } = req.query;
+
+    // Tạo một đối tượng filters chứa các tham số lọc
+    const filters = {
+      dorm,
+      floor,
+      status,
+    };
+
+    // Gọi model với đối tượng filters
+    const result = await Room.getRoomsWithFilters(filters);
+
+    const rooms = result.recordset; 
 
     console.log("Danh sách phòng:", rooms); // Kiểm tra dữ liệu ở đây
 
@@ -23,6 +34,7 @@ const getAllRooms = async (req, res) => {
     });
   }
 };
+
 
 // Lấy thông tin phòng theo ID
 const getRoomById = async (req, res) => {
@@ -372,6 +384,29 @@ const updateRoomStatus = async (req, res) => {
 
 
 
+
+const getRoomByStatus = async (req, res) => {
+  try {
+    const { status } = req.query;
+
+    const result = await Room.getRoomByStatus(status); // Gọi model
+    const rooms = result.recordset;
+
+    return res.status(200).json({
+      message: 'Lấy danh sách phòng thành công',
+      data: rooms,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Lấy danh sách phòng thất bại',
+      error: error.message,
+    });
+  }
+};
+
+
+
+
 module.exports = {
   getAllRooms,
   getRoomById,
@@ -385,5 +420,6 @@ module.exports = {
   getAllAvailableRooms,
   getRoomsByDormRoomTypeFloor,
   getDorm,
-  updateRoomStatus
+  updateRoomStatus,
+  getRoomByStatus
 };

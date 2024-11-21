@@ -95,6 +95,32 @@ const SidebarAdmin = () => {
                 <span> Manage invoices </span>
               </Link>
             </li>
+
+            <li className="side-nav-item">
+              <a
+                data-bs-toggle="collapse"
+                href="#sidebarManageRoom"
+                aria-expanded="false"
+                aria-controls="sidebarManageRoom"
+                className="side-nav-link"
+              >
+                <i className="fas fa-bed"></i> {/* Icon giường ngủ */}
+                <span> Manage Room </span>
+              </a>
+              <div className="collapse" id="sidebarManageRoom">
+                <ul className="side-nav-second-level">
+                  <li>
+                    <Link to={`/admin/list-room`}>List All Room</Link> {/* Liên kết đến trang tạo phòng */}
+                  </li>
+                  <li>
+                    <Link to={`/admin/manager-room`}>Manager Room</Link> {/* Liên kết đến trang quản lý phòng */}
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+
+
           </ul>
 
           {/* <!-- Help Box --> */}
