@@ -15,6 +15,7 @@ const routerPayment = require("./routes/payment");
 const semesterRouter = require("./routes/semester.route");
 const ResidentRouter = require("./routes/residentHistory");
 const invoiceRouter = require("./routes/invoice.route");
+const reportRouter = require("./routes/report.route");
 
 app.use(cors());
 app.use(morgan("dev"));
@@ -29,6 +30,7 @@ app.use("/invoice", invoiceRouter);
 app.use("/auth", authRouter);
 app.use("/requests", requestRouter);
 app.use("/profile", profileRouter);
+app.use('/reports', reportRouter);
 app.use("/auth", authRouter);
 app.use("/profile", profileRouter);
 app.use("/api/booking", bookingRouter);

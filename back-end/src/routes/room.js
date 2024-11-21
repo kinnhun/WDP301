@@ -21,6 +21,10 @@ roomRouter.delete("/:id", roomController.deleteRoom);
 // Lấy phòng theo trạng thái khả dụng
 roomRouter.get("/status/available", roomController.getAvailableRooms);
 
+// Lấy phòng theo trạng thái 
+roomRouter.get("/room-status/status", roomController.getRoomByStatus);
+
+
 // lấy ra category của phòng 
 roomRouter.get("/roomCategories/all", roomController.getRoomCategory);
 
@@ -42,7 +46,11 @@ roomRouter.get("/dorms/all", roomController.getDorm);
 
 // Thay đổi trạng thái phòng [availability_status]
 roomRouter.put("/change-status", roomController.updateRoomStatus);
+roomRouter.put("/change/availability-status", roomController.changeRoomAvailabilityStatus);
 
+
+// lấy ra phòng  đã có người  ở 
+roomRouter.get('/rooms/bookings/expired', roomController.getRoomIdBooking);
 
 
 

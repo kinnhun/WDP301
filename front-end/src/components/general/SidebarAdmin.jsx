@@ -70,6 +70,7 @@ const SidebarAdmin = () => {
                 <span> Manage Booking </span>
               </Link>
             </li>
+
             <li className="side-nav-item">
               <Link to={`/admin/requests`} className="side-nav-link">
                 <i className="uil-calender"></i>
@@ -89,6 +90,46 @@ const SidebarAdmin = () => {
                 <span> Manage invoices </span>
               </Link>
             </li>
+
+            <li className="side-nav-item">
+              <a
+                data-bs-toggle="collapse"
+                href="#sidebarManageRoom"
+                aria-expanded="false"
+                aria-controls="sidebarManageRoom"
+                className="side-nav-link"
+              >
+                <i className="fas fa-bed"></i> {/* Icon giường ngủ */}
+                <span> Manage Room </span>
+              </a>
+              <div className="collapse" id="sidebarManageRoom">
+                <ul className="side-nav-second-level">
+                  <li>
+                    <Link to={`/admin/manager-room`} className="nav-link">
+                      <i className="uil uil-cog"></i> <span> Manager Room </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/admin/list-room`} className="nav-link">
+                      <i className="uil uil-list-ul"></i> <span>List All Room</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/admin/create-room`} className="nav-link">
+                      <i className="uil uil-plus-circle"></i> <span>Create A New Room</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={`/admin/create-many-rooms`} className="nav-link">
+                      <i className="uil uil-plus-circle"></i> <span>Create Many New Room</span>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+
+
           </ul>
 
           {/* <!-- Help Box --> */}
