@@ -45,7 +45,7 @@ const ListAllRoom = () => {
             const params = [];
             if (dorm) params.push(`dorm=${dorm}`);
             if (floor) params.push(`floor=${floor}`);
-            if (status) params.push(`status=${status}`);
+            if (status && status !== 'Under Maintenance') params.push(`status=${status}`); // Filter by status unless "Under Maintenance"
             const url = params.length > 0
                 ? `${import.meta.env.VITE_BASE_URL}/api/room?${params.join("&")}`
                 : `${import.meta.env.VITE_BASE_URL}/api/room`;
@@ -110,28 +110,34 @@ const ListAllRoom = () => {
     };
 
     const handleChangeRoomStatus = async (roomId, status) => {
-        try {
-            // Gọi API để cập nhật trạng thái của phòng
-            const response = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/room/change/availability-status`, // Endpoint của API
-                {}, // Body rỗng vì bạn chỉ dùng query params
-                {
-                    params: {
-                        id: roomId, // Truyền roomId vào query params
-                        availability_status: status // Truyền trạng thái mới
+        // Show confirmation dialog before changing status
+        const confirmation = window.confirm(`Are you sure you want to change the room status to ${status}?`);
+        if (confirmation) {
+            try {
+                // Gọi API để cập nhật trạng thái của phòng
+                const response = await axios.put(
+                    `${import.meta.env.VITE_BASE_URL}/api/room/change/availability-status`, // Endpoint của API
+                    {}, // Body rỗng vì bạn chỉ dùng query params
+                    {
+                        params: {
+                            id: roomId, // Truyền roomId vào query params
+                            availability_status: status // Truyền trạng thái mới
+                        }
                     }
-                }
-            );
+                );
 
-            if (response.data.success) {
-                console.log(`Room status changed to ${status} successfully!`);
-                // Nếu cập nhật thành công, làm mới dữ liệu phòng
-                fetchRooms(selectedDorm, selectedFloor, selectedStatus);
-            } else {
-                console.error(`Failed to change room status to ${status}:`, response.data.message);
+                if (response.data.success) {
+                    console.log(`Room status changed to ${status} successfully!`);
+                    // Nếu cập nhật thành công, làm mới dữ liệu phòng
+                    fetchRooms(selectedDorm, selectedFloor, selectedStatus);
+                } else {
+                    console.error(`Failed to change room status to ${status}:`, response.data.message);
+                }
+            } catch (error) {
+                console.error("Error changing room status:", error);
             }
-        } catch (error) {
-            console.error("Error changing room status:", error);
+        } else {
+            console.log("Room status change cancelled.");
         }
     };
 
@@ -225,6 +231,15 @@ const ListAllRoom = () => {
                                     <td>{room.price.toLocaleString()}</td>
                                     <td>{room.availability_status}</td>
                                     <td>
+                                        {/* Nút để thay đổi trạng thái thành Under Maintenance */}
+                                        <Button
+                                            variant="danger"
+                                            size="sm"
+                                            className="me-2"
+                                            onClick={() => handleChangeRoomStatus(room.room_id, 'Under Maintenance')}
+                                        >
+                                            Under Maintenance
+                                        </Button>
                                         {!expiredRoomIds.includes(room.room_id) && (
                                             <>
                                                 {/* Nút để thay đổi trạng thái thành Inactive */}
@@ -235,16 +250,6 @@ const ListAllRoom = () => {
                                                     onClick={() => handleChangeRoomStatus(room.room_id, 'Inactive')}
                                                 >
                                                     Inactive
-                                                </Button>
-
-                                                {/* Nút để thay đổi trạng thái thành Under Maintenance */}
-                                                <Button
-                                                    variant="danger"
-                                                    size="sm"
-                                                    className="me-2"
-                                                    onClick={() => handleChangeRoomStatus(room.room_id, 'Under Maintenance')}
-                                                >
-                                                    Under Maintenance
                                                 </Button>
 
                                                 {/* Nút để thay đổi trạng thái thành Available */}
@@ -308,7 +313,6 @@ const ListAllRoom = () => {
             )}
         </div>
     );
-
 };
 
 export default ListAllRoom;
