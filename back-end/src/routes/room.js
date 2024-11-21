@@ -46,7 +46,11 @@ roomRouter.get("/dorms/all", roomController.getDorm);
 
 // Thay đổi trạng thái phòng [availability_status]
 roomRouter.put("/change-status", roomController.updateRoomStatus);
+roomRouter.put("/change/availability-status", roomController.changeRoomAvailabilityStatus);
 
+
+// lấy ra phòng  đã có người  ở 
+roomRouter.get('/rooms/bookings/expired', roomController.getRoomIdBooking);
 
 
 

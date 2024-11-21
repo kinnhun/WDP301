@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Col, Form, Row, Table, Pagination } from 'react-bootstrap';
+import { Col, Form, Row, Table, Pagination, Button } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead'; // Import Typeahead
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 
@@ -8,6 +8,7 @@ const ListAllRoom = () => {
     const [dorms, setDorms] = useState([]);
     const [rooms, setRooms] = useState([]);
     const [searchRooms, setSearchRooms] = useState([]); // State for search results
+    const [expiredRoomIds, setExpiredRoomIds] = useState([]); // State for expired room IDs
     const [selectedDorm, setSelectedDorm] = useState("");
     const [selectedFloor, setSelectedFloor] = useState("");
     const [floors, setFloors] = useState([]);
@@ -46,8 +47,8 @@ const ListAllRoom = () => {
             if (floor) params.push(`floor=${floor}`);
             if (status) params.push(`status=${status}`);
             const url = params.length > 0
-                ? `http://localhost:8080/api/room?${params.join("&")}`
-                : 'http://localhost:8080/api/room';
+                ? `${import.meta.env.VITE_BASE_URL}/api/room?${params.join("&")}`
+                : `${import.meta.env.VITE_BASE_URL}/api/room`;
 
             const response = await axios.get(url);
             if (response.data.success) {
@@ -59,9 +60,22 @@ const ListAllRoom = () => {
         }
     };
 
+    const fetchExpiredRoomIds = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/room/rooms/bookings/expired`);
+            if (response.data.success) {
+                const ids = response.data.data.map(item => item.room_id);
+                setExpiredRoomIds(ids);
+            }
+        } catch (error) {
+            console.error("Error fetching expired room IDs:", error);
+        }
+    };
+
     useEffect(() => {
         fetchDorms();
         fetchFloors();
+        fetchExpiredRoomIds(); // Fetch expired room IDs
     }, []);
 
     useEffect(() => {
@@ -92,6 +106,32 @@ const ListAllRoom = () => {
             setSearchRooms(filteredRooms); // Update search results
         } else {
             setSearchRooms(rooms); // Reset to full list if no selection
+        }
+    };
+
+    const handleChangeRoomStatus = async (roomId, status) => {
+        try {
+            // Gọi API để cập nhật trạng thái của phòng
+            const response = await axios.put(
+                `${import.meta.env.VITE_BASE_URL}/api/room/change/availability-status`, // Endpoint của API
+                {}, // Body rỗng vì bạn chỉ dùng query params
+                {
+                    params: {
+                        id: roomId, // Truyền roomId vào query params
+                        availability_status: status // Truyền trạng thái mới
+                    }
+                }
+            );
+
+            if (response.data.success) {
+                console.log(`Room status changed to ${status} successfully!`);
+                // Nếu cập nhật thành công, làm mới dữ liệu phòng
+                fetchRooms(selectedDorm, selectedFloor, selectedStatus);
+            } else {
+                console.error(`Failed to change room status to ${status}:`, response.data.message);
+            }
+        } catch (error) {
+            console.error("Error changing room status:", error);
         }
     };
 
@@ -141,6 +181,7 @@ const ListAllRoom = () => {
                             <option value="Available">Available</option>
                             <option value="Booked">Booked</option>
                             <option value="Under Maintenance">Under Maintenance</option>
+                            <option value="Inactive">Inactive</option>
                         </Form.Control>
                     </Form.Group>
                 </Col>
@@ -171,6 +212,7 @@ const ListAllRoom = () => {
                                 <th>Gender</th>
                                 <th>Price</th>
                                 <th>Availability</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -182,6 +224,40 @@ const ListAllRoom = () => {
                                     <td>{room.gender}</td>
                                     <td>{room.price.toLocaleString()}</td>
                                     <td>{room.availability_status}</td>
+                                    <td>
+                                        {!expiredRoomIds.includes(room.room_id) && (
+                                            <>
+                                                {/* Nút để thay đổi trạng thái thành Inactive */}
+                                                <Button
+                                                    variant="warning"
+                                                    size="sm"
+                                                    className="me-2"
+                                                    onClick={() => handleChangeRoomStatus(room.room_id, 'Inactive')}
+                                                >
+                                                    Inactive
+                                                </Button>
+
+                                                {/* Nút để thay đổi trạng thái thành Under Maintenance */}
+                                                <Button
+                                                    variant="danger"
+                                                    size="sm"
+                                                    className="me-2"
+                                                    onClick={() => handleChangeRoomStatus(room.room_id, 'Under Maintenance')}
+                                                >
+                                                    Under Maintenance
+                                                </Button>
+
+                                                {/* Nút để thay đổi trạng thái thành Available */}
+                                                <Button
+                                                    variant="success"
+                                                    size="sm"
+                                                    onClick={() => handleChangeRoomStatus(room.room_id, 'Available')}
+                                                >
+                                                    Available
+                                                </Button>
+                                            </>
+                                        )}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -193,7 +269,6 @@ const ListAllRoom = () => {
                             disabled={currentPage === 1}
                         />
 
-                        {/* Hiển thị trang đầu tiên nếu số trang > 5 */}
                         {totalPages > 5 && currentPage > 3 && (
                             <>
                                 <Pagination.Item onClick={() => handlePageChange(1)}>
@@ -203,7 +278,6 @@ const ListAllRoom = () => {
                             </>
                         )}
 
-                        {/* Hiển thị trang trước, trang hiện tại và trang sau */}
                         {currentPage - 1 > 0 && (
                             <Pagination.Item onClick={() => handlePageChange(currentPage - 1)}>
                                 {currentPage - 1}
@@ -216,7 +290,6 @@ const ListAllRoom = () => {
                             </Pagination.Item>
                         )}
 
-                        {/* Hiển thị trang cuối cùng nếu số trang > 5 */}
                         {totalPages > 5 && currentPage < totalPages - 2 && (
                             <>
                                 <Pagination.Ellipsis />
@@ -231,11 +304,11 @@ const ListAllRoom = () => {
                             disabled={currentPage === totalPages}
                         />
                     </Pagination>
-
                 </div>
             )}
         </div>
     );
+
 };
 
 export default ListAllRoom;

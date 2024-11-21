@@ -46,16 +46,22 @@ module.exports = {
         throw error;
       }
       const msg = await InvoiceService.createInvoice(req.body);
+
+
+
+
       return successResponse({
         res,
         message: msg,
       });
     } catch (error) {
+      console.log(error)
       return errorResponse({
         res,
         status: error.status || 500,
         message: "Create Invoice failed",
         errors: error.message,
+      
       });
     }
   },

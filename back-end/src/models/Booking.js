@@ -128,7 +128,7 @@ updateBedStatus: async (bed_id, status) => {
         JOIN 
             [dbo].[Beds] bd ON b.[bed_id] = bd.[bed_id]
         JOIN 
-            [wdp3].[dbo].[RoomCategories] rc ON r.[room_type_id] = rc.[room_type_id]
+            [dbo].[RoomCategories] rc ON r.[room_type_id] = rc.[room_type_id]
 
         WHERE b.[user_id] = ${userId}
         `;

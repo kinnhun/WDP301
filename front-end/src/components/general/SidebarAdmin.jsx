@@ -70,12 +70,7 @@ const SidebarAdmin = () => {
                 <span> Manage Booking </span>
               </Link>
             </li>
-            <li className="side-nav-item">
-              <Link to={`/admin/new`} className="side-nav-link">
-                <i className="uil-calender"></i>
-                <span> Manage news </span>
-              </Link>
-            </li>
+
             <li className="side-nav-item">
               <Link to={`/admin/requests`} className="side-nav-link">
                 <i className="uil-calender"></i>

@@ -422,6 +422,81 @@ const getRoomByStatus = async (req, res) => {
 };
 
 
+const getRoomIdBooking = async (req, res) => {
+  try {
+    const result = await Room.getRoomIdBooking(); // Gọi hàm trong model
+    const roomIds = result.recordset;
+
+    if (roomIds.length === 0) {
+      return errorResponse({
+        res,
+        status: 404,
+        message: "Không có phòng nào có đặt phòng đã hết hạn.",
+      });
+    }
+
+    return successResponse({
+      res,
+      message: "Lấy danh sách phòng có đặt phòng đã hết hạn thành công.",
+      data: roomIds,
+    });
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách phòng có đặt phòng đã hết hạn:", error);
+    return errorResponse({
+      res,
+      status: 500,
+      message: "Lỗi khi lấy danh sách phòng có đặt phòng đã hết hạn.",
+      errors: error.message,
+    });
+  }
+};
+
+
+const changeRoomAvailabilityStatus = async (req, res) => {
+  const { id, availability_status } = req.query; // Use req.query for query parameters
+
+  console.log("Changing status for Room ID:", id);
+  console.log("New Availability Status:", availability_status);
+
+  // Validate inputs
+  if (!id || isNaN(id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid Room ID provided.",
+    });
+  }
+
+  if (!availability_status) {
+    return res.status(400).json({
+      success: false,
+      message: "Availability status is required.",
+    });
+  }
+
+  try {
+    // Update room status in the database
+    const result = await Room.updateRoomStatus(parseInt(id, 10), availability_status);
+
+    if (result.rowsAffected[0] === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Room not found or status unchanged.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Room availability status updated successfully.",
+    });
+  } catch (error) {
+    console.error("Error updating room availability status:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update room availability status.",
+      errors: error.message,
+    });
+  }
+};
 
 
 module.exports = {
@@ -438,5 +513,7 @@ module.exports = {
   getRoomsByDormRoomTypeFloor,
   getDorm,
   updateRoomStatus,
-  getRoomByStatus
+  getRoomByStatus,
+  getRoomIdBooking,
+  changeRoomAvailabilityStatus
 };

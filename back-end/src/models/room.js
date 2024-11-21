@@ -94,15 +94,22 @@ WHERE r.[availability_status] = ${status};
   // Lấy phòng theo ID
   getRoomById: async (id) => {
     const result = await sql.query`
-            SELECT 
-                [room_id],
-                [room_number],
-                [room_type_id],
-                [price],
-                [availability_status],
-                [created_at],
-                [updated_at]
-            FROM [dbo].[Rooms]
+             SELECT 
+          r.[room_id],
+          r.[room_number],
+          r.[room_type_id],
+          r.[price],
+          r.[availability_status],
+          r.[created_at],
+          r.[updated_at],
+          r.[floor_number],
+          r.[dorm],
+          r.[gender],
+          rc.[category_name] AS room_category_name
+      FROM [dbo].[Rooms] r
+      LEFT JOIN [dbo].[RoomCategories] rc
+          ON r.[room_type_id] = rc.[room_type_id]
+          
             WHERE [room_id] = ${id}
         `;
     return result.recordset[0]; // Trả về phòng đầu tiên nếu tìm thấy
@@ -235,6 +242,16 @@ WHERE [floor_number] IS NOT NULL;
     `;
   },
 
+
+   updateRoomStatus1 : async (roomId, availability_status) => {
+    return sql.query`
+      UPDATE [dbo].[Rooms]
+      SET availability_status = ${availability_status}
+      WHERE room_id = ${roomId}
+    `;
+  },
+  
+
   
   getRoomsWithFilters: async (filters) => {
     let query = `
@@ -335,13 +352,59 @@ WHERE [floor_number] IS NOT NULL;
       throw new Error("Tạo phòng mới thất bại");
     }
   },
+   
+
+  getRoomIdBooking : async () => {
+    return sql.query`
+      SELECT DISTINCT [room_id]
+      FROM [dbo].[Bookings]
+      WHERE [end_date] < GETDATE();
+    `;
+  },
+
+
+
+
+  getUserIdByRoomNumber: async (roomNumber) => {
+    return sql.query`
+  SELECT B.user_id
+    ,B.room_id
+  FROM Bookings B
+  LEFT JOIN Rooms R ON B.room_id = R.room_id
+  LEFT JOIN Semester S ON B.semester = S.semester_name
+  WHERE R.room_number = ${roomNumber}
+  AND S.status = 'Active'
+    `;
+  },
+  getRoomIdByRoomNumber: async (roomNumber) => {
+    return sql.query`
+    SELECT room_id
+    FROM Rooms
+    WHERE room_number = ${roomNumber}
+    `;
+  },
+  getRoomIdByEmail: async (email) => {
+    return sql.query`
+   SELECT R.room_id
+  FROM Rooms R
+  LEFT JOIN Bookings B
+  ON R.room_id = B.room_id
+  LEFT JOIN Users U
+  ON U.user_id = B.user_id
+  LEFT JOIN Semester S
+  ON S.semester_name = B.semester
+  WHERE U.email = ${email}
+  AND S.status = 'Active'
+    `;
+  },
+
+
+
   
-  
-
-
-
   
 };
+
+
 
 
 
