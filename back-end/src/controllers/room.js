@@ -4,8 +4,19 @@ const { successResponse, errorResponse } = require("../utils/response.js");
 // Lấy tất cả phòng
 const getAllRooms = async (req, res) => {
   try {
-    const result = await Room.getAllRooms();
-    const rooms = result.recordset; // Lấy danh sách phòng
+    const { dorm, floor, status } = req.query;
+
+    // Tạo một đối tượng filters chứa các tham số lọc
+    const filters = {
+      dorm,
+      floor,
+      status,
+    };
+
+    // Gọi model với đối tượng filters
+    const result = await Room.getRoomsWithFilters(filters);
+
+    const rooms = result.recordset; 
 
     console.log("Danh sách phòng:", rooms); // Kiểm tra dữ liệu ở đây
 
@@ -23,6 +34,7 @@ const getAllRooms = async (req, res) => {
     });
   }
 };
+
 
 // Lấy thông tin phòng theo ID
 const getRoomById = async (req, res) => {
@@ -57,31 +69,48 @@ const getRoomById = async (req, res) => {
 // Tạo phòng mới
 const createRoom = async (req, res) => {
   try {
-    const { room_number, room_type_id, price, availability_status } = req.body;
+    const { room_number, room_type_id, price, availability_status, floor_number, dorm, gender } = req.body;
+
+
+    console.log(room_number);
+    console.log(room_type_id);
+    console.log(price);
+    console.log(availability_status);
+    console.log(gender);
+    console.log(floor_number);
+    console.log(dorm);
+
+    
 
     // Kiểm tra dữ liệu đầu vào
-    if (!room_number || !room_type_id || !price || !availability_status) {
+    if (!room_number || !room_type_id || !price || !availability_status || !floor_number || !dorm || !gender) {
       return res.status(400).json({
         success: false,
         message: "Thiếu thông tin cần thiết để tạo phòng",
       });
     }
 
-    await Room.createRoom(room_number, room_type_id, price, availability_status);
-
-    return successResponse({
-      res,
-      message: "Tạo phòng mới thành công",
+    // Gọi hàm tạo phòng mới, truyền các tham số vào
+    const result = await Room.createRoom({
+      room_number,
+      room_type_id,
+      price,
+      availability_status,
+      floor_number,
+      dorm,
+      gender
     });
+
+    return res.status(200).json(result);  // Trả kết quả trả về từ createRoom
   } catch (error) {
-    return errorResponse({
-      res,
-      status: 500,
+    return res.status(500).json({
+      success: false,
       message: "Tạo phòng mới thất bại",
       errors: error.message,
     });
   }
 };
+
 
 // Cập nhật thông tin phòng
 const updateRoom = async (req, res) => {
@@ -372,6 +401,104 @@ const updateRoomStatus = async (req, res) => {
 
 
 
+
+const getRoomByStatus = async (req, res) => {
+  try {
+    const { status } = req.query;
+
+    const result = await Room.getRoomByStatus(status); // Gọi model
+    const rooms = result.recordset;
+
+    return res.status(200).json({
+      message: 'Lấy danh sách phòng thành công',
+      data: rooms,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Lấy danh sách phòng thất bại',
+      error: error.message,
+    });
+  }
+};
+
+
+const getRoomIdBooking = async (req, res) => {
+  try {
+    const result = await Room.getRoomIdBooking(); // Gọi hàm trong model
+    const roomIds = result.recordset;
+
+    if (roomIds.length === 0) {
+      return errorResponse({
+        res,
+        status: 404,
+        message: "Không có phòng nào có đặt phòng đã hết hạn.",
+      });
+    }
+
+    return successResponse({
+      res,
+      message: "Lấy danh sách phòng có đặt phòng đã hết hạn thành công.",
+      data: roomIds,
+    });
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách phòng có đặt phòng đã hết hạn:", error);
+    return errorResponse({
+      res,
+      status: 500,
+      message: "Lỗi khi lấy danh sách phòng có đặt phòng đã hết hạn.",
+      errors: error.message,
+    });
+  }
+};
+
+
+const changeRoomAvailabilityStatus = async (req, res) => {
+  const { id, availability_status } = req.query; // Use req.query for query parameters
+
+  console.log("Changing status for Room ID:", id);
+  console.log("New Availability Status:", availability_status);
+
+  // Validate inputs
+  if (!id || isNaN(id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid Room ID provided.",
+    });
+  }
+
+  if (!availability_status) {
+    return res.status(400).json({
+      success: false,
+      message: "Availability status is required.",
+    });
+  }
+
+  try {
+    // Update room status in the database
+    const result = await Room.updateRoomStatus(parseInt(id, 10), availability_status);
+
+    if (result.rowsAffected[0] === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Room not found or status unchanged.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Room availability status updated successfully.",
+    });
+  } catch (error) {
+    console.error("Error updating room availability status:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update room availability status.",
+      errors: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   getAllRooms,
   getRoomById,
@@ -385,5 +512,8 @@ module.exports = {
   getAllAvailableRooms,
   getRoomsByDormRoomTypeFloor,
   getDorm,
-  updateRoomStatus
+  updateRoomStatus,
+  getRoomByStatus,
+  getRoomIdBooking,
+  changeRoomAvailabilityStatus
 };

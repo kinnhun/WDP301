@@ -33,6 +33,12 @@ import InvoiceManagement from "../pages/Admin/InvoiceManagement/InvoiceManagemen
 import BookingManager from "../pages/Manager/ManagerBooking/BookingManager";
 import Invoice from "../pages/Student/Invoice/Invoice";
 
+import ManagerRoom from "../pages/Admin/ManagerRoom/ManagerRoom";
+import ListAllRoom from "../pages/Admin/ManagerRoom/ListAllRoom";
+import CreateNewRoom from "../pages/Admin/ManagerRoom/CreateNewRoom";
+import CreateManyRooms from "../pages/Admin/ManagerRoom/CreateManyRooms";
+import LayoutStaff from "../layouts/LayoutStaff";
+
 const publicRouter = () => {
   return (
     <Routes>
@@ -65,12 +71,17 @@ const publicRouter = () => {
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/student/reports" element={<Report />} />
         <Route path="/student/invoices" element={<Invoice />} />
+
+      </Route>
+
+      <Route element={<LayoutStaff />}>
         {/* staff */}
         <Route path="/staff" element={<Navigate to={"/staff/home"} />} />
         <Route path="/staff/home" element={<Home />} />
         <Route path="/staff/requests" element={<StaffRequestManagement />} />
         <Route path="/staff/request/:id" element={<StaffRequestDetail />} />
       </Route>
+
 
       <Route element={<LayoutAdmin />}>
         <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
@@ -87,6 +98,11 @@ const publicRouter = () => {
         <Route path="/admin/semester" element={<ManagerSemester />} />
         <Route path="/admin/invoices" element={<InvoiceManagement />} />
         <Route path="/admin/invoices/create" element={<CreateInvoice />} />
+
+        <Route path="/admin/manager-room" element={<ManagerRoom />} />
+        <Route path="/admin/list-room" element={<ListAllRoom />} />
+        <Route path="/admin/create-room" element={<CreateNewRoom />} />
+        <Route path="/admin/create-many-rooms" element={<CreateManyRooms />} />
       </Route>
     </Routes>
   );
