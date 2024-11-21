@@ -32,6 +32,7 @@ import CreateInvoice from "../pages/Admin/InvoiceManagement/CreateInvoice";
 import InvoiceManagement from "../pages/Admin/InvoiceManagement/InvoiceManagement";
 import BookingManager from "../pages/Manager/ManagerBooking/BookingManager";
 import Invoice from "../pages/Student/Invoice/Invoice";
+import ReportsByStaff from "../pages/Staff/ReportManagement/ReportStaff";
 
 import ManagerRoom from "../pages/Admin/ManagerRoom/ManagerRoom";
 import ListAllRoom from "../pages/Admin/ManagerRoom/ListAllRoom";
@@ -51,7 +52,7 @@ const publicRouter = () => {
         <Route path="/manager/manage-users" element={<UserList />} />
         <Route path="/manager/requests" element={<RequestManagement />} />
         <Route path="/manager/request/:id" element={<RequestDetail />} />
-        <Route path="/manager/reports" element={<ReportManager />} />
+        
         <Route path="/manager/home" element={<ManagerHome />} />
 
         {/* student */}
@@ -80,6 +81,7 @@ const publicRouter = () => {
         <Route path="/staff/home" element={<Home />} />
         <Route path="/staff/requests" element={<StaffRequestManagement />} />
         <Route path="/staff/request/:id" element={<StaffRequestDetail />} />
+        <Route path="/staff/reports" element={<ReportsByStaff />} />
       </Route>
 
 

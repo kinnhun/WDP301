@@ -76,6 +76,12 @@ const Sidebar = () => {
                 <span> Requests </span>
               </Link>
             </li>
+            <li className="side-nav-item">
+              <Link to={`/student/reports`} className="side-nav-link">
+                <i className="uil-rss"></i>
+                <span> Report </span>
+              </Link>
+            </li>
           </ul>
 
           {/* <!-- Help Box --> */}

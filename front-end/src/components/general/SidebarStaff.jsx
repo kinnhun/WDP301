@@ -38,6 +38,12 @@ const SidebarStaff = () => {
                             </Link>
                         </li>
 
+                        <li className="side-nav-item">
+                            <Link to={`/staff/reports`} className="side-nav-link">
+                                <i className="uil-store"></i>
+                                <span> Staff reports </span>
+                            </Link>
+                        </li>
 
 
 
