@@ -346,6 +346,86 @@ const bulkUpdateBookingStatus = async (req, res) => {
 };
 
 
+// Lấy booking mới nhất bởi user_id
+const getLatestBookingById = async (req, res) => {
+    try {
+        const { userId } = req.params; // Lấy user_id từ tham số URL
+
+        // Kiểm tra nếu userId không được cung cấp hoặc không hợp lệ
+        if (!userId || isNaN(parseInt(userId, 10))) {
+            return errorResponse({
+                res,
+                status: 400,
+                message: 'user_id không hợp lệ',
+            });
+        }
+
+        // Gọi model để lấy booking mới nhất theo user_id
+        const result = await Booking.getLatestBookingByUserId(userId);
+        const latestBooking = result.recordset[0]; // Lấy booking đầu tiên (mới nhất)
+
+        if (!latestBooking) {
+            return errorResponse({
+                res,
+                status: 404,
+                message: 'Không tìm thấy booking nào cho người dùng này',
+            });
+        }
+
+        return successResponse({
+            res,
+            message: 'Lấy booking mới nhất thành công',
+            data: latestBooking,
+        });
+    } catch (error) {
+        console.error('Error fetching latest booking:', error.message);
+        return errorResponse({
+            res,
+            status: 500,
+            message: 'Lấy booking mới nhất thất bại',
+            errors: error.message,
+        });
+    }
+};
+
+
+const createBookingByLatest = async (req, res) => {
+    try {
+        const { booking_id, start_date, end_date, semester } = req.body; // Retrieve input data from request body
+
+        // Validate required fields
+        if (!booking_id || !start_date || !end_date || !semester) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required fields: booking_id, start_date, end_date, semester',
+            });
+        }
+
+        // Call the model method to create a new booking
+        const result = await Booking.createBookingByLatest(booking_id, start_date, end_date, semester);
+
+        if (result.rowsAffected[0] === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'No booking found with the specified booking_id',
+            });
+        }
+
+        return res.status(201).json({
+            success: true,
+            message: 'New booking created successfully',
+        });
+    } catch (error) {
+        console.error('Error creating booking by latest:', error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to create booking by latest',
+            errors: error.message,
+        });
+    }
+};
+
+
 module.exports = {
     getUserBookings,
     createBooking,
@@ -357,4 +437,6 @@ module.exports = {
     getBookingStatus,
     updateBookingStatus,
     bulkUpdateBookingStatus,
+    getLatestBookingById,
+    createBookingByLatest
 };

@@ -97,7 +97,49 @@ getAllSemesters: async () => {
             console.error("Lỗi khi xóa kỳ học:", err);
             throw err;
         }
+    },
+
+
+
+ // Cập nhật trạng thái kỳ học
+ updateSemesterStatus: async (semesterId, status) => {
+    try {
+        const result = await sql.query`
+            UPDATE [dbo].[Semester]
+            SET [status] = ${status}, [updated_at] = SYSDATETIME()
+            WHERE [semester_id] = ${semesterId}
+        `;
+        return result.rowsAffected; // Trả về số bản ghi đã thay đổi
+    } catch (err) {
+        console.error("Lỗi khi cập nhật trạng thái kỳ học:", err);
+        throw err;
     }
+},
+
+getSemesterByStatusWithEarliestCreatedAt: async () => {
+    try {
+        const result = await sql.query`
+            SELECT TOP 1 
+                [semester_id]
+      ,[semester_name]
+      ,[start_date]
+      ,[end_date]
+      ,[status]
+      ,[created_at]
+      ,[updated_at]
+            FROM [dbo].[Semester]
+            WHERE [status] = 'Coming'
+            ORDER BY [created_at] ASC
+        `;
+        return result; // Return the query result
+    } catch (err) {
+        console.error("Lỗi khi lấy thông tin kỳ học với trạng thái và thời gian tạo sớm nhất:", err);
+        throw err;
+    }
+},
+
+
+
 };
 
 module.exports = Semester;

@@ -7,7 +7,8 @@ import "./Bookings.css";
 
 const Bookings = () => {
     const [bookingsData, setBookingsData] = useState([]);
-    const [isBookingAllowed, setIsBookingAllowed] = useState(true); // Trạng thái cho phép booking
+    const [isBookingAllowed, setIsBookingAllowed] = useState(true); // Booking status
+    const [activeSemester, setActiveSemester] = useState(null); // Active semester data
     const baseUrl = import.meta.env.VITE_PUBLIC_URL;
 
     useEffect(() => {
@@ -15,7 +16,7 @@ const Bookings = () => {
             try {
                 const token = JSON.parse(localStorage.getItem('token'));
                 const userId = verifyAccessToken(token).id;
-                
+
                 const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/booking/user/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -26,30 +27,99 @@ const Bookings = () => {
                     const bookings = response.data.data;
                     setBookingsData(bookings);
 
-                    // Kiểm tra nếu có booking nào có `end_date` lớn hơn hoặc bằng ngày hiện tại
+                    // Check if there's any active booking
                     const now = new Date();
                     const hasActiveBooking = bookings.some(booking => new Date(booking.end_date) >= now);
-                    setIsBookingAllowed(!hasActiveBooking); 
+                    setIsBookingAllowed(!hasActiveBooking);
                 }
             } catch (error) {
                 console.error('Error fetching bookings:', error);
             }
         };
 
+        const fetchActiveSemester = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/semester/active`);
+                if (response.data.success) {
+                    setActiveSemester(response.data.data);
+                }
+            } catch (error) {
+                console.error('Error fetching active semester:', error);
+            }
+        };
+
         fetchBookings();
+        fetchActiveSemester();
     }, []);
+
+    const currentDate = new Date(); // Current date
+
+    const shouldShowAddBookingButton = () => {
+        if (activeSemester && isBookingAllowed) {
+            const semesterEndDate = new Date(activeSemester.end_date);
+            const twoWeeksAfterEnd = new Date(semesterEndDate);
+            twoWeeksAfterEnd.setDate(semesterEndDate.getDate() + 14);
+
+            // Check if the current date is within two weeks after the semester's end date
+            return currentDate > semesterEndDate && currentDate <= twoWeeksAfterEnd;
+        }
+        return false;
+    };
+
+
+
+    const shouldShowDormitoryReservationButton = () => {
+        if (activeSemester) {
+            const semesterEndDate = new Date(activeSemester.end_date);
+            const twoWeeksAfterEnd = new Date(semesterEndDate);
+            twoWeeksAfterEnd.setDate(semesterEndDate.getDate() + 14);
+
+            // Show button if the current date is less than end_date or within 14 days after end_date
+            return currentDate < semesterEndDate || (currentDate >= semesterEndDate && currentDate <= twoWeeksAfterEnd);
+        }
+        return false;
+    };
+
+
+
 
     return (
         <div className="container mt-4">
-            <h1>Bookings</h1>
-            {isBookingAllowed && (
+            <h1>
+                Bookings <small className="text-muted">({currentDate.toLocaleDateString()})</small>
+            </h1>
+
+            {activeSemester && (
+                <div className="mb-4">
+                    <h4>Active Semester</h4>
+                    <p>
+                        <strong>Name:</strong> {activeSemester.semester_name} <br />
+                        <strong>Start Date:</strong> {new Date(activeSemester.start_date).toLocaleDateString()} <br />
+                        <strong>End Date:</strong> {new Date(activeSemester.end_date).toLocaleDateString()} <br />
+                        <strong>Status:</strong> {activeSemester.status}
+                    </p>
+                </div>
+            )}
+            {shouldShowDormitoryReservationButton() && (
+                <Link to={`${baseUrl}/student/booking/dormitory-reservation`}>
+                    <button className="btn btn-secondary mb-2 mr-2">
+                        Dormitory Reservation
+                    </button>
+                </Link>
+            )}
+
+
+
+            {/* Show "Add New Booking" button only if the current date is within two weeks after the semester's end date */}
+            {shouldShowAddBookingButton() && (
                 <Link to={`${baseUrl}/student/booking/create-booking`}>
                     <button className="btn btn-primary float-right">
                         Add New Booking
                     </button>
                 </Link>
             )}
-           
+
+
             <Table striped bordered hover responsive className="table-sm">
                 <thead>
                     <tr>

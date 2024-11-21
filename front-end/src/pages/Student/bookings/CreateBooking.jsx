@@ -485,7 +485,7 @@ const Book = () => {
               <strong>Dorm:</strong> {bookingDetails.dorm}
             </p>
             <p>
-              <strong>Floor:</strong> {bookingDetails.floor}
+              <strong>Floor:</strong> {bookingDetails.floor_number}
             </p>
             <p>
               <strong>Room Number:</strong> {bookingDetails.room_name}

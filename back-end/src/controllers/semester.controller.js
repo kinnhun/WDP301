@@ -122,9 +122,78 @@ const createSemester = async (req, res) => {
 };
   
 
+// Cập nhật trạng thái kỳ học
+const updateSemesterStatus = async (req, res) => {
+    const { id } = req.params;  // Lấy ID của kỳ học từ tham số URL
+    const { status } = req.body; // Lấy trạng thái mới từ body request
+
+    try {
+       
+        // Cập nhật trạng thái kỳ học
+        const updateResult = await Semester.updateSemesterStatus(id, status);  // Gọi phương thức model để cập nhật trạng thái
+
+        if (updateResult === 0) {
+            return errorResponse({
+                res,
+                status: 400,
+                message: "Không thay đổi trạng thái kỳ học",
+            });
+        }
+
+        return successResponse({
+            res,
+            message: "Trạng thái kỳ học đã được cập nhật thành công",
+            data: { id, status },
+        });
+    } catch (error) {
+        console.error("Error updating semester status:", error);
+        return errorResponse({
+            res,
+            status: 500,
+            message: "Lỗi khi cập nhật trạng thái kỳ học",
+            errors: error.message,
+        });
+    }
+};
+
+
+
+const getNextSemester = async (req, res) => {
+    try {
+        // Fetch the next semester with status 'Coming' and earliest created_at
+        const { recordset } = await Semester.getSemesterByStatusWithEarliestCreatedAt();
+
+        const nextSemester = recordset?.[0]; // Get the first result (smallest created_at)
+
+        if (!nextSemester) {
+            return errorResponse({
+                res,
+                status: 404,
+                message: 'Không có kỳ học nào có trạng thái "Coming"',
+            });
+        }
+
+        return successResponse({
+            res,
+            message: 'Lấy thông tin kỳ học tiếp theo thành công',
+            data: nextSemester,
+        });
+    } catch (error) {
+        return errorResponse({
+            res,
+            status: 500,
+            message: 'Lỗi khi lấy thông tin kỳ học tiếp theo',
+            errors: error.message,
+        });
+    }
+};
+
+
 module.exports = {
     getSemesterActive,
     getAllSemesters,
     createSemester,
     deleteSemester,
+    updateSemesterStatus,
+    getNextSemester
 };

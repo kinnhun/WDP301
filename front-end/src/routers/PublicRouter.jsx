@@ -39,6 +39,7 @@ import ListAllRoom from "../pages/Admin/ManagerRoom/ListAllRoom";
 import CreateNewRoom from "../pages/Admin/ManagerRoom/CreateNewRoom";
 import CreateManyRooms from "../pages/Admin/ManagerRoom/CreateManyRooms";
 import LayoutStaff from "../layouts/LayoutStaff";
+import ReservationBooking from "../pages/Student/bookings/ReservationBooking";
 
 const publicRouter = () => {
   return (
@@ -52,7 +53,7 @@ const publicRouter = () => {
         <Route path="/manager/manage-users" element={<UserList />} />
         <Route path="/manager/requests" element={<RequestManagement />} />
         <Route path="/manager/request/:id" element={<RequestDetail />} />
-        
+
         <Route path="/manager/home" element={<ManagerHome />} />
 
         {/* student */}
@@ -66,6 +67,7 @@ const publicRouter = () => {
           element={<ResidentHistories></ResidentHistories>}
         />
         <Route path="/student/bookings" element={<Bookings />} />
+        <Route path="/student/booking/dormitory-reservation" element={<ReservationBooking />} />
         <Route path="/student/booking/create-booking" element={<Book />} />
         <Route path="/student/EWUsage" element={<EWUsage />} />
         <Route path="/student/paymentHistory" element={<PaymentHistory />} />
