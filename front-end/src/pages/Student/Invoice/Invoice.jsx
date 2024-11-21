@@ -23,6 +23,17 @@ const Invoice = () => {
   const [transactionStatus, setTransactionStatus] = useState("pending");
   const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
 
+  const getInvoicesTypes = async () => {
+    try {
+      const response = await axios.get("/invoice/types");
+      if (response.status === 200) {
+        setTypes(response.data.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const getInvoices = async () => {
     const token = JSON.parse(localStorage.getItem("token"));
     const user = verifyAccessToken(token);
@@ -31,8 +42,36 @@ const Invoice = () => {
         setIsLoading(true);
         const response = await axios.get(`/invoice/${user.email}`);
         if (response.status === 200) {
-          setAllInvoices(response.data.data);
-          setFilteredInvoices(response.data.data);
+          const currentTimeUTC = new Date();
+          const timezoneOffset = 7; // GMT+7
+          const currentTimeGMT7 = new Date(
+            currentTimeUTC.getTime() + timezoneOffset * 60 * 60 * 1000
+          );
+
+          const invoices = response.data.data.map((invoice) => {
+            const expiredDate = new Date(invoice.expired_date);
+
+            if (expiredDate < currentTimeGMT7 && invoice.status === false) {
+              // Tính số ngày chậm
+              const daysLate = Math.floor((currentTimeGMT7 - expiredDate) / (1000 * 60 * 60 * 24));
+              // Cộng thêm 20,000 mỗi ngày muộn
+              // const updatedAmount = invoice.amount + daysLate * 20000;
+
+              return {
+                ...invoice,
+                expired: true,
+                fine: daysLate * 20000,
+              };
+            }
+
+            return {
+              ...invoice,
+              expired: false,
+            };
+          });
+
+          setAllInvoices(invoices);
+          setFilteredInvoices(invoices);
         }
       } catch (error) {
         console.error(error);
@@ -109,6 +148,7 @@ const Invoice = () => {
 
   useEffect(() => {
     getInvoices();
+    getInvoicesTypes();
   }, []);
 
   useEffect(() => {
@@ -122,6 +162,8 @@ const Invoice = () => {
   if (isLoading) {
     return <Spinner />;
   }
+
+  console.log(currentInvoices);
 
   return (
     <div>
@@ -170,19 +212,21 @@ const Invoice = () => {
         <tbody>
           {currentInvoices.length > 0 ? (
             currentInvoices.map((invoice) => (
-              <tr key={invoice.id}>
+              <tr
+                key={invoice.id}
+                className={invoice.expired ? "bg-danger bg-gradient bg-opacity-25" : ""}
+              >
                 <td>{invoice.type}</td>
-                <td>{invoice.amount}</td>
+                <td>
+                  {invoice.amount} {invoice.expired && `+ ${invoice.fine} (fine)`}
+                </td>
                 <td>{invoice.status === false ? "Unpaid" : "Paid"}</td>
                 <td>{invoice.created_at && formatDate(invoice.created_at)}</td>
                 <td>{invoice.expired_date && formatDate(invoice.expired_date)}</td>
                 <td>{invoice.payment_at && formatDate(invoice.payment_at)}</td>
                 <td>
                   {invoice.status === false && (
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => handleShowModal(invoice.id)}
-                    >
+                    <button className="btn btn-primary" onClick={() => handleShowModal(invoice.id)}>
                       Pay
                     </button>
                   )}
@@ -208,51 +252,49 @@ const Invoice = () => {
 
       {/* Modal for QR Code */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
-  <Modal.Header closeButton>
-    <Modal.Title>Scan to Pay</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    {qrUrl ? (
-      <div>
-        <img src={qrUrl} alt="QR Code" style={{ width: "100%" }} />
-        <p>Status: {transactionStatus}</p>
-        {transactionStatus === "pending" && <p>Waiting for payment...</p>}
-        {transactionStatus === "success" && <p>Payment Successful!</p>}
-      </div>
-    ) : (
-      <p>Loading QR Code...</p>
-    )}
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={() => setShowModal(false)}>
-      Close
-    </Button>
-    <Button
-      variant="success"
-      onClick={async () => {
-        // Chuyển trạng thái sang success
-        setTransactionStatus("success");
+        <Modal.Header closeButton>
+          <Modal.Title>Scan to Pay</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {qrUrl ? (
+            <div>
+              <img src={qrUrl} alt="QR Code" style={{ width: "100%" }} />
+              <p>Status: {transactionStatus}</p>
+              {transactionStatus === "pending" && <p>Waiting for payment...</p>}
+              {transactionStatus === "success" && <p>Payment Successful!</p>}
+            </div>
+          ) : (
+            <p>Loading QR Code...</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+          <Button
+            variant="success"
+            onClick={async () => {
+              // Chuyển trạng thái sang success
+              setTransactionStatus("success");
 
-        // Hiển thị trạng thái thanh toán trong 10 giây
-        setTimeout(() => {
-          setShowModal(false);
-          toast.success("Fake payment completed!");
-          try {
-            // Gọi API để cập nhật trạng thái hóa đơn
-            axios.patch(`/invoice/${selectedInvoiceId}`);
-            getInvoices();
-          } catch (error) {
-            console.error("Error updating invoice:", error);
-          }
-        }, 5000); // Đóng modal sau 10 giây
-      }}
-    >
-      Fake Payment
-    </Button>
-  </Modal.Footer>
-</Modal>
-
-
+              // Hiển thị trạng thái thanh toán trong 10 giây
+              setTimeout(() => {
+                setShowModal(false);
+                toast.success("Fake payment completed!");
+                try {
+                  // Gọi API để cập nhật trạng thái hóa đơn
+                  axios.patch(`/invoice/${selectedInvoiceId}`);
+                  getInvoices();
+                } catch (error) {
+                  console.error("Error updating invoice:", error);
+                }
+              }, 5000); // Đóng modal sau 10 giây
+            }}
+          >
+            Fake Payment
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
