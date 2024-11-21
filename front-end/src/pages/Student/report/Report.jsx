@@ -247,6 +247,7 @@ const Report = () => {
         <Modal.Body>
           <p><strong>Room Number:</strong> {selectedReport?.room_number}</p>
           <p><strong>Content:</strong> {selectedReport?.content}</p>
+          <p><strong>Reply:</strong> {selectedReport?.reply || "No reply yet"}</p>
           <p><strong>Status:</strong> {selectedReport?.report_status}</p>
           <p><strong>Created At:</strong> {toLocaleData(selectedReport?.created_at)}</p>
         </Modal.Body>

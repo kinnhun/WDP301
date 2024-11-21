@@ -52,7 +52,7 @@ const publicRouter = () => {
         <Route path="/manager/manage-users" element={<UserList />} />
         <Route path="/manager/requests" element={<RequestManagement />} />
         <Route path="/manager/request/:id" element={<RequestDetail />} />
-        <Route path="/manager/reports" element={<ReportManager />} />
+        
         <Route path="/manager/home" element={<ManagerHome />} />
 
         {/* student */}

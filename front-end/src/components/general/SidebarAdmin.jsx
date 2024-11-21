@@ -77,7 +77,14 @@ const SidebarAdmin = () => {
                 <span> Manage requests </span>
               </Link>
             </li>
+            <li className="side-nav-item">
+              <Link to={`/admin/reports`} className="side-nav-link">
+                <i className="uil-calender"></i>
+                <span> Manage reports </span>
+              </Link>
+            </li>
 
+            
             <li className="side-nav-item">
               <Link to={`/admin/semester`} className="side-nav-link">
                 <i className="uil-calender"></i>
