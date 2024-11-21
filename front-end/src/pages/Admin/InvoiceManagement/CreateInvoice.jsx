@@ -10,6 +10,8 @@ const CreateInvoice = () => {
   const { register, handleSubmit, watch, setValue, reset } = useForm();
   const [electricity, setElectricity] = useState(0);
   const [water, setWater] = useState(0);
+  const [rooms, setRooms] = useState([]);
+  const [roomSuggestions, setRoomSuggestions] = useState([]); // Gợi ý phòng
 
   const navigate = useNavigate();
   const invoiceType = watch("invoiceType");
@@ -18,17 +20,34 @@ const CreateInvoice = () => {
     return Math.max(electricity * 3000 + water * 10000, 0);
   };
 
+  const getRooms = async () => {
+    try {
+      const response = await axios.get("/api/room/rooms/bookings/expired");
+      if (response.status === 200) {
+        setRooms(response.data.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleRoomInput = (input) => {
+    const suggestions = rooms.filter((room) =>
+      room.room_number.toLowerCase().includes(input.toLowerCase())
+    );
+    setRoomSuggestions(suggestions);
+  };
+
   const createInvoice = async (data) => {
     try {
       const response = await axios.post("/invoice", data);
-      console.log(response);
       if (response.status === 200) {
         reset();
         toast.success("Invoice created successfully");
-        // navigate("/admin/invoices");
+        navigate("/admin/invoices");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       if (error.response.data.errors === "Not found user in this room") {
         toast.error("Not found user in this room");
       }
@@ -39,7 +58,6 @@ const CreateInvoice = () => {
   };
 
   const onSubmit = (data) => {
-    console.log(data.amount);
     const currentDate = new Date().setHours(0, 0, 0, 0);
     const selected = new Date(data.expiredDate).setHours(0, 0, 0, 0);
     if (selected < currentDate) {
@@ -72,6 +90,7 @@ const CreateInvoice = () => {
   };
 
   useEffect(() => {
+    getRooms();
     getInvoiceTypes();
   }, []);
 
@@ -97,6 +116,8 @@ const CreateInvoice = () => {
     }
   }, [invoiceType]);
 
+  console.log(roomSuggestions);
+
   return (
     <div className="create-invoice-form">
       <button className="btn btn-primary" onClick={() => navigate("/admin/invoices")}>
@@ -121,21 +142,39 @@ const CreateInvoice = () => {
 
         {invoiceType && (
           <>
-            {" "}
             <div className="form-group">
-              <label>{invoiceType == 2 ? "Room" : invoiceType == 1 ? "Room" : "Email"}</label>
-              <input
-                type="text"
-                {...register(invoiceType == 2 || invoiceType == 1 ? "room" : "email")}
-                className="form-control"
-                required
-              />
+              {invoiceType == 3 ? (
+                <>
+                  <label>Email</label>
+                  <input type="text" {...register("email")} className="form-control" required />
+                </>
+              ) : (
+                <>
+                  <label>Room</label>
+                  <input
+                    type="text"
+                    list="roomOptions"
+                    {...register("room")}
+                    className="form-control"
+                    onChange={(e) => handleRoomInput(e.target.value)}
+                    required
+                  />
+                  <datalist id="roomOptions">
+                    {rooms.length > 0 &&
+                      rooms.map((room) => (
+                        <option key={room.room_id} value={room.room_number}>
+                          {room.room_number}
+                        </option>
+                      ))}
+                  </datalist>
+                </>
+              )}
             </div>
             <div className="form-group">
               <label>Description</label>
               <textarea {...register("description")} className="form-control" rows="3" />
             </div>
-            {invoiceType == 1 && invoiceType != 2 && (
+            {invoiceType == 1 && (
               <>
                 <div className="form-group">
                   <label>Electricity Units</label>

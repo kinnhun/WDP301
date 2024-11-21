@@ -39,6 +39,7 @@ module.exports = {
           });
         }
       } else if (invoice.email) {
+        console.log(invoice.email);
         const user = await User.getUserByEmail(invoice.email);
         if (user.recordset.length === 0) {
           const error = new Error("User not found");
@@ -46,15 +47,11 @@ module.exports = {
           throw error;
         }
         let roomId = await Room.getRoomIdByEmail(invoice.email);
-        if (roomId.recordset.length === 0) {
-          const error = new Error("Room not found");
-          error.status = 404;
-          throw error;
-        }
+
         await Invoice.createInvoice({
           ...invoice,
           user_id: user.recordset[0].user_id,
-          room_id: roomId.recordset[0].room_id,
+          room_id: roomId.recordset.length !== 0 ? roomId.recordset[0].room_id : null,
           ew_date: null,
         });
       }

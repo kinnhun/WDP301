@@ -6,8 +6,12 @@ import { formatDate } from "../../../utils/formatDate";
 import Spinner from "../../../components/Spinner/Spinner";
 import toast from "react-hot-toast";
 import { Modal, Button } from "react-bootstrap"; // Import Modal từ react-bootstrap
+import "./Invoice.scss";
 
 const Invoice = () => {
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
+
   const [isLoading, setIsLoading] = useState(true);
   const [types, setTypes] = useState([]);
   const [allInvoices, setAllInvoices] = useState([]);
@@ -22,6 +26,11 @@ const Invoice = () => {
   const [transactionId, setTransactionId] = useState("");
   const [transactionStatus, setTransactionStatus] = useState("pending");
   const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
+
+  const handleShowDetailModal = (invoice) => {
+    setSelectedInvoice(invoice);
+    setShowDetailModal(true);
+  };
 
   const getInvoicesTypes = async () => {
     try {
@@ -55,18 +64,20 @@ const Invoice = () => {
               // Tính số ngày chậm
               const daysLate = Math.floor((currentTimeGMT7 - expiredDate) / (1000 * 60 * 60 * 24));
               // Cộng thêm 20,000 mỗi ngày muộn
-              const updatedAmount = invoice.amount + daysLate * 20000;
+              const updatedAmount = invoice.amount + daysLate * 10000;
 
               return {
                 ...invoice,
                 expired: true,
-                amount: updatedAmount,
+                fine: daysLate * 10000,
+                daysLate,
               };
             }
 
             return {
               ...invoice,
               expired: false,
+              fine: 0,
             };
           });
 
@@ -168,7 +179,7 @@ const Invoice = () => {
   console.log(currentInvoices);
 
   return (
-    <div>
+    <div className="invoice">
       {/* Filters Section */}
       <div className="filters">
         <div className="form-group">
@@ -219,15 +230,22 @@ const Invoice = () => {
                 className={invoice.expired ? "bg-danger bg-gradient bg-opacity-25" : ""}
               >
                 <td>{invoice.type}</td>
-                <td>{invoice.amount}</td>
+                <td>{(invoice.amount + invoice.fine).toLocaleString()} đ</td>
                 <td>{invoice.status === false ? "Unpaid" : "Paid"}</td>
                 <td>{invoice.created_at && formatDate(invoice.created_at)}</td>
                 <td>{invoice.expired_date && formatDate(invoice.expired_date)}</td>
                 <td>{invoice.payment_at && formatDate(invoice.payment_at)}</td>
                 <td>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleShowDetailModal(invoice)}
+                  >
+                    View Detail
+                  </button>
+
                   {invoice.status === false && (
                     <button
-                      className="btn btn-primary"
+                      className="btn btn-primary pay-btn"
                       onClick={() => handleShowModal(invoice.id, invoice.amount)}
                     >
                       Pay
@@ -295,6 +313,99 @@ const Invoice = () => {
             }}
           >
             Fake Payment
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* detail modal */}
+      <Modal show={showDetailModal} onHide={() => setShowDetailModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Invoice Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedInvoice ? (
+            <div>
+              {/* Thông tin tổng quan hóa đơn */}
+              <p>
+                <strong>Type:</strong> {selectedInvoice.type}
+              </p>
+              <p>
+                <strong>Amount:</strong> {selectedInvoice.amount.toLocaleString()} đ
+              </p>
+              <p>
+                <strong>Status:</strong> {selectedInvoice.status ? "Paid" : "Unpaid"}
+              </p>
+              <p>
+                <strong>Created Date:</strong>{" "}
+                {selectedInvoice.created_at && formatDate(selectedInvoice.created_at)}
+              </p>
+              <p>
+                <strong>Expired Date:</strong>{" "}
+                {selectedInvoice.expired_date && formatDate(selectedInvoice.expired_date)}
+              </p>
+              <p>
+                <strong>Paid Date:</strong>{" "}
+                {selectedInvoice.payment_at && formatDate(selectedInvoice.payment_at)}
+              </p>
+              <p>
+                <strong>Description:</strong>{" "}
+                {selectedInvoice.description && selectedInvoice.description}
+              </p>
+
+              {selectedInvoice.expired && (
+                <p className="text-danger">
+                  <strong>Note:</strong> This invoice is expired!
+                </p>
+              )}
+
+              {/* Bảng chi tiết các mục */}
+              {selectedInvoice.type === "Electricity & Water" && (
+                <table className="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Quantity</th>
+                      <th>Price</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Electricity</td>
+                      <td>{selectedInvoice.electricity}</td>
+                      <td>3,000 đ</td>
+                      <td>{(selectedInvoice.electricity * 3000).toLocaleString()} đ</td>
+                    </tr>
+                    <tr>
+                      <td>Water</td>
+                      <td>{selectedInvoice.water}</td>
+                      <td>10,000 đ</td>
+                      <td>{(selectedInvoice.water * 10000).toLocaleString()} đ</td>
+                    </tr>
+                    <tr>
+                      <td>Total</td>
+                      <td></td>
+                      <td></td>
+                      <td>
+                        {(
+                          selectedInvoice.water * 10000 +
+                          selectedInvoice.electricity * 3000
+                        ).toLocaleString()}
+                        đ
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              )}
+            </div>
+          ) : (
+            <p>No details available.</p>
+          )}
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDetailModal(false)}>
+            Close
           </Button>
         </Modal.Footer>
       </Modal>
