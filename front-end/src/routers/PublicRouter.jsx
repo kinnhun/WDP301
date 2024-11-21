@@ -32,6 +32,7 @@ import CreateInvoice from "../pages/Admin/InvoiceManagement/CreateInvoice";
 import InvoiceManagement from "../pages/Admin/InvoiceManagement/InvoiceManagement";
 import BookingManager from "../pages/Manager/ManagerBooking/BookingManager";
 import Invoice from "../pages/Student/Invoice/Invoice";
+import ReportsByStaff from "../pages/Staff/ReportManagement/ReportStaff";
 
 const publicRouter = () => {
   return (
@@ -70,6 +71,7 @@ const publicRouter = () => {
         <Route path="/staff/home" element={<Home />} />
         <Route path="/staff/requests" element={<StaffRequestManagement />} />
         <Route path="/staff/request/:id" element={<StaffRequestDetail />} />
+        <Route path="/staff/reports" element={<ReportsByStaff />} />
       </Route>
 
       <Route element={<LayoutAdmin />}>
