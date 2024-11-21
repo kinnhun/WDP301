@@ -274,6 +274,7 @@ WHERE [floor_number] IS NOT NULL;
 
   createRoom: async ({ room_number, room_type_id, price, availability_status, floor_number, dorm, gender }) => {
     try {
+      // Tạo phòng mới và lấy room_id
       const result = await sql.query`
         INSERT INTO [dbo].[Rooms] 
           ([room_number], [room_type_id], [price], [availability_status], [floor_number], [dorm], [gender], [created_at], [updated_at])
@@ -281,23 +282,60 @@ WHERE [floor_number] IS NOT NULL;
           (${room_number}, ${room_type_id}, ${price}, ${availability_status}, ${floor_number}, ${dorm}, ${gender}, SYSDATETIME(), SYSDATETIME())
         SELECT SCOPE_IDENTITY() AS room_id;
       `;
-      
-      // Kiểm tra xem recordset có chứa dữ liệu không
+    
+      // Kiểm tra xem có room_id không
       if (result.recordset && result.recordset.length > 0) {
+        const room_id = result.recordset[0].room_id;  // Lấy room_id của phòng vừa tạo
+        console.log("Room ID: ", room_id);
+    
+        // Xác định số lượng giường cần tạo dựa trên room_type_id
+        let bedCount = 0;
+        if (room_type_id == 1) {
+          bedCount = 6; // Tạo 6 giường
+        } else if (room_type_id == 2) {
+          bedCount = 4; // Tạo 4 giường
+        } else if (room_type_id == 3) {
+          bedCount = 3; // Tạo 3 giường
+        }
+
+        console.log("bedCount : ", bedCount);
+
+  
+        // Tạo giường mới nếu cần
+        if (bedCount > 0) {
+          const bedPromises = [];
+          for (let i = 1; i <= bedCount; i++) {
+            console.log(`Creating bed ${i} for room_id ${room_id}`);
+            // Tạo giường mới với room_id và bed_number
+            console.log("id: " , i)
+            bedPromises.push(
+              sql.query`
+                INSERT INTO [dbo].[Beds] 
+                  ([room_id], [bed_number], [availability_status])
+                VALUES
+                  (${room_id}, ${i}, 'Available');
+              `
+            );
+          }
+  
+          // Đợi tất cả các giường được tạo thành công
+          await Promise.all(bedPromises);
+        }
+  
         return {
           success: true,
-          message: "Tạo phòng mới thành công",
-          room_id: result.recordset[0].room_id,  // Trả về room_id của phòng vừa được tạo
+          message: "Tạo phòng mới và giường thành công",
+          room_id: room_id,
         };
       } else {
         throw new Error("Không thể lấy room_id sau khi chèn");
       }
     } catch (error) {
-      // Xử lý lỗi nếu có
       console.error("Lỗi tạo phòng:", error);
       throw new Error("Tạo phòng mới thất bại");
     }
   },
+  
   
 
 
