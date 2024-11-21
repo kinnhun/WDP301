@@ -22,7 +22,7 @@ const Room = {
           
     `;
   },
-  
+
   getRoomsByDorm: async (dorm) => {
     return sql.query`
       SELECT 
@@ -90,7 +90,7 @@ WHERE r.[availability_status] = ${status};
 
 
 
-  
+
   // Lấy phòng theo ID
   getRoomById: async (id) => {
     const result = await sql.query`
@@ -115,7 +115,7 @@ WHERE r.[availability_status] = ${status};
     return result.recordset[0]; // Trả về phòng đầu tiên nếu tìm thấy
   },
 
-  
+
 
   // Cập nhật phòng
   updateRoom: async (id, { room_number, room_type_id, price, availability_status }) => {
@@ -195,7 +195,7 @@ WHERE [floor_number] IS NOT NULL;
   },
 
   // Lấy danh sách phòng theo loại phòng, số tầng, và ký túc xá
-  getRoomsByDormRoomTypeFloor: async (roomTypeId, floorNumber, dormName,gender) => {
+  getRoomsByDormRoomTypeFloor: async (roomTypeId, floorNumber, dormName, gender) => {
     return sql.query`
         SELECT 
         [room_id],
@@ -243,16 +243,16 @@ WHERE [floor_number] IS NOT NULL;
   },
 
 
-   updateRoomStatus1 : async (roomId, availability_status) => {
+  updateRoomStatus1: async (roomId, availability_status) => {
     return sql.query`
       UPDATE [dbo].[Rooms]
       SET availability_status = ${availability_status}
       WHERE room_id = ${roomId}
     `;
   },
-  
 
-  
+
+
   getRoomsWithFilters: async (filters) => {
     let query = `
       SELECT 
@@ -272,7 +272,7 @@ WHERE [floor_number] IS NOT NULL;
         ON r.[room_type_id] = rc.[room_type_id]
       WHERE 1 = 1  -- Điều kiện mặc định, dễ dàng thêm điều kiện sau này
     `;
-  
+
     // Kiểm tra từng filter và bổ sung điều kiện vào câu truy vấn
     if (filters.dorm) {
       query += ` AND r.dorm = '${filters.dorm}'`;  // Thêm dấu nháy đơn cho giá trị dorm
@@ -283,10 +283,10 @@ WHERE [floor_number] IS NOT NULL;
     if (filters.status) {
       query += ` AND r.availability_status = '${filters.status}'`;  // Thêm dấu nháy đơn cho giá trị status
     }
-  
+
     return sql.query(query); // Thực hiện truy vấn với điều kiện động
   },
-  
+
 
 
   createRoom: async ({ room_number, room_type_id, price, availability_status, floor_number, dorm, gender }) => {
@@ -299,12 +299,12 @@ WHERE [floor_number] IS NOT NULL;
           (${room_number}, ${room_type_id}, ${price}, ${availability_status}, ${floor_number}, ${dorm}, ${gender}, SYSDATETIME(), SYSDATETIME())
         SELECT SCOPE_IDENTITY() AS room_id;
       `;
-    
+
       // Kiểm tra xem có room_id không
       if (result.recordset && result.recordset.length > 0) {
         const room_id = result.recordset[0].room_id;  // Lấy room_id của phòng vừa tạo
         console.log("Room ID: ", room_id);
-    
+
         // Xác định số lượng giường cần tạo dựa trên room_type_id
         let bedCount = 0;
         if (room_type_id == 1) {
@@ -317,14 +317,14 @@ WHERE [floor_number] IS NOT NULL;
 
         console.log("bedCount : ", bedCount);
 
-  
+
         // Tạo giường mới nếu cần
         if (bedCount > 0) {
           const bedPromises = [];
           for (let i = 1; i <= bedCount; i++) {
             console.log(`Creating bed ${i} for room_id ${room_id}`);
             // Tạo giường mới với room_id và bed_number
-            console.log("id: " , i)
+            console.log("id: ", i)
             bedPromises.push(
               sql.query`
                 INSERT INTO [dbo].[Beds] 
@@ -334,11 +334,11 @@ WHERE [floor_number] IS NOT NULL;
               `
             );
           }
-  
+
           // Đợi tất cả các giường được tạo thành công
           await Promise.all(bedPromises);
         }
-  
+
         return {
           success: true,
           message: "Tạo phòng mới và giường thành công",
@@ -352,13 +352,19 @@ WHERE [floor_number] IS NOT NULL;
       throw new Error("Tạo phòng mới thất bại");
     }
   },
-   
 
-  getRoomIdBooking : async () => {
+
+  getRoomIdBooking: async () => {
     return sql.query`
-      SELECT DISTINCT [room_id]
-      FROM [dbo].[Bookings]
-      WHERE [end_date] < GETDATE();
+     
+  SELECT r.[room_id],
+       r.[room_number]
+   
+FROM [dbo].[Rooms] r
+JOIN [dbo].[Bookings] b
+    ON r.[room_id] = b.[room_id]
+WHERE b.[end_date] > GETDATE()
+
     `;
   },
 
@@ -400,8 +406,8 @@ WHERE [floor_number] IS NOT NULL;
 
 
 
-  
-  
+
+
 };
 
 
