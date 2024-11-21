@@ -54,8 +54,10 @@ const InvoiceTable = () => {
 
     // Lọc theo Room
     if (filters.room) {
-      filtered = filtered.filter((invoice) =>
-        invoice.room_number.toLowerCase().includes(filters.room.toLowerCase())
+      filtered = filtered.filter(
+        (invoice) =>
+          invoice.room_number &&
+          invoice.room_number.toLowerCase().includes(filters.room.toLowerCase())
       );
     }
 
