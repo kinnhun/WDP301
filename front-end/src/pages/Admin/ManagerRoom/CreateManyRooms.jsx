@@ -7,19 +7,19 @@ const CreateManyRooms = () => {
     const [dorms, setDorms] = useState([]);
     const [floors, setFloors] = useState([]);
     const [roomData, setRoomData] = useState({
-        room_type_id: '1', // default to "6 beds"
+        room_type_id: '1',
         price: '',
         availability_status: 'Available',
         floor_number: '',
         dorm: '',
-        dorm_name: '', // Added field for dorm name
         gender: 'Male',
     });
 
-    const [rooms, setRooms] = useState([]); // Track multiple rooms
-    const [roomLimit, setRoomLimit] = useState(1); // Number of rooms to create
+    const [rooms, setRooms] = useState([]);
+    const [roomLimit, setRoomLimit] = useState(1);
+    const [isFormDisabled, setIsFormDisabled] = useState(false);
+    const [useDormName, setUseDormName] = useState(false); // Toggle between select or input dorm
 
-    // Fetch dorms and floors on component mount
     useEffect(() => {
         fetchDorms();
         fetchFloors();
@@ -35,7 +35,6 @@ const CreateManyRooms = () => {
             }
         } catch (error) {
             toast.error('Error fetching dorms');
-            console.error('Error fetching dorms:', error);
         }
     };
 
@@ -49,7 +48,6 @@ const CreateManyRooms = () => {
             }
         } catch (error) {
             toast.error('Error fetching floors');
-            console.error('Error fetching floors:', error);
         }
     };
 
@@ -65,65 +63,74 @@ const CreateManyRooms = () => {
         setRoomLimit(e.target.value);
     };
 
-    const generateRoomNumber = (floorNumber, roomIndex) => {
-        // Format the room number: first digit is the floor, the rest are the room number with leading zeros
-        return `${floorNumber}${String(roomIndex).padStart(2, '0')}`;
+    const generateRoomNumber = (dorm, floorNumber, roomIndex) => {
+        return `${dorm}${floorNumber}${String(roomIndex).padStart(2, '0')}`;
     };
 
     const handleRoomAddition = () => {
+        if (!roomData.dorm || !roomData.floor_number) {
+            toast.error("Please select both Dormitory and Floor.");
+            return;
+        }
+
         const newRooms = [];
-        for (let i = 1; i <= roomLimit; i++) {
-            const roomNumber = generateRoomNumber(roomData.floor_number, i);
+        const roomStartIndex = rooms.length + 1;
+
+        for (let i = roomStartIndex; i < roomStartIndex + parseInt(roomLimit); i++) {
+            const roomNumber = generateRoomNumber(
+                roomData.dorm,
+                roomData.floor_number,
+                i
+            );
+            // Check for duplicates in the current rooms array
+            if (rooms.some((room) => room.room_number === roomNumber)) {
+                toast.error(`Duplicate room number: ${roomNumber}.`);
+                return;
+            }
             newRooms.push({
                 ...roomData,
                 room_number: roomNumber,
             });
         }
-        setRooms([...rooms, ...newRooms]);
-        setRoomData({
-            room_type_id: '1',
-            price: '',
-            availability_status: 'Available',
-            floor_number: '',
-            dorm: '',
-            dorm_name: '', // Reset dorm name
-            gender: 'Male',
-        });
-        setRoomLimit(1); // Reset room limit after adding
-    };
 
+        setRooms([...rooms, ...newRooms]);
+        setIsFormDisabled(true);
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const roomCreationPromises = rooms.map(async (room) => {
                 const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/room`, room);
                 if (response.data.success) {
-                    toast.success('Room created successfully');
+                    toast.success(`Room ${room.room_number} created successfully`);
                 } else {
-                    toast.error('Failed to create room');
+                    toast.error(`Failed to create room ${room.room_number}`);
                 }
             });
-
             await Promise.all(roomCreationPromises);
         } catch (error) {
             toast.error('Error creating rooms');
-            console.error('Error submitting room data:', error);
         }
     };
 
     const handleReset = () => {
-        // Reset form and room list
         setRoomData({
             room_type_id: '1',
             price: '',
             availability_status: 'Available',
             floor_number: '',
             dorm: '',
-            dorm_name: '', // Reset dorm name
             gender: 'Male',
         });
-        setRooms([]); // Clear the rooms list
-        setRoomLimit(1); // Reset room limit
+        setRooms([]);
+        setRoomLimit(1);
+        setIsFormDisabled(false);
+        setUseDormName(false); // Reset dorm type selection
+    };
+
+    const toggleDormNameUsage = () => {
+        setUseDormName(!useDormName);
+        setRoomData({ ...roomData, dorm: '' }); // Reset dorm field
     };
 
     return (
@@ -131,7 +138,6 @@ const CreateManyRooms = () => {
             <h2>Create Multiple Rooms</h2>
             <form onSubmit={handleSubmit} className="mt-3">
                 <div className="row">
-                    {/* Left side of the form */}
                     <div className="col-md-6">
                         <div className="mb-3">
                             <label htmlFor="room_type_id" className="form-label">Room Type</label>
@@ -141,6 +147,7 @@ const CreateManyRooms = () => {
                                 className="form-select"
                                 value={roomData.room_type_id}
                                 onChange={handleInputChange}
+                                disabled={isFormDisabled}
                                 required
                             >
                                 <option value="1">6 Beds</option>
@@ -157,6 +164,7 @@ const CreateManyRooms = () => {
                                 className="form-control"
                                 value={roomLimit}
                                 onChange={handleRoomLimitChange}
+                                disabled={isFormDisabled}
                                 min="1"
                                 required
                             />
@@ -170,6 +178,7 @@ const CreateManyRooms = () => {
                                 className="form-control"
                                 value={roomData.price}
                                 onChange={handleInputChange}
+                                disabled={isFormDisabled}
                                 required
                             />
                         </div>
@@ -181,6 +190,7 @@ const CreateManyRooms = () => {
                                 className="form-select"
                                 value={roomData.gender}
                                 onChange={handleInputChange}
+                                disabled={isFormDisabled}
                                 required
                             >
                                 <option value="Male">Male</option>
@@ -188,42 +198,60 @@ const CreateManyRooms = () => {
                             </select>
                         </div>
                     </div>
-
-                    {/* Right side of the form */}
                     <div className="col-md-6">
                         <div className="mb-3">
-                            <label htmlFor="dorm" className="form-label">Dormitory</label>
-                            <select
-                                id="dorm"
-                                name="dorm"
-                                className="form-select"
-                                value={roomData.dorm}
-                                onChange={handleInputChange}
-                                required
-                            >
-                                <option value="">Select Dormitory</option>
-                                {dorms.map((dorm) => (
-                                    <option key={dorm.dorm} value={dorm.dorm}>
-                                        {dorm.dorm}
-                                    </option>
-                                ))}
-                            </select>
+                            <label htmlFor="useDormName" className="form-label">Dormitory Selection</label>
+                            <div className="form-check">
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    id="useDormName"
+                                    checked={useDormName}
+                                    onChange={toggleDormNameUsage}
+                                    disabled={isFormDisabled}
+                                />
+                                <label className="form-check-label" htmlFor="useDormName">
+                                    Use Dormitory Name instead of Select Dormitory
+                                </label>
+                            </div>
                         </div>
 
-                        {/* New input for dormitory name */}
-                        <div className="mb-3">
-                            <label htmlFor="dorm_name" className="form-label">Dormitory Name</label>
-                            <input
-                                type="text"
-                                id="dorm_name"
-                                name="dorm_name"
-                                className="form-control"
-                                value={roomData.dorm_name}
-                                onChange={handleInputChange}
-                                placeholder="Enter Dormitory Name"
-                                required
-                            />
-                        </div>
+                        {!useDormName ? (
+                            <div className="mb-3">
+                                <label htmlFor="dorm" className="form-label">Dormitory</label>
+                                <select
+                                    id="dorm"
+                                    name="dorm"
+                                    className="form-select"
+                                    value={roomData.dorm}
+                                    onChange={handleInputChange}
+                                    disabled={isFormDisabled}
+                                    required
+                                >
+                                    <option value="">Select Dormitory</option>
+                                    {dorms.map((dorm) => (
+                                        <option key={dorm.dorm} value={dorm.dorm}>
+                                            {dorm.dorm}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        ) : (
+                            <div className="mb-3">
+                                <label htmlFor="dorm" className="form-label">Dormitory Name</label>
+                                <input
+                                    type="text"
+                                    id="dorm"
+                                    name="dorm"
+                                    className="form-control"
+                                    value={roomData.dorm}
+                                    onChange={handleInputChange}
+                                    disabled={isFormDisabled}
+                                    required
+                                />
+                            </div>
+                        )}
+
                         <div className="mb-3">
                             <label htmlFor="availability_status" className="form-label">Availability Status</label>
                             <select
@@ -232,6 +260,7 @@ const CreateManyRooms = () => {
                                 className="form-select"
                                 value={roomData.availability_status}
                                 onChange={handleInputChange}
+                                disabled={isFormDisabled}
                                 required
                             >
                                 <option value="Available">Available</option>
@@ -246,6 +275,7 @@ const CreateManyRooms = () => {
                                 className="form-select"
                                 value={roomData.floor_number}
                                 onChange={handleInputChange}
+                                disabled={isFormDisabled}
                                 required
                             >
                                 <option value="">Select Floor</option>
@@ -263,7 +293,6 @@ const CreateManyRooms = () => {
                 <button type="button" onClick={handleReset} className="btn btn-danger">Reset</button>
             </form>
 
-            {/* Display rooms added in a table */}
             {rooms.length > 0 && (
                 <div className="mt-5">
                     <h4>Added Rooms</h4>
@@ -288,7 +317,7 @@ const CreateManyRooms = () => {
                                     <td>{room.gender}</td>
                                     <td>{room.availability_status}</td>
                                     <td>{room.floor_number}</td>
-                                    <td>{room.dorm_name}</td>
+                                    <td>{room.dorm}</td>
                                 </tr>
                             ))}
                         </tbody>

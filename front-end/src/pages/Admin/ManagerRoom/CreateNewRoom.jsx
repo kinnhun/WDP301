@@ -13,6 +13,7 @@ const CreateNewRoom = () => {
         availability_status: 'Available',
         floor_number: '',
         dorm: '',
+        room_index: '01', // default room index
         gender: 'Male',
     });
 
@@ -50,12 +51,32 @@ const CreateNewRoom = () => {
         }
     };
 
+    const generateRoomNumber = (dorm, floor, index) => {
+        // Generate room number in the format A101, A102...
+        return `${dorm}${floor}${String(index).padStart(2, '0')}`;
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setRoomData({
-            ...roomData,
-            [name]: value,
-        });
+
+        if (name === 'dorm' || name === 'floor_number' || name === 'room_index') {
+            // Update room_number when dorm, floor, or room index changes
+            const newRoomNumber = generateRoomNumber(
+                name === 'dorm' ? value : roomData.dorm,
+                name === 'floor_number' ? value : roomData.floor_number,
+                name === 'room_index' ? value : roomData.room_index
+            );
+            setRoomData({
+                ...roomData,
+                [name]: value,
+                room_number: newRoomNumber,
+            });
+        } else {
+            setRoomData({
+                ...roomData,
+                [name]: value,
+            });
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -64,6 +85,16 @@ const CreateNewRoom = () => {
             const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/room`, roomData);
             if (response.data.success) {
                 toast.success('Room created successfully');
+                setRoomData({
+                    room_number: '',
+                    room_type_id: '1',
+                    price: '',
+                    availability_status: 'Available',
+                    floor_number: '',
+                    dorm: '',
+                    room_index: '01',
+                    gender: 'Male',
+                });
             } else {
                 toast.error('Failed to create room');
             }
@@ -88,8 +119,7 @@ const CreateNewRoom = () => {
                                 name="room_number"
                                 className="form-control"
                                 value={roomData.room_number}
-                                onChange={handleInputChange}
-                                required
+                                readOnly
                             />
                         </div>
                         <div className="mb-3">
@@ -172,6 +202,20 @@ const CreateNewRoom = () => {
                                     </option>
                                 ))}
                             </select>
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="room_index" className="form-label">Room Index (e.g., 01, 02, ...)</label>
+                            <input
+                                type="number"
+                                id="room_index"
+                                name="room_index"
+                                className="form-control"
+                                value={roomData.room_index}
+                                onChange={handleInputChange}
+                                min="1"
+                                max="99"
+                                required
+                            />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="gender" className="form-label">Gender</label>

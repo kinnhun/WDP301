@@ -71,6 +71,17 @@ const createRoom = async (req, res) => {
   try {
     const { room_number, room_type_id, price, availability_status, floor_number, dorm, gender } = req.body;
 
+
+    console.log(room_number);
+    console.log(room_type_id);
+    console.log(price);
+    console.log(availability_status);
+    console.log(gender);
+    console.log(floor_number);
+    console.log(dorm);
+
+    
+
     // Kiểm tra dữ liệu đầu vào
     if (!room_number || !room_type_id || !price || !availability_status || !floor_number || !dorm || !gender) {
       return res.status(400).json({
