@@ -288,7 +288,7 @@ const CreateManyRooms = () => {
                         </div>
                     </div>
                 </div>
-                <button type="button" onClick={handleRoomAddition} className="btn btn-secondary me-2">Add Rooms</button>
+                <button type="button" onClick={handleRoomAddition} className="btn btn-secondary me-2">Preview</button>
                 <button type="submit" className="btn btn-primary me-2">Create Rooms</button>
                 <button type="button" onClick={handleReset} className="btn btn-danger">Reset</button>
             </form>

@@ -21,6 +21,7 @@
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.5",
+    "react-bootstrap-typeahead": "^6.3.2",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.53.0",

@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Col, Form, Row, Table, Pagination } from 'react-bootstrap';
+import { Typeahead } from 'react-bootstrap-typeahead'; // Import Typeahead
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 const ListAllRoom = () => {
     const [dorms, setDorms] = useState([]);
     const [rooms, setRooms] = useState([]);
+    const [searchRooms, setSearchRooms] = useState([]); // State for search results
     const [selectedDorm, setSelectedDorm] = useState("");
-    const [selectedFloor, setSelectedFloor] = useState("");  // Added floor state
+    const [selectedFloor, setSelectedFloor] = useState("");
     const [floors, setFloors] = useState([]);
-    const [selectedStatus, setSelectedStatus] = useState(""); // New state for status
-    const [currentPage, setCurrentPage] = useState(1);  // State for current page
-    const [roomsPerPage, setRoomsPerPage] = useState(5);  // Number of rooms per page
+    const [selectedStatus, setSelectedStatus] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [roomsPerPage, setRoomsPerPage] = useState(5);
 
     const fetchDorms = async () => {
         try {
@@ -36,65 +39,67 @@ const ListAllRoom = () => {
         }
     };
 
-    // Fetch rooms based on dorm, floor, and status selection
     const fetchRooms = async (dorm = "", floor = "", status = "") => {
         try {
-            // Xây dựng URL đúng với các tham số dorm, floor và status
             const params = [];
             if (dorm) params.push(`dorm=${dorm}`);
             if (floor) params.push(`floor=${floor}`);
             if (status) params.push(`status=${status}`);
             const url = params.length > 0
                 ? `http://localhost:8080/api/room?${params.join("&")}`
-                : 'http://localhost:8080/api/room'; // Fetch all rooms nếu không có filter
+                : 'http://localhost:8080/api/room';
 
             const response = await axios.get(url);
             if (response.data.success) {
                 setRooms(response.data.data);
+                setSearchRooms(response.data.data); // Initialize search results with full list
             }
         } catch (error) {
             console.error("Error fetching rooms:", error);
         }
     };
 
-    // Fetch dorms and floors on initial load
     useEffect(() => {
         fetchDorms();
         fetchFloors();
     }, []);
 
-    // Fetch rooms when dorm, floor or status selection changes
     useEffect(() => {
         fetchRooms(selectedDorm, selectedFloor, selectedStatus);
     }, [selectedDorm, selectedFloor, selectedStatus]);
 
-    // Handle dorm selection change
     const handleDormChange = (e) => {
         setSelectedDorm(e.target.value);
     };
 
-    // Handle floor selection change
     const handleFloorChange = (e) => {
         setSelectedFloor(e.target.value);
     };
 
-    // Handle status selection change
     const handleStatusChange = (e) => {
-        setSelectedStatus(e.target.value); // Update the selected status
+        setSelectedStatus(e.target.value);
     };
 
-    // Handle page change
     const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);  // Update current page
+        setCurrentPage(pageNumber);
     };
 
-    // Get the rooms to display for the current page
+    const handleSearch = (selected) => {
+        if (selected.length > 0) {
+            const filteredRooms = rooms.filter((room) =>
+                room.room_number === selected[0]
+            );
+            setSearchRooms(filteredRooms); // Update search results
+        } else {
+            setSearchRooms(rooms); // Reset to full list if no selection
+        }
+    };
+
     const indexOfLastRoom = currentPage * roomsPerPage;
     const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
-    const currentRooms = rooms.slice(indexOfFirstRoom, indexOfLastRoom);
+    const currentRooms = searchRooms.slice(indexOfFirstRoom, indexOfLastRoom);
 
-    // Pagination logic
-    const totalPages = Math.ceil(rooms.length / roomsPerPage);
+    const totalPages = Math.ceil(searchRooms.length / roomsPerPage);
 
     return (
         <div>
@@ -128,7 +133,6 @@ const ListAllRoom = () => {
                     </Form.Group>
                 </Col>
 
-                {/* Added Status Selection */}
                 <Col md={4} sm={12}>
                     <Form.Group controlId="status1">
                         <Form.Label>Status</Form.Label>
@@ -142,8 +146,20 @@ const ListAllRoom = () => {
                 </Col>
             </Row>
 
+            <Row className="mt-4">
+                <Col>
+                    <Typeahead
+                        id="room-search"
+                        labelKey="room_number"
+                        options={rooms.map((room) => room.room_number)} // Room numbers for search
+                        placeholder="Search by Room Number"
+                        onChange={handleSearch}
+                        clearButton
+                    />
+                </Col>
+            </Row>
 
-            {rooms.length > 0 && (
+            {searchRooms.length > 0 && (
                 <div>
                     <h2>Room List {selectedDorm && `for Dorm ${selectedDorm}`}</h2>
                     <Table striped bordered hover>
@@ -171,26 +187,51 @@ const ListAllRoom = () => {
                         </tbody>
                     </Table>
 
-                    {/* Pagination controls */}
                     <Pagination>
                         <Pagination.Prev
                             onClick={() => handlePageChange(currentPage - 1)}
                             disabled={currentPage === 1}
                         />
-                        {[...Array(totalPages)].map((_, index) => (
-                            <Pagination.Item
-                                key={index + 1}
-                                active={index + 1 === currentPage}
-                                onClick={() => handlePageChange(index + 1)}
-                            >
-                                {index + 1}
+
+                        {/* Hiển thị trang đầu tiên nếu số trang > 5 */}
+                        {totalPages > 5 && currentPage > 3 && (
+                            <>
+                                <Pagination.Item onClick={() => handlePageChange(1)}>
+                                    1
+                                </Pagination.Item>
+                                <Pagination.Ellipsis />
+                            </>
+                        )}
+
+                        {/* Hiển thị trang trước, trang hiện tại và trang sau */}
+                        {currentPage - 1 > 0 && (
+                            <Pagination.Item onClick={() => handlePageChange(currentPage - 1)}>
+                                {currentPage - 1}
                             </Pagination.Item>
-                        ))}
+                        )}
+                        <Pagination.Item active>{currentPage}</Pagination.Item>
+                        {currentPage + 1 <= totalPages && (
+                            <Pagination.Item onClick={() => handlePageChange(currentPage + 1)}>
+                                {currentPage + 1}
+                            </Pagination.Item>
+                        )}
+
+                        {/* Hiển thị trang cuối cùng nếu số trang > 5 */}
+                        {totalPages > 5 && currentPage < totalPages - 2 && (
+                            <>
+                                <Pagination.Ellipsis />
+                                <Pagination.Item onClick={() => handlePageChange(totalPages)}>
+                                    {totalPages}
+                                </Pagination.Item>
+                            </>
+                        )}
+
                         <Pagination.Next
                             onClick={() => handlePageChange(currentPage + 1)}
                             disabled={currentPage === totalPages}
                         />
                     </Pagination>
+
                 </div>
             )}
         </div>
