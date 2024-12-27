@@ -116,6 +116,27 @@ getAllSemesters: async () => {
     }
 },
 
+getSemesterByStatusWithEarliestCreatedAt: async () => {
+    try {
+        const result = await sql.query`
+            SELECT TOP 1 
+                [semester_id]
+      ,[semester_name]
+      ,[start_date]
+      ,[end_date]
+      ,[status]
+      ,[created_at]
+      ,[updated_at]
+            FROM [dbo].[Semester]
+            WHERE [status] = 'Coming'
+            ORDER BY [created_at] ASC
+        `;
+        return result; // Return the query result
+    } catch (err) {
+        console.error("Lỗi khi lấy thông tin kỳ học với trạng thái và thời gian tạo sớm nhất:", err);
+        throw err;
+    }
+},
 
 
 

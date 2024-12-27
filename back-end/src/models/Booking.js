@@ -222,9 +222,88 @@ updateMultipleStatuses: async (bookingIds, newStatus) => {
 },
 
 
-
+getLatestBookingByUserId: async (userId) => {
+    return sql.query`
+        SELECT TOP 1 
+            b.[booking_id],
+            b.[user_id],
+            b.[room_id],
+            r.[room_number],
+            r.[floor_number],
+            r.[dorm],
+            b.[start_date],
+            b.[end_date],
+            b.[total_amount],
+            b.[payment_status],
+            b.[booking_status],
+            b.[created_at],
+            b.[updated_at],
+            b.[bed_id],
+            bd.[bed_number]
+        FROM [dbo].[Bookings] b
+        JOIN [dbo].[Rooms] r ON b.[room_id] = r.[room_id]
+        JOIN [dbo].[Beds] bd ON b.[bed_id] = bd.[bed_id]
+        WHERE b.[user_id] = ${userId}
+        ORDER BY b.[created_at] DESC;
+    `;
+},
 
     
+
+
+   // Method to create a new booking based on an existing one
+   createBookingByLatest: async (bookingId, startDate, endDate, semester) => {
+    try {
+        const pool = await sql.connect();
+        const query = `
+            INSERT INTO [wdp7].[dbo].[Bookings] (
+                [user_id], 
+                [room_id], 
+                [start_date], 
+                [end_date], 
+                [total_amount], 
+                [payment_status], 
+                [booking_status], 
+                [created_at], 
+                [updated_at], 
+                [bed_id], 
+                [semester], 
+                [note]
+            )
+            SELECT 
+                [user_id], 
+                [room_id], 
+                @start_date AS [start_date],  -- New start date
+                @end_date AS [end_date],     -- New end date
+                [total_amount], 
+                [payment_status], 
+                [booking_status], 
+                GETDATE() AS [created_at],   -- Current creation timestamp
+                GETDATE() AS [updated_at],   -- Current update timestamp
+                [bed_id], 
+                @semester AS [semester],     -- New semester
+                [note]
+            FROM 
+                [dbo].[Bookings]
+            WHERE 
+                [booking_id] = @booking_id; -- Filter by specific booking_id
+        `;
+
+        const request = pool.request();
+        request.input('booking_id', sql.Int, bookingId);
+        request.input('start_date', sql.DateTime, startDate);
+        request.input('end_date', sql.DateTime, endDate);
+        request.input('semester', sql.NVarChar, semester);
+
+        const result = await request.query(query);
+        return result;
+    } catch (error) {
+        console.error('Error in createBookingByLatest model:', error.message);
+        throw error;
+    }
+},
+
+
 };
 
 

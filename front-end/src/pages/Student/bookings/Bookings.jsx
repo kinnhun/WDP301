@@ -7,7 +7,8 @@ import "./Bookings.css";
 
 const Bookings = () => {
     const [bookingsData, setBookingsData] = useState([]);
-    const [isBookingAllowed, setIsBookingAllowed] = useState(true); // Trạng thái cho phép booking
+    const [isBookingAllowed, setIsBookingAllowed] = useState(true); // Booking status
+    const [activeSemester, setActiveSemester] = useState(null); // Active semester data
     const baseUrl = import.meta.env.VITE_PUBLIC_URL;
 
     useEffect(() => {
@@ -26,7 +27,7 @@ const Bookings = () => {
                     const bookings = response.data.data;
                     setBookingsData(bookings);
 
-                    // Kiểm tra nếu có booking nào có `end_date` lớn hơn hoặc bằng ngày hiện tại
+                    // Check if there's any active booking
                     const now = new Date();
                     const hasActiveBooking = bookings.some(booking => new Date(booking.end_date) >= now);
                     setIsBookingAllowed(!hasActiveBooking);
@@ -36,19 +37,67 @@ const Bookings = () => {
             }
         };
 
+        const fetchActiveSemester = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/semester/active`);
+                if (response.data.success) {
+                    setActiveSemester(response.data.data);
+                }
+            } catch (error) {
+                console.error('Error fetching active semester:', error);
+            }
+        };
+
         fetchBookings();
+        fetchActiveSemester();
     }, []);
 
-    const currentDate = new Date().toLocaleDateString(); // Lấy ngày tháng hiện tại
+    const currentDate = new Date(); // Current date
+
+    const shouldShowAddBookingButton = () => {
+        if (activeSemester) {
+            const semesterEndDate = new Date(activeSemester.end_date);
+            const twoWeeksAfterEnd = new Date(semesterEndDate);
+            twoWeeksAfterEnd.setDate(semesterEndDate.getDate() + 14);
+
+            // Check if the current date is within two weeks after the semester's end date
+            return currentDate > semesterEndDate && currentDate <= twoWeeksAfterEnd;
+        }
+        return false;
+    };
+
+    const shouldShowDormitoryReservationButton = () => {
+        if (activeSemester) {
+            const semesterEndDate = new Date(activeSemester.end_date);
+            const twoWeeksBeforeEnd = new Date();
+            twoWeeksBeforeEnd.setDate(currentDate.getDate() + 14);
+
+            // Check if the current date + 14 days is before the semester's end date
+            return twoWeeksBeforeEnd < semesterEndDate;
+        }
+        return false;
+    };
 
     return (
         <div className="container mt-4">
             <h1>
-                Bookings <small className="text-muted">({currentDate})</small>
+                Bookings <small className="text-muted">({currentDate.toLocaleDateString()})</small>
             </h1>
 
-            {/* Hiển thị nút "Add New Booking" nếu bất kỳ booking nào có End Date < ngày hiện tại */}
-            {bookingsData.some(booking => new Date(booking.end_date) < new Date()) && (
+            {activeSemester && (
+                <div className="mb-4">
+                    <h4>Active Semester</h4>
+                    <p>
+                        <strong>Name:</strong> {activeSemester.semester_name} <br />
+                        <strong>Start Date:</strong> {new Date(activeSemester.start_date).toLocaleDateString()} <br />
+                        <strong>End Date:</strong> {new Date(activeSemester.end_date).toLocaleDateString()} <br />
+                        <strong>Status:</strong> {activeSemester.status}
+                    </p>
+                </div>
+            )}
+
+            {/* Show "Add New Booking" button only if the current date is within two weeks after the semester's end date */}
+            {shouldShowAddBookingButton() && (
                 <Link to={`${baseUrl}/student/booking/create-booking`}>
                     <button className="btn btn-primary float-right">
                         Add New Booking
@@ -56,6 +105,19 @@ const Bookings = () => {
                 </Link>
             )}
 
+            {/* Show "Dormitory Reservation" button if current date + 14 days is before semester's end date */}
+            {shouldShowDormitoryReservationButton() && (
+                <Link to={`${baseUrl}/student/booking/dormitory-reservation`}>
+                    <button className="btn btn-secondary float-right mr-2">
+                        Dormitory Reservation
+                    </button>
+                </Link>
+            )}
+            <Link to={`${baseUrl}/student/booking/dormitory-reservation`}>
+                <button className="btn btn-secondary float-right mr-2">
+                    Dormitory Reservation
+                </button>
+            </Link>
             <Table striped bordered hover responsive className="table-sm">
                 <thead>
                     <tr>

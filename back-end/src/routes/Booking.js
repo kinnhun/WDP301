@@ -30,6 +30,11 @@ bookingRouter.put("/booking-status/:id/:statusName", bookingController.updateBoo
 // New route for bulk updating booking statuses
 bookingRouter.put("/bulk-status/bulk", bookingController.bulkUpdateBookingStatus);
 
+// lấy ra booking mới nhất bởi user id 
+bookingRouter.get("/latest/:userId", bookingController.getLatestBookingById);
 
+
+// tạo booking từ booking cũ 
+bookingRouter.post("/create-booking-latest", bookingController.createBookingByLatest);
 
 module.exports = bookingRouter;

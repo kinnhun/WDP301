@@ -157,10 +157,43 @@ const updateSemesterStatus = async (req, res) => {
 };
 
 
+
+const getNextSemester = async (req, res) => {
+    try {
+        // Fetch the next semester with status 'Coming' and earliest created_at
+        const { recordset } = await Semester.getSemesterByStatusWithEarliestCreatedAt();
+
+        const nextSemester = recordset?.[0]; // Get the first result (smallest created_at)
+
+        if (!nextSemester) {
+            return errorResponse({
+                res,
+                status: 404,
+                message: 'Không có kỳ học nào có trạng thái "Coming"',
+            });
+        }
+
+        return successResponse({
+            res,
+            message: 'Lấy thông tin kỳ học tiếp theo thành công',
+            data: nextSemester,
+        });
+    } catch (error) {
+        return errorResponse({
+            res,
+            status: 500,
+            message: 'Lỗi khi lấy thông tin kỳ học tiếp theo',
+            errors: error.message,
+        });
+    }
+};
+
+
 module.exports = {
     getSemesterActive,
     getAllSemesters,
     createSemester,
     deleteSemester,
-    updateSemesterStatus
+    updateSemesterStatus,
+    getNextSemester
 };
