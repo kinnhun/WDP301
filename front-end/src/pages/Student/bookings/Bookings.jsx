@@ -55,7 +55,7 @@ const Bookings = () => {
     const currentDate = new Date(); // Current date
 
     const shouldShowAddBookingButton = () => {
-        if (activeSemester) {
+        if (activeSemester && isBookingAllowed) {
             const semesterEndDate = new Date(activeSemester.end_date);
             const twoWeeksAfterEnd = new Date(semesterEndDate);
             twoWeeksAfterEnd.setDate(semesterEndDate.getDate() + 14);
@@ -66,17 +66,22 @@ const Bookings = () => {
         return false;
     };
 
+
+
     const shouldShowDormitoryReservationButton = () => {
         if (activeSemester) {
             const semesterEndDate = new Date(activeSemester.end_date);
-            const twoWeeksBeforeEnd = new Date();
-            twoWeeksBeforeEnd.setDate(currentDate.getDate() + 14);
+            const twoWeeksAfterEnd = new Date(semesterEndDate);
+            twoWeeksAfterEnd.setDate(semesterEndDate.getDate() + 14);
 
-            // Check if the current date + 14 days is before the semester's end date
-            return twoWeeksBeforeEnd < semesterEndDate;
+            // Show button if the current date is less than end_date or within 14 days after end_date
+            return currentDate < semesterEndDate || (currentDate >= semesterEndDate && currentDate <= twoWeeksAfterEnd);
         }
         return false;
     };
+
+
+
 
     return (
         <div className="container mt-4">
@@ -95,6 +100,15 @@ const Bookings = () => {
                     </p>
                 </div>
             )}
+            {shouldShowDormitoryReservationButton() && (
+                <Link to={`${baseUrl}/student/booking/dormitory-reservation`}>
+                    <button className="btn btn-secondary mb-2 mr-2">
+                        Dormitory Reservation
+                    </button>
+                </Link>
+            )}
+
+
 
             {/* Show "Add New Booking" button only if the current date is within two weeks after the semester's end date */}
             {shouldShowAddBookingButton() && (
@@ -105,19 +119,7 @@ const Bookings = () => {
                 </Link>
             )}
 
-            {/* Show "Dormitory Reservation" button if current date + 14 days is before semester's end date */}
-            {shouldShowDormitoryReservationButton() && (
-                <Link to={`${baseUrl}/student/booking/dormitory-reservation`}>
-                    <button className="btn btn-secondary float-right mr-2">
-                        Dormitory Reservation
-                    </button>
-                </Link>
-            )}
-            <Link to={`${baseUrl}/student/booking/dormitory-reservation`}>
-                <button className="btn btn-secondary float-right mr-2">
-                    Dormitory Reservation
-                </button>
-            </Link>
+
             <Table striped bordered hover responsive className="table-sm">
                 <thead>
                     <tr>
